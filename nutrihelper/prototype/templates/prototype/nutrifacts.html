@@ -2,37 +2,37 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Nutrition Facts</title>
-	<style>
-		table, th, td, tr {
-			border: 1px solid black;
-			border-collapse: collapse;
-			height: 100px;
-		}
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<style>
+			table, th, td, tr {
+				border: 1px solid black;
+				border-collapse: collapse;
+				height: 100px;
+			}
 
-		body {
-			background-color: #f1f1c1;
-		}
-		
-		a {
-			text-decoration: none;
-			align: center;
-		}
-		
-		a:hover {
-			color: blue;
-		}
-	</style>
-</head>
-<body>
-<table style="width:100%">
-	<tr >
-		<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
-	</tr>
-</table>
-<h1><center>{{ food }} Nutrition Facts</center></h1>
+			body {
+				background-color: #f1f1c1;
+			}
+			
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			
+			a:hover {
+				color: blue;
+			}
+		</style>
+	</head>
+	<body>
+		<table style="width:100%">
+			<tr >
+				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
+			</tr>
+		</table>
+		<h1><center>{{ food }} Nutrition Facts</center></h1>
 		<table style="width:100%">
 			<tr>
 				<td>Serving size</td>
@@ -63,7 +63,7 @@
 				<td id="D7">place holder</td>
 			</tr>
 		</table>
-<br>
-<button type="button" ><a href="../" alt="Return">RETURN </a></button>
-</body>
+		<br>
+		<button type="button" ><a href="../" alt="Return">RETURN </a></button>
+	</body>
 </html>
