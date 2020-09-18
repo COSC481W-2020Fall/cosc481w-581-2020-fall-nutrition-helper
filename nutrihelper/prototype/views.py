@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 
+from .models import Food
+
 class IndexView(TemplateView):
 	template_name = 'prototype/index.html'
 
@@ -16,5 +18,6 @@ class FactsView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		context['food'] = self.request.GET['food']
+		query = self.request.GET['food']
+		context['f_list'] = get_object_or_404(Food, name__startswith=query).get_facts()
 		return context
