@@ -19,7 +19,8 @@ Project is created with:
 2. Run `python manage.py makemigrations`
 3. Run `python manage.py migrate`
 4. Run `python manage.py runserver`
-5. You should see the line `Starting development server at http://127.0.0.1:8000/`. Enter this address into your browser `http://127.0.0.1:8000/prototype/`
+5. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
+6. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
 
 ## Members
 * Bryce VanAsselt
