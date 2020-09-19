@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Prototype Description</title>
+		<style>
+			p {
+				color: white;
+				text-align: center;
+				font-size: 30px;
+			}
+			body {
+				background-image: url("{% static 'prototype/images/background.jpg' %}");
+			}
+		</style>
+	</head>
+	<body>
+		<table style="width:100%">
+			<tr>
+				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
+			</tr>
+		</table>
+		<h1 style="color: green;"><center><u>How It Works</u></center></h1>
+		<p>A simple webpage that can access the USDA nutrition facts database<br> through two buttons: "Egg" and "Broccoli".<br>
+		The buttons will be basic buttons with text on them.<br>
+		Clicking on either button will retrieve the information <br>(serving size, calories, total fat, cholesterol, sodium, total carb, protein)<br>
+		of that food and display it on the screen in a table. <br>
+		This page will be dynamically populated with that food's data <br> that we will store on the server.
+		The website will have a back button<br> for users to return to the previous page to select a different meal<br> if they would like to.
+		</p>
+	</body>
+</html>

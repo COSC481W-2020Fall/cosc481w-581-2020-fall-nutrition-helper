@@ -5,17 +5,22 @@ A website that helps with meal planning and provides nutrition information.
 
 ## Prototype Description
 A simple webpage that can access the USDA nutrition facts database through two buttons: "Egg" and "Broccoli". The buttons will be basic buttons with text on them. Clicking on either button will retrieve the information (serving size, calories, total fat, cholesterol, sodium, total carb, protein) of that food and display it on the screen in a table. This page will be dynamically populated with that food's data that we will store on the server. The website will have a back button for users to return to the previous page to select a different meal if they would like to.
+
 A use case diagram for this prototype may be found at https://app.lucidchart.com/publicSegments/view/069e1c84-fd26-4b98-ae55-51c4ec09040b/image.pdf
 
 ## Technologies
 Project is created with:
 * Python
 * Django
-* SQL
+* SQLite
 
 ## Running the Web Server
 1. Make sure you are inside the directory 'nutrihelper'
-2. Run `python manage.py runserver`
+2. Run `python manage.py makemigrations`
+3. Run `python manage.py migrate`
+4. Run `python manage.py runserver`
+5. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
+6. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
 
 ## Members
 * Bryce VanAsselt

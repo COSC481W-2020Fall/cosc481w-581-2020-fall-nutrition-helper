@@ -2,69 +2,82 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Nutrition Facts</title>
-	<style>
-		table, th, td, tr {
-			border: 1px solid black;
-			border-collapse: collapse;
-			height: 100px;
-		}
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 10px;
+			}
 
-		body {
-			background-color: #f1f1c1;
-		}
-		
-		a {
-			text-decoration: none;
-			align: center;
-		}
-		
-		a:hover {
-			color: blue;
-		}
-	</style>
-</head>
-<body>
-<table style="width:100%">
-	<tr >
-		<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
-	</tr>
-</table>
-<h1><center>{{ food }}</center></h1>
-<h1><center>Nutrition Facts</center></h1>
-		<table style="width:100%">
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+
+			body {
+				background-image: url("{% static 'prototype/images/background.jpg' %}");
+			}
+			
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			
+			a:hover {
+				color: blue;
+			}
+		</style>
+	</head>
+	<body>
+		<table style="width: 100%; height: 100px; border: none">
+			<tr >
+				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
+			</tr>
+		</table>
+		<h1 style="color: white"><center>{{ f_list.name }} Nutrition Facts</center></h1>
+		<br>
+		<table class="facts" style="background-color: white">
 			<tr>
 				<td>Serving size</td>
-				<td id="D1">place holder</td>
+				<td class="right">{{ f_list.servingSize }}</td>
 			</tr>
 			<tr>
 				<td>Calories</td>
-				<td id="D2">place holder</td>
+				<td class="right">{{ f_list.calories }}</td>
 			</tr>
 			<tr>
-				<td>Total fat</td>
-				<td id="D3">place holder</td>
+				<td>Total Fat</td>
+				<td class="right">{{ f_list.totalFat }}</td>
 			</tr>
 			<tr>
 				<td>Cholesterol</td>
-				<td id="D4">place holder</td>
+				<td class="right">{{ f_list.cholesterol }}</td>
 			</tr>
 			<tr>
 				<td>Sodium</td>
-				<td id="D5">place holder</td>
+				<td class="right">{{ f_list.sodium }}</td>
 			</tr>
 			<tr>
 				<td>Total Carbohydrates</td>
-				<td id="D6">place holder</td>
+				<td class="right">{{ f_list.totalCarb }}</td>
 			</tr>
 			<tr>
 				<td>Protein</td>
-				<td id="D7">place holder</td>
+				<td class="right">{{ f_list.protein }}</td>
 			</tr>
 		</table>
-<br>
-<button type="button" ><a href="../" alt="Return">RETURN </a></button>
-</body>
+		<br><br>
+		<div style="text-align: center"><button type="button"><a href="../" alt="Return">RETURN </a></button></div>
+	</body>
 </html>
