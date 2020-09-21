@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3b260731-373b-4153-bf05-dc32076f91fa" name="Default Changelist" comment="Background-image fixed" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1hpjsNsBg9Ne8mAQb2L3DcA7sM0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3b260731-373b-4153-bf05-dc32076f91fa" name="Default Changelist" comment="" />
+      <created>1600715134078</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600715134078</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Background-image fixed">
+      <created>1600715677389</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1600715677389</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Background-image fixed">
+      <created>1600716002248</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1600716002249</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Background-image fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Background-image fixed" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="0" y="44" key="CommitChangelistDialog2" timestamp="1600716380592">
+      <screen x="0" y="23" width="1440" height="830" />
+    </state>
+    <state x="177" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1600716097010" />
+    <state x="0" y="44" key="CommitChangelistDialog2/0.23.1440.830@0.23.1440.830" timestamp="1600716380592" />
+    <state x="466" y="69" width="667" height="729" key="find.popup" timestamp="1600716634447">
+      <screen x="0" y="23" width="1440" height="830" />
+    </state>
+    <state x="466" y="69" width="667" height="729" key="find.popup/0.23.1440.830@0.23.1440.830" timestamp="1600716634447" />
+  </component>
+</project>
