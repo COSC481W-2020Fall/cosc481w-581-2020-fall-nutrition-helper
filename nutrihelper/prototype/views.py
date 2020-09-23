@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView, ListView
+from django.db.models import Q
 
 from .models import Food
 
@@ -19,3 +20,21 @@ class FactsView(TemplateView):
 		query = self.request.GET['food']
 		context['f_list'] = get_object_or_404(Food, name__startswith=query).get_facts()
 		return context
+
+
+class SearchResultsView(ListView):
+    model = Food
+    template_name = 'prototype/search.html'
+    
+    def get_queryset(self):
+        query = self.request.GET.get('term')
+        object_list = Food.objects.filter(
+                Q(name__icontains = query)
+            )
+        return object_list
+        
+        
+        
+    
+    
+    
