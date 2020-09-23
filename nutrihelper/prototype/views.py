@@ -28,10 +28,14 @@ class SearchResultsView(ListView):
     
     def get_queryset(self):
         query = self.request.GET.get('term')
-        object_list = Food.objects.filter(
+        
+        if (query == None):
+            return Food.objects.all()
+        else:
+            object_list = Food.objects.filter(
                 Q(name__icontains = query)
             )
-        return object_list
+            return object_list
         
         
         
