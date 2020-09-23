@@ -34,13 +34,28 @@
 			<table id="t02" width="70%" align="center" style="background-color:black">
 					<tr><th>
 						<h1>Search Results</h1>
-					</th></tr>
+					</th>
+						<th>servingSize</th>
+						<th>calories</th>
+						<th>totalFat</th>
+						<th>cholesterol</th>
+						<th>sodium</th>
+						<th>totalCarb</th>
+						<th>protein</th>
+					</tr>
 						{% for food in object_list %}
-					<tr><th>
-						
+						<tr>
+						<th>			
 						<input class="B" type="submit" name="food" value="{{ food.name }}"/>
-						
-					</th></tr>
+						</th>
+						<th>{{ food.servingSize }}</th>
+						<th>{{ food.calories }}</th>
+						<th>{{ food.totalFat }}</th>
+						<th>{{ food.cholesterol }}</th>
+						<th>{{ food.sodium }}</th>
+						<th>{{ food.totalCarb }}</th>
+						<th>{{ food.protein }}</th>
+						</tr>
 						{% endfor %}
 			</table>
 			<br>
