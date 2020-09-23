@@ -33,6 +33,12 @@ a:hover {
 .B:hover {
 	background-color: blue;
 }
+.button{
+	padding: 15px 30px;
+	border: none;
+	display: inline-block;
+	margin: 4px 2px;
+}
 
 body {
 	background-image: url("images/background.jpg");
