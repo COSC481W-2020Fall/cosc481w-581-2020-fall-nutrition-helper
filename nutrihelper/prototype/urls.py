@@ -9,5 +9,8 @@ urlpatterns = [
 	# /prototype/nutrifacts/
 	path('nutrifacts/', views.FactsView.as_view(), name='nutrifacts'),
 	# /prototype/description/
-	path('description/', views.DescriptionView.as_view(), name='description')
+	path('description/', views.DescriptionView.as_view(), name='description'),
+    # /prototype/search/
+	path('search/', views.SearchResultsView.as_view(), name='search')
+    
 ]
