@@ -25,6 +25,8 @@ Project is created with:
 ### Running the Web Server on AWS
 1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
 2. Run `python manage.py runserver 0.0.0.0:8000`
+    * You may get the message `Error: That port is already in use.` In this case, run `sudo fuser -k 8000/tcp` to kill any processses on that port.
+3. Enter the public ip followed by :8000/prototype into your browser: `http://[PUBLIC_IP]:8000/prototype`
 
 ## Members
 * Bryce VanAsselt
