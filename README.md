@@ -22,6 +22,10 @@ Project is created with:
 5. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
 6. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
 
+### Running the Web Server on AWS
+1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
+2. Run `python manage.py runserver 0.0.0.0:8000`
+
 ## Members
 * Bryce VanAsselt
 * Michael Neet
