@@ -5,29 +5,52 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Prototype Description</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+	</head>
 		<style>
-			p {
+body{
+				background-image: url("images/background.jpg");
+				height: 100%;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+			}
+p{
 				color: white;
 				text-align: center;
 				font-size: 30px;
 			}
-			body {
+body{
 				background-image: url("{% static 'prototype/images/background.jpg' %}");
 			}
 		</style>
-	</head>
+			 </head>
 	<body style="background-size:cover">
 		<table style="width:100%">
 			<tr>
 				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
+				<th>
+					<form action="{% url 'prototype:search' %}" method="get" align="center" style="background: transparent">
+				<input name="term" type="search" placeholder="Search..." size="16%">
+						</form>
+		</th>
+
 			</tr>
 		</table>
 		<h1 style="color: green;"><center><u>How It Works</u></center></h1>
 		<p>A simple webpage that can access the USDA nutrition facts database<br> through two buttons: "Egg" and "Broccoli".<br>
 		The buttons will be basic buttons with text on them.<br>
-		Clicking on either button will retrieve the information <br>
-		Serving size, calories,total fat, cholesterol, sodium, total carb and protein
-		<br> of that food and display it on the screen in a table. <br>
+			Clicking on either button will retrieve the information </p>
+		<ul>
+			<li>Serving size</li>
+			<li>Calories</li>
+			<li>Total fat</li>
+			<li>Cholesterol</li>
+			<li>Sodium</li>
+			<li>Total Carb and </li>
+			<li>Protein</li>
+		</ul>
+		<p>of that food and display it on the screen in a table. <br>
 		This page will be dynamically populated with that food's data <br> that we will store on the server.
 		The website will have a back button<br> for users to return to the previous page to select a different meal<br> if they would like to.
 		</p>

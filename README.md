@@ -20,11 +20,10 @@ https://fdc.nal.usda.gov/
 
 ## Running the Web Server
 1. Make sure you are inside the directory 'nutrihelper'
-2. Run `python manage.py makemigrations`
-3. Run `python manage.py migrate`
-4. Run `python manage.py runserver`
-5. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
-6. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
+2. Run `python manage.py migrate`
+3. Run `python manage.py runserver`
+4. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
+5. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
 
 ### Running the Web Server on AWS
 1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
