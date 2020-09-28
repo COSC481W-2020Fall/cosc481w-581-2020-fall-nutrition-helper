@@ -17,26 +17,22 @@
 				margin: auto;
 				font-size: 24px;
 			}
-
 			.right {
 				text-align: right;
 				border-left: 0px;
 				border-right: 3px solid black;
 			}
-
 			body {
 				background-image: url("{% static 'prototype/images/background.jpg' %}");
 			}
-			
 			a {
 				text-decoration: none;
 				align: center;
 			}
-			
 			a:hover {
 				color: blue;
 			}
-			.button{
+			.button {
 				padding: 15px 30px;
 				border: none;
 				display: inline-block;
@@ -50,12 +46,12 @@
 				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
 			</tr>
 		</table>
-		<h1 style="color: white"><center>{{ f_list.name }} Nutrition Facts</center></h1>
+		<h1 style="color: white"><center>Nutrition Facts: {{ f_list.name }}</center></h1>
 		<br>
 		<table class="facts" style="background-color: white">
 			<tr>
 				<td>Serving size</td>
-				<td class="right">{{ f_list.servingSize }}</td>
+				<td class="right">{{ f_list.servingSize }}g</td>
 			</tr>
 			<tr>
 				<td>Calories</td>
@@ -63,23 +59,23 @@
 			</tr>
 			<tr>
 				<td>Total Fat</td>
-				<td class="right">{{ f_list.totalFat }}</td>
+				<td class="right">{{ f_list.totalFat }}g</td>
 			</tr>
 			<tr>
 				<td>Cholesterol</td>
-				<td class="right">{{ f_list.cholesterol }}</td>
+				<td class="right">{{ f_list.cholesterol }}mg</td>
 			</tr>
 			<tr>
 				<td>Sodium</td>
-				<td class="right">{{ f_list.sodium }}</td>
+				<td class="right">{{ f_list.sodium }}mg</td>
 			</tr>
 			<tr>
 				<td>Total Carbohydrates</td>
-				<td class="right">{{ f_list.totalCarb }}</td>
+				<td class="right">{{ f_list.totalCarb }}g</td>
 			</tr>
 			<tr>
 				<td>Protein</td>
-				<td class="right">{{ f_list.protein }}</td>
+				<td class="right">{{ f_list.protein }}g</td>
 			</tr>
 		</table>
 		<br><br>
