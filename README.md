@@ -14,6 +14,10 @@ Project is created with:
 * Django
 * SQLite
 
+## USDA Database
+We are getting all of our nutrition information from the USDA database found below.
+https://fdc.nal.usda.gov/
+
 ## Running the Web Server
 1. Make sure you are inside the directory 'nutrihelper'
 2. Run `python manage.py migrate`
