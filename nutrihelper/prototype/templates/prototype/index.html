@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Helper</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+	</head>
+	<body style="background-size:cover">
+		<table id="01" width="100%" style="background-color: black;">
+				<tr>
+					<th style="text-align: left;"><a href=""><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+					<th><a href="description">How it works</a> </th>
+					<th><a href="">Foods</a></th>
+					<th><a href="search">Search</a></th>
+					<th><a href ="">About us</a></th>
+				</tr>
+		</table>
+		<p>This website helps with meal planning and provides nutrition information.</p>
+		<br>
+
+		<!--  Form that submits food value as GET request (shouldn't change the database)  
+			  Field = "food" Value="Broccoli" or "Egg"  -->
+		<form action="{% url 'prototype:nutrifacts' %}" method="GET">
+		<table id="t02" width="70%" align="right">
+			<tr>
+					<th><button id= "demo" class="B" type="submit" name="food" value="broccoli"/> <img src="{% static 'prototype/images/broccoli.jpg' %}" alt="Vegan option" width="120px" height="120px"> <br> Broccoli</th>
+					<th><button class="B" type="submit" name="food" value="egg"/> <img src="{% static 'prototype/images/eggs.png' %}" alt="Vegan option" width="120px" height="120px"> <br> Eggs</th>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

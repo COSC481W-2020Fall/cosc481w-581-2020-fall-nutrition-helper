@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 10px;
+			}
+
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+
+			body {
+				background-image: url("{% static 'prototype/images/background.jpg' %}");
+			}
+			
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			
+			a:hover {
+				color: blue;
+			}
+			.button{
+				padding: 15px 30px;
+				border: none;
+				display: inline-block;
+				margin: 4px 2px;
+			}
+		</style>
+	</head>
+	<body style="background-size: cover">
+		<table style="width: 100%; height: 100px; border: none">
+			<tr >
+				<th style="text-align: center;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="200px" height="200px"></a></th>
+			</tr>
+		</table>
+		<h1 style="color: white"><center>{{ f_list.name }} Nutrition Facts</center></h1>
+		<br>
+		<table class="facts" style="background-color: white">
+			<tr>
+				<td>Serving size</td>
+				<td class="right">{{ f_list.servingSize }}</td>
+			</tr>
+			<tr>
+				<td>Calories</td>
+				<td class="right">{{ f_list.calories }}</td>
+			</tr>
+			<tr>
+				<td>Total Fat</td>
+				<td class="right">{{ f_list.totalFat }}</td>
+			</tr>
+			<tr>
+				<td>Cholesterol</td>
+				<td class="right">{{ f_list.cholesterol }}</td>
+			</tr>
+			<tr>
+				<td>Sodium</td>
+				<td class="right">{{ f_list.sodium }}</td>
+			</tr>
+			<tr>
+				<td>Total Carbohydrates</td>
+				<td class="right">{{ f_list.totalCarb }}</td>
+			</tr>
+			<tr>
+				<td>Protein</td>
+				<td class="right">{{ f_list.protein }}</td>
+			</tr>
+		</table>
+		<br><br>
+		<div style="text-align: center"><button class="button"><a href="../" alt="Return">RETURN TO HOME</a></button></div>
+	</body>
+</html>
