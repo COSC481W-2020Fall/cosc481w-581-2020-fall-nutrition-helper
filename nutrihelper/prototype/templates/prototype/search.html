@@ -20,7 +20,7 @@
 		<p>This website helps with meal planning and provides nutrition information.</p>
 		<br>
 
-		<!--  Form that submits a search term  -->
+		<!--  Search bar form that submits a search term  -->
 			  
 		<form action="{% url 'prototype:search' %}" method="get" align="center" style="background-color:black">
 		<br>
@@ -43,11 +43,14 @@
 						<th>totalCarb</th>
 						<th>protein</th>
 					</tr>
+					<!-- For loop that loops for each food that the query returned -->
 						{% for food in object_list %}
 						<tr>
 						<th>			
+						<!-- Button of the food in question -->
 						<input class="B" type="submit" name="food" value="{{ food.name }}"/>
 						</th>
+						<!-- Convenient food information at a glance -->
 						<th>{{ food.servingSize }}</th>
 						<th>{{ food.calories }}</th>
 						<th>{{ food.totalFat }}</th>

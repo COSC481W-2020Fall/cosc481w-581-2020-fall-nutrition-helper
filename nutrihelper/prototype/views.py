@@ -36,10 +36,10 @@ class SearchResultsView(ListView):
 	# overrides ListView get_queryset to find names containing search term and pass them to template
     def get_queryset(self):
         query = self.request.GET.get('term')
-        
+        # TODO: change the case of no query terms from returning all food items to returning an empty list
         if (query == None):
             return Food.objects.all()
-        else:
+        else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
             object_list = Food.objects.filter(
                 Q(name__icontains = query)
             )
