@@ -15,8 +15,7 @@ Project is created with:
 * SQLite
 
 ## USDA Database
-We are getting all of our nutrition information from the USDA database found below.
-https://fdc.nal.usda.gov/
+We are getting all of our nutrition information from the USDA database found here: https://fdc.nal.usda.gov/
 
 ## Running the Web Server
 1. Make sure you are inside the directory 'nutrihelper'
