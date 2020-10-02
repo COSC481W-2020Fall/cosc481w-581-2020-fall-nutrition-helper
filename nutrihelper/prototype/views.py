@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
+from django.contrib.auth import views as auth_views
 
 from .models import Food
 
@@ -44,6 +45,18 @@ class SearchResultsView(ListView):
                 Q(name__icontains = query)
             )
             return object_list
+
+class LoginAccountView(auth_views.LoginView):
+    template_name = "prototype/login.html"
+
+class LogoutAccountView(auth_views.LogoutView):
+    template_name = "prototype/logout.html"
+
+class PasswordChangeAccountView(auth_views.PasswordChangeView):
+    template_name = "prototype/changepassword.html"
+
+
+
         
         
         
