@@ -14,6 +14,13 @@ urlpatterns = [
 	# /prototype/description/
 	path('description/', views.DescriptionView.as_view(), name='description'),
     # /prototype/search/
-	path('search/', views.SearchResultsView.as_view(), name='search')
+	path('search/', views.SearchResultsView.as_view(), name='search'),
+    
+    # /prototype/login/
+    path('login/', views.LoginAccountView.as_view(), name='login'),
+    # /prototype/logout/
+    path('logout/', views.LogoutAccountView.as_view(), name='logout'),
+    # /prototype/change_password/
+    path('change_password/', views.PasswordChangeAccountView.as_view(), name='change_password'),
     
 ]
