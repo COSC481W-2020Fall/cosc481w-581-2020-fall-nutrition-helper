@@ -1,3 +1,5 @@
+import decimal
+
 from django.db import models
 
 #food model for database
@@ -16,15 +18,24 @@ class Food(models.Model):
 	def __str__(self):
 		return self.name
 
+	# for display purposes
+	# chops off extra zeros if unnecessary
+	def chop_zeros(self, value):
+		if value == value.to_integral():
+			return value.quantize(decimal.Decimal(1))
+		else:
+			return value.normalize()
+
+	# returns dictionary containing nutrient data fields
 	def get_facts(self):
 		return {
 			'name':self.name,
-			'servingSize':self.servingSize,
+			'servingSize':self.chop_zeros(self.servingSize),
 			'calories':self.calories,
-			'totalFat':self.totalFat,
-			'cholesterol':self.cholesterol,
-			'sodium':self.sodium,
-			'totalCarb':self.totalCarb,
-			'protein':self.protein
+			'totalFat':self.chop_zeros(self.totalFat),
+			'cholesterol':self.chop_zeros(self.cholesterol),
+			'sodium':self.chop_zeros(self.sodium),
+			'totalCarb':self.chop_zeros(self.totalCarb),
+			'protein':self.chop_zeros(self.protein)
 		}
 	
