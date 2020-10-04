@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Helper</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+	</head>
+    <body>
+        {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{% url 'prototype:login' %}">
+        {% csrf_token %}
+        <table align="center" width="25%">
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Login"></td>
+        </tr>
+        </table>
+
+
+        <input type="hidden" name="next" value="{{ next }}">
+        </form>
+    </body>
+</html>
