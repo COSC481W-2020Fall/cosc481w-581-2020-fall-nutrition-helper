@@ -12,9 +12,13 @@
 				<tr>
 					<th style="text-align: left;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
 					<th><a href="../description">How it works</a> </th>
-					<th><a href="..">Foods</a></th>
-					<th><a href="../search">Search</a></th>
-					<th><a href ="">Sign in</a></th>
+					<th><a href="">Search</a></th>
+					{% if user.is_authenticated %}
+                    <th><a href=>{{ user.username }}'s Profile</a>
+                    <th><a href="../logout">Logout</a>
+                    {% else %}
+					<th><a href ="../login">Login/Register</a></th>
+                    {% endif %}
 				</tr>
 		</table>
 		<p>This website helps with meal planning and provides nutrition information.</p>
@@ -28,40 +32,36 @@
 		</br></br></br>
 		</form>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<form action="{% url 'prototype:nutrifacts' %}" method="GET" style="background:transparent">
-		
-		
-			<table class="t02" width="70%" align="center" style="background-color:white">
-					<tr><th>
-						<h1>Search Results</h1>
-					</th>
-						<th>servingSize </th>
-						<th>calories </th>
-						<th>totalFat </th>
-						<th>cholesterol </th>
-						<th>sodium </th>
-						<th>totalCarb </th>
-						<th>protein </th>
-					</tr>
-					<!-- For loop that loops for each food that the query returned -->
-						{% for food in object_list %}
-						<tr>
-						<th>			
-						<!-- Button of the food in question -->
-						<input class="B" type="submit" name="food" value="{{ food.name }}"/>
-						</th>
-						<!-- Convenient food information at a glance -->
-						<th>{{ food.servingSize }}</th>
-						<th>{{ food.calories }}</th>
-						<th>{{ food.totalFat }}</th>
-						<th>{{ food.cholesterol }}</th>
-						<th>{{ food.sodium }}</th>
-						<th>{{ food.totalCarb }}</th>
-						<th>{{ food.protein }}</th>
-						</tr>
-						{% endfor %}
-			</table>
-			<br>
-		</form>
+		<table class="t02" width="70%" align="center" style="background-color:white">
+			<tr><th>
+				<h1>Search Results</h1>
+			</th>
+				<th>servingSize </th>
+				<th>calories </th>
+				<th>totalFat </th>
+				<th>cholesterol </th>
+				<th>sodium </th>
+				<th>totalCarb </th>
+				<th>protein </th>
+			</tr>
+			<!-- For loop that loops for each food that the query returned -->
+				{% for food in object_list %}
+				<tr>
+				<th>			
+				<!-- Button of the food in question -->
+				<a href="{% url 'prototype:nutrifacts' food.id %}"><button class="B">{{ food.name }}</button></a>
+				</th>
+				<!-- Convenient food information at a glance -->
+				<th>{{ food.servingSize }}g</th>
+				<th>{{ food.calories }}</th>
+				<th>{{ food.totalFat }}g</th>
+				<th>{{ food.cholesterol }}mg</th>
+				<th>{{ food.sodium }}mg</th>
+				<th>{{ food.totalCarb }}g</th>
+				<th>{{ food.protein }}g</th>
+				</tr>
+				{% endfor %}
+		</table>
+		<br>
 	</body>
 </html>
