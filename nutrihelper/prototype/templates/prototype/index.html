@@ -27,6 +27,7 @@
 		<!--  Form that submits food value as GET request (shouldn't change the database)  
 			  Field = "food" Value="Broccoli" or "Egg"  -->
 
+		{% comment %}
 		<table class="t02" width="70%" align="right">
 			<form action="{% url 'prototype:nutrifacts' %}" method="GET">
 			<tr>
@@ -35,6 +36,7 @@
 			</tr>
 				</form>
 		</table>
+		{% endcomment %}
 
 		<table class="t03" width="100%">
 				<form action="{% url 'prototype:search' %}" method="get" align="center" style="background-color:white ">

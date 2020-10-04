@@ -28,40 +28,38 @@
 		</br></br></br>
 		</form>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<form action="{% url 'prototype:nutrifacts' %}" method="GET" style="background:transparent">
-		
-		
-			<table class="t02" width="70%" align="center" style="background-color:white">
-					<tr><th>
-						<h1>Search Results</h1>
-					</th>
-						<th>servingSize </th>
-						<th>calories </th>
-						<th>totalFat </th>
-						<th>cholesterol </th>
-						<th>sodium </th>
-						<th>totalCarb </th>
-						<th>protein </th>
-					</tr>
-					<!-- For loop that loops for each food that the query returned -->
-						{% for food in object_list %}
-						<tr>
-						<th>			
-						<!-- Button of the food in question -->
-						<input class="B" type="submit" name="food" value="{{ food.name }}"/>
-						</th>
-						<!-- Convenient food information at a glance -->
-						<th>{{ food.servingSize }}</th>
-						<th>{{ food.calories }}</th>
-						<th>{{ food.totalFat }}</th>
-						<th>{{ food.cholesterol }}</th>
-						<th>{{ food.sodium }}</th>
-						<th>{{ food.totalCarb }}</th>
-						<th>{{ food.protein }}</th>
-						</tr>
-						{% endfor %}
-			</table>
-			<br>
-		</form>
+		<table class="t02" width="70%" align="center" style="background-color:white">
+			<tr><th>
+				<h1>Search Results</h1>
+			</th>
+				<th>Serving Size </th>
+				<th>Calories </th>
+				<th>Total Fat </th>
+				<th>Cholesterol </th>
+				<th>Sodium </th>
+				<th>Total Carbohydrates </th>
+				<th>Protein </th>
+			</tr>
+			<!-- For loop that loops for each food that the query returned -->
+				{% for food in object_list %}
+				<tr>
+				<th>			
+				<!-- Button of the food in question -->
+				<form action="{% url 'prototype:nutrifacts' food.id %}">
+					<input type="submit" class="B" value="{{ food.name }}">
+				</form>
+				</th>
+				<!-- Convenient food information at a glance -->
+				<th>{{ food.servingSize }}g</th>
+				<th>{{ food.calories }}</th>
+				<th>{{ food.totalFat }}g</th>
+				<th>{{ food.cholesterol }}mg</th>
+				<th>{{ food.sodium }}mg</th>
+				<th>{{ food.totalCarb }}g</th>
+				<th>{{ food.protein }}g</th>
+				</tr>
+				{% endfor %}
+		</table>
+		<br>
 	</body>
 </html>
