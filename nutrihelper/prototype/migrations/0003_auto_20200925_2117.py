@@ -13,31 +13,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='food',
             name='cholesterol',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
         migrations.AlterField(
             model_name='food',
             name='protein',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
         migrations.AlterField(
             model_name='food',
             name='servingSize',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
         migrations.AlterField(
             model_name='food',
             name='sodium',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
         migrations.AlterField(
             model_name='food',
             name='totalCarb',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
         migrations.AlterField(
             model_name='food',
             name='totalFat',
-            field=models.DecimalField(decimal_places=2, max_digits=5),
+            field=models.DecimalField(decimal_places=2, max_digits=8),
         ),
     ]
