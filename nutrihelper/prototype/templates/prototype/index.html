@@ -50,7 +50,9 @@
 
 			</table>
 
-		<button><a href="Food_intake.html">Daily Log</a></button>
+		<form action="{% url 'prototype:Food_intake' %}" method="get">
+			<input type="button" value="Daily Log" />
+		</form>
 
 	</body>
 </html>
