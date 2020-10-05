@@ -12,6 +12,7 @@ from django.shortcuts import render
 
 from .models import Food
 from .models import Profile
+from .models import EatReport
 
 class IndexView(TemplateView):
 	template_name = 'prototype/index.html'

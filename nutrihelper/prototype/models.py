@@ -88,3 +88,16 @@ class Profile(models.Model):
             'weight':self.chop_zeros(self.weight),
             'showmetric':self.showmetric
 		}
+
+
+#Reporting the consumption of a food. At this time only one food at a time, but in the future it might have a different table for each food attached to the eatreport.
+class EatReport(models.Model):
+	#many to one with users and with food
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    food = models.ForeignKey(Food, on_delete = models.CASCADE)
+    portion = models.DecimalField(max_digits=3, decimal_places=2)
+    timestamp = models.DateTimeField()
+    
+    #currently just gets the associated user
+    def __str__(self):
+    	return self.user.username + ", " + self.food.name + " x" + self.portion + ", " + self.timestamp
