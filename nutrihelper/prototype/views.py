@@ -90,8 +90,9 @@ class LogoutView(auth_views.LogoutView):
 	template_name = "prototype/logout.html"
 
 class PasswordChangeView(auth_views.PasswordChangeView):
-	template_name = "prototype/changepassword.html"
-
+    template_name = "prototype/change_password.html"
+    success_url = reverse_lazy('prototype:index')
+    
 class RegisterAccountView(FormView):
     template_name = 'prototype/register_account.html'
     form_class = UserCreationForm
@@ -102,10 +103,3 @@ class RegisterAccountView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-
-		
-		
-		
-	
-	
-	
