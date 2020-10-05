@@ -1,0 +1,41 @@
+Problem Scenarios
+The problem scenario should answer the three questions explicitly:
+
+
+What problems/needs does the persona have in your area?
+ 
+Jenny needs to track her food intake to see if she’s achieving her goals in the long term and the short term. Jenny also needs a way to inform her shopping decisions based on what’s healthy for her family and what she can use in recipes.
+ 
+What alternatives do they have? Instead of using your product, what do they do right now to solve this problem/meet this need?
+ 
+One alternative is meal-kit companies (like HelloFresh) that deliver ingredients and recipes based on the user’s specifications. 
+ 
+Eatthismuch.com is a website that can be used to track meals and make recipes, and there are other websites and apps which fulfill a similar purpose
+ 
+Users can google the nutrition facts of foods
+ 
+Users can use recipe websites or cookbooks that have their nutrition facts included
+ 
+What are your product ideas for the problems?
+ 
+A website that can be used to track meals and nutrition, create recipes, and follow a diet. Our website is convenient and easy to use. It will make it easy to search for foods and find their nutrition information. It will also allow users to create recipes and save them for future use. Meals can be tracked each day to help the user maintain a certain diet. In addition, our website will include easy to make recipes for users to follow, which will be browsable and searchable. Our site would also allow users to view how their health habits have changed over time.
+ 
+Our website would be accessible via any internet browser, and busy moms carry around mobile phones rather than having a health-conscious cookbook on hand whenever they need to pick up some groceries.
+ 
+The various features of our website would ideally be interconnected for the user’s convenient use but each would also be able to be used in isolation. A potential example of this desired interconnectivity would be a user wanting to use avocados in a recipe, searching for recipes containing avocados as a component ingredient, discovering a public recipe they like, cloning it to a private recipe to double a particular ingredient and substitute an ingredient for another, saving that recipe under the user’s personal recipes, and then after dinner the user records that they ate a certain amount of the recipe they saved earlier. At every step of that process the user would be able to see the total nutrition facts of the recipe at its sample amount or at any particular amount.
+ 
+
+
+Possible problems:
+
+Jenny wants to track her food intake to see if she’s achieving her goals in the long term and the short term.
+ 
+Jenny wants a tool that can inform her shopping decisions based on what’s healthy for her family and what she can use in recipes
+ 
+Jenny wants to see the health info of the foods she’s considering eating so that she can budget her calories for that day and make informed decisions on what to eat.
+ 
+Jenny wants to discover new recipes and food ideas that are simple, healthy, tasty, and novel
+ 
+Jenny wants a tool that her husband and son might be willing to use themselves and that isn’t a huge chore to use casually
+ 
+Jenny wants a tool that she can find time to use even on her most hectic of days

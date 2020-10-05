@@ -8,15 +8,18 @@ from django.views.generic.edit import FormView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render
 
 from .models import Food
+from .models import Profile
 
 class IndexView(TemplateView):
 	template_name = 'prototype/index.html'
 
 class DescriptionView(TemplateView):
 	template_name = 'prototype/description.html'
-
+class FoodIntakeView(TemplateView):
+	template_name = 'prototype/Food_intake.html'
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
@@ -82,6 +85,16 @@ class SearchResultsView(ListView):
 				Q(name__icontains = query)
 			)
 			return object_list
+
+
+def get_user_profile(request, username):
+    user = User.objects.get(username=username)
+    return render(request, 'prototype/profile.html', {"user":user})
+
+
+class ProfileView(ListView):
+	model = Profile
+	template_name = 'prototype/profile.html'
 
 class LoginView(auth_views.LoginView):
 	template_name = "prototype/login.html"

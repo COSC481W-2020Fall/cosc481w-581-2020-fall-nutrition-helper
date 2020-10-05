@@ -2,14 +2,21 @@
 
 <table class="01" width="100%" style="background-color: black;">
         <tr>
-            <th style="text-align: left;"><a href="{% url 'prototype:index' %}"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
-            <th><a href="{% url 'prototype:description' %}">How it works</a> </th>
-            <th><a href="{% url 'prototype:search' %}">Search</a></th>
+            <th style="text-align: left;"><a href=""><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+            
+            <th><form action="{% url 'prototype:search' %}" method="get">
+                <input name="term" type="search" placeholder="Search..." size="100%" />
+                <button type="submit" name="search">&#128269;</button>
+            </form></th>
+            
+            <th><a href="description">How it works</a> </th>
+            <th><a href="search">Search</a></th>
+            <th><a href="Food_intake">Daily Log</a></th>
             {% if user.is_authenticated %}
-            <th><a href=>{{ user.username }}'s Profile</a>
-            <th><a href="{% url 'prototype:logout' %}">Logout</a>
+            <th><a href="profile">{{ user.username }}'s Profile</a>
+            <th><a href="logout">Logout</a>
             {% else %}
-            <th><a href ="{% url 'prototype:login' %}">Login/Register</a></th>
+            <th><a href ="login">Login/Register</a></th>
             {% endif %}
         </tr>
 </table>
