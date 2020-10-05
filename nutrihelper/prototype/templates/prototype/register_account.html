@@ -16,6 +16,9 @@
         }
     </style>
     <body>
+        {% if user.is_authenticated %}
+        <p>You are already logged in.</p>
+        {% else %}
         <p>{{ form.non_field_errors }}</p>
         <p>{{ form.username.errors }}</p>
         <p>{{ form.password1.errors }}</p>
@@ -43,5 +46,6 @@
         </tr>
         </table>
         </form>
+        {% endif %}
     </body>
 </html>
