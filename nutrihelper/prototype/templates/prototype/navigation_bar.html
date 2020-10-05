@@ -1,0 +1,15 @@
+{% load static %}
+
+<table class="01" width="100%" style="background-color: black;">
+        <tr>
+            <th style="text-align: left;"><a href="{% url 'prototype:index' %}"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+            <th><a href="{% url 'prototype:description' %}">How it works</a> </th>
+            <th><a href="{% url 'prototype:search' %}">Search</a></th>
+            {% if user.is_authenticated %}
+            <th><a href=>{{ user.username }}'s Profile</a>
+            <th><a href="{% url 'prototype:logout' %}">Logout</a>
+            {% else %}
+            <th><a href ="{% url 'prototype:login' %}">Login/Register</a></th>
+            {% endif %}
+        </tr>
+</table>
