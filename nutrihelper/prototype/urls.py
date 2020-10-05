@@ -23,6 +23,9 @@ urlpatterns = [
 	path('profile/', views.ProfileView.as_view(), name='profile'),
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
+    # For updating user profiles
+    # url(r'^update_profile/(?P<slug>[\-\w]+)/$', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
     
     # /prototype/login/
     path('login/', views.LoginView.as_view(), name='login'),

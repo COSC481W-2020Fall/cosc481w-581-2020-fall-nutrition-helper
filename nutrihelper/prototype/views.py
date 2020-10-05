@@ -3,7 +3,7 @@ import decimal
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView
 from django.views.generic.edit import FormView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
@@ -95,6 +95,14 @@ def get_user_profile(request, username):
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'prototype/profile.html'
+    
+class UpdateProfile(UpdateView):
+    model = Profile
+    fields = ['gender', 'height', 'weight', 'birthdate', 'showmetric'] # Keep listing whatever fields 
+    # the combined UserProfile and User exposes.
+    template_name = 'prototype/profile_update.html'
+    slug_field = 'username'
+    slug_url_kwarg = 'slug'
 
 class LoginView(auth_views.LoginView):
 	template_name = "prototype/login.html"
