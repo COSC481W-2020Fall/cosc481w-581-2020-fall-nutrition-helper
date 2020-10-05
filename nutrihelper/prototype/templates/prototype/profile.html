@@ -67,45 +67,46 @@
                     {% endif %}
 				</tr>
 		</table>
-		<h1 style="color: white"><center>Nutrition Facts: {{ food.name }}</center></h1>
 		<br>
-		<form action="{% url 'prototype:nutrifacts' food.id %}" method="GET">
-			<center>
-				<label style="color: white">Number of portions: </label>
-				<input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}">
-				<button type="submit" value="Submit">Calculate</button>
-			</center>
-		</form>
 		<br>
 		<table class="facts" style="background-color: white">
 			<tr>
-				<td>Serving Size</td>
-				<td class="right">{{ food.servingSize }}g</td>
+				<td>Username</td>
+				<td class="right">{{ user.username }}</td>
 			</tr>
 			<tr>
-				<td>Calories</td>
-				<td class="right">{{ food.calories }}</td>
+				<td>Email Address</td>
+				<td class="right">{{ user.email }}</td>
 			</tr>
 			<tr>
-				<td>Total Fat</td>
-				<td class="right">{{ food.totalFat }}g</td>
+				<td>First Name</td>
+				<td class="right">{{ user.first_name }}</td>
 			</tr>
 			<tr>
-				<td>Cholesterol</td>
-				<td class="right">{{ food.cholesterol }}mg</td>
+				<td>Last Name</td>
+				<td class="right">{{ user.last_name }}</td>
 			</tr>
 			<tr>
-				<td>Sodium</td>
-				<td class="right">{{ food.sodium }}mg</td>
+				<td>Gender</td>
+				<td class="right">{{ user.profile.gender }}</td>
 			</tr>
 			<tr>
-				<td>Total Carbohydrates</td>
-				<td class="right">{{ food.totalCarb }}g</td>
+				<td>Birthdate</td>
+				<td class="right">{{ user.profile.birthdate }}</td>
 			</tr>
 			<tr>
-				<td>Protein</td>
-				<td class="right">{{ food.protein }}g</td>
+				<td>Height</td>
+				<td class="right">{{ user.profile.height }}</td>
 			</tr>
+			<tr>
+				<td>Weight</td>
+				<td class="right">{{ user.profile.weight }}</td>
+			</tr>
+			<tr>
+				<td>Are metric units preferred?</td>
+				<td class="right">{{ user.profile.showmetric }}</td>
+			</tr>
+			
 		</table>
 		<br><br>
 		<div style="text-align: center"><button class="button"><a href="{% url 'prototype:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
