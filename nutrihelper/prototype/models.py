@@ -88,3 +88,6 @@ class Profile(models.Model):
             'weight':self.chop_zeros(self.weight),
             'showmetric':self.showmetric
 		}
+
+
+

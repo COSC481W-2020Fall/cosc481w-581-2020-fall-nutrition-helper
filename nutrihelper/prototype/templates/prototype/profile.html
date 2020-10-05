@@ -59,6 +59,7 @@
 					
 					<th><a href="../description">How it works</a> </th>
 					<th><a href="../search">Search</a></th>
+					<th><a href="../Food_intake" alt="Daily Log">Daily Log</a></th>
                     {% if user.is_authenticated %}
                     <th><a href="../profile">{{ user.username }}'s Profile</a>
                     <th><a href="../logout">Logout</a>
@@ -110,5 +111,5 @@
 		</table>
 		<br><br>
 		<div style="text-align: center"><button class="button"><a href="{% url 'prototype:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
-	</body>
+
 </html>
