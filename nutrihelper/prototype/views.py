@@ -6,7 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import FormView
 from django.db.models import Q
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import Food
@@ -102,4 +102,8 @@ class RegisterAccountView(FormView):
     # redirects to success_url
     def form_valid(self, form):
         form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=raw_password)
+        login(self.request, user)
         return super().form_valid(form)
