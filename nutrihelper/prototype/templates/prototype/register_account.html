@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Helper</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+	</head>
+    <body>
+        <p>{{ form.non_field_errors }}</p>
+        <p>{{ form.username.errors }}</p>
+        <p>{{ form.password1.errors }}</p>
+        <p>{{ form.password2.errors }}</p>
+        <form method="post" action="{% url 'prototype:register_account' %}">
+        {% csrf_token %}
+        
+        <table align="center" width="25%">
+
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password1.label_tag }}</td>
+            <td>{{ form.password1 }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password2.label_tag }}</td>
+            <td>{{ form.password2 }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Register Account"></td>
+        </tr>
+        </table>
+        </form>
+    </body>
+</html>

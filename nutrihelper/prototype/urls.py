@@ -17,10 +17,12 @@ urlpatterns = [
 	path('search/', views.SearchResultsView.as_view(), name='search'),
     
     # /prototype/login/
-    path('login/', views.LoginAccountView.as_view(), name='login'),
+    path('login/', views.LoginView.as_view(), name='login'),
     # /prototype/logout/
-    path('logout/', views.LogoutAccountView.as_view(), name='logout'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
     # /prototype/change_password/
-    path('change_password/', views.PasswordChangeAccountView.as_view(), name='change_password'),
+    path('change_password/', views.PasswordChangeView.as_view(), name='change_password'),
+    # /prototype/register_account/
+    path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
     
 ]
