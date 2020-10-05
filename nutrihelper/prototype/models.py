@@ -101,3 +101,4 @@ class EatReport(models.Model):
     #currently just gets the associated user
     def __str__(self):
     	return self.user.username + ", " + self.food.name + " x" + self.portion + ", " + self.timestamp
+

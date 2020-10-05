@@ -4,6 +4,7 @@ from .models import Food
 from .models import Profile
 from .models import EatReport
 
+
 # registers the Food model in the admin site
 admin.site.register(Food)
 
@@ -11,5 +12,7 @@ admin.site.register(Food)
 # registers the Profile model in the admin site
 admin.site.register(Profile)
 
+
 # registers the Profile model in the admin site
 admin.site.register(EatReport)
+
