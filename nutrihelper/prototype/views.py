@@ -2,11 +2,12 @@ import decimal
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import FormView
 from django.db.models import Q
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views, login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Food
 
@@ -82,20 +83,27 @@ class SearchResultsView(ListView):
 			)
 			return object_list
 
-class LoginAccountView(auth_views.LoginView):
+class LoginView(auth_views.LoginView):
 	template_name = "prototype/login.html"
 
-class LogoutAccountView(auth_views.LogoutView):
+class LogoutView(auth_views.LogoutView):
 	template_name = "prototype/logout.html"
 
-class PasswordChangeAccountView(auth_views.PasswordChangeView):
-	template_name = "prototype/changepassword.html"
-
-
-
-		
-		
-		
-	
-	
-	
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = "prototype/change_password.html"
+    success_url = reverse_lazy('prototype:index')
+    
+class RegisterAccountView(FormView):
+    template_name = 'prototype/register_account.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('prototype:index')
+    
+    # called when valid form data has been POSTed
+    # redirects to success_url
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=raw_password)
+        login(self.request, user)
+        return super().form_valid(form)
