@@ -83,6 +83,7 @@ ul{
 			 }
 h2{
                 text-align:center;
+                color:green;
             }
 form{
                 text-align:center;
@@ -94,5 +95,5 @@ input{
             box-sizing: border-box;
 }
 a:link{
-text-decoration:none;
+            text-decoration:none;
 }
