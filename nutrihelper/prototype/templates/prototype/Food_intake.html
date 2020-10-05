@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Intake Log</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+    <style>
+        h2{
+                text-align:center;
+                color: green;
+            }
+        input{
+                padding: 10px 10px;
+                margin: 6px 0;
+                box-sizing: border-box;
+            }
+
+    </style>
+
+</head>
+<body>
+<a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="110px" height="110px"></a>
+<h2>Daily Log</h2>
+<hr>
+<form>
+    How many meals did you have today?
+    <select id= "UI"name="number of meals">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select><br>
+    <!-- The food intake has required field and optional
+    required field is more general info and optional input is for more specific info-->
+    <br>*What did you eat for breakfast?
+     <input required type="text" placeholder="" onclick="" /></br>
+    Calories: <input optional type="number" placeholder="" onclick=""/></br>
+    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
+    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
+    Protein: <input optional type="number" placeholder="" onclick=""/>g</br><hr>
+    <br>*What did you have for lunch?
+    <input required type="text" placeholder="" onclick="" /></br>
+    Calories: <input optional type="number" placeholder="" onclick=""/></br>
+    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
+    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
+    Protein: <input optional type="number" placeholder="" onclick=""/>g</br><hr>
+
+    <br>*What did you have for dinner?
+    <input required type="text" placeholder="" onclick=""/></br>
+    Calories: <input optional type="number" placeholder="" onclick=""/></br>
+    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
+    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
+    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
+    Protein: <input optional type="number" placeholder="" onclick=""/>g</br>
+    <input  type="submit" Value="Submit" onclick="">
+</form>
+
+</body>
+</html>

@@ -6,8 +6,42 @@
 		<meta charset="UTF-8">
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+        <script>
+            function registerRedirect()
+            {
+                window.location.href="{% url 'prototype:register_account' %}"
+            }
+        </script>
+        <style>
+        body {
+            margin-top: 10%;
+            }
+        table {
+            border-spacing: 15px;
+        }
+        </style>
 	</head>
-    <body>
+    <body style="background-size:cover">
+	<table class="01" width="100%" style="background-color: black;">
+				<tr>
+					<th style="text-align: left;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+					
+					<th><form action="{% url 'prototype:search' %}" method="get">
+						<input name="term" type="search" placeholder="Search..." size="100%" />
+						<button type="submit" name="search">&#128269;</button>
+					</form></th>
+					
+					<th><a href="../description">How it works</a> </th>
+					<th><a href="../search">Search</a></th>
+                    {% if user.is_authenticated %}
+                    <th><a href="../profile">{{ user.username }}'s Profile</a>
+                    <th><a href="../logout">Logout</a>
+                    {% else %}
+					<th><a href ="../login">Login/Register</a></th>
+                    {% endif %}
+				</tr>
+		</table>
+		<br>
         {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
         {% endif %}
@@ -20,7 +54,10 @@
             <p>Please login to see this page.</p>
             {% endif %}
         {% endif %}
-
+        
+        {% if user.is_authenticated %}
+        <p>You are already logged in.</p>
+        {% else %}
         <form method="post" action="{% url 'prototype:login' %}">
         {% csrf_token %}
         <table align="center" width="25%">
@@ -36,10 +73,18 @@
             <td></td>
             <td><input type="submit" value="Login"></td>
         </tr>
+        <tr>
+            <td></td>
+            <td> 
+                </br> 
+                <input type="button" value="Create Account" onclick="registerRedirect();">
+            </td>
+        </tr>
         </table>
 
 
         <input type="hidden" name="next" value="{{ next }}">
         </form>
+        {% endif %}
     </body>
 </html>
