@@ -7,8 +7,10 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import FormView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views
+from django.shortcuts import render
 
 from .models import Food
+from .models import Profile
 
 class IndexView(TemplateView):
 	template_name = 'prototype/index.html'
@@ -81,6 +83,26 @@ class SearchResultsView(ListView):
 				Q(name__icontains = query)
 			)
 			return object_list
+
+
+def get_user_profile(request, username):
+    user = User.objects.get(username=username)
+    return render(request, 'prototype/profile.html', {"user":user})
+
+
+# displays the food that match a search, passed to the template as a list
+class ProfileView(ListView):
+	model = Profile
+	template_name = 'prototype/profile.html'
+	
+	# overrides DetailView get_context_data
+	def get_context_data(self, **kwargs):
+		# get context
+		context = super().get_context_data(**kwargs)
+		
+		# TODO: PUT SOMETHING HERE THAT MAKES SENSE
+
+		return 
 
 class LoginAccountView(auth_views.LoginView):
 	template_name = "prototype/login.html"
