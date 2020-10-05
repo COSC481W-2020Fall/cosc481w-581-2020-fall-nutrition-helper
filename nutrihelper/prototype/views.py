@@ -18,7 +18,8 @@ class IndexView(TemplateView):
 
 class DescriptionView(TemplateView):
 	template_name = 'prototype/description.html'
-
+class FoodIntakeView(TemplateView):
+	template_name = 'prototype/Food_intake.html'
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
