@@ -45,7 +45,7 @@ class Food(models.Model):
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    sex = models.CharField(max_length=1)
+    gender = models.CharField(max_length=1)
     birthdate = models.DateField()
     height = models.DecimalField(max_digits=5, decimal_places=2)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
@@ -83,7 +83,7 @@ class Profile(models.Model):
         return {
             'user':self.user,
             'gender':self.gender,
-            'birthday':self.birthday,
+            'birthdate':self.birthdate,
             'height':self.chop_zeros(self.height),
             'weight':self.chop_zeros(self.weight),
             'showmetric':self.showmetric

@@ -20,7 +20,8 @@ urlpatterns = [
     path('search/', views.SearchResultsView.as_view(), name='search'),
     
     # /prototype/profile/
-	path('profile/', views.ProfileView.as_view(), name='profile'), # The below stuff is from a tutorial
+	path('profile/', views.ProfileView.as_view(), name='profile'),
+    # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
     
     # /prototype/login/
