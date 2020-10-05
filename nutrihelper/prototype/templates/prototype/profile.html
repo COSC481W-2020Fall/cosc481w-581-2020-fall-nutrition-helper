@@ -86,6 +86,27 @@
 				<td>Last Name</td>
 				<td class="right">{{ user.last_name }}</td>
 			</tr>
+			<tr>
+				<td>Gender</td>
+				<td class="right">{{ user.profile.gender }}</td>
+			</tr>
+			<tr>
+				<td>Birthdate</td>
+				<td class="right">{{ user.profile.birthdate }}</td>
+			</tr>
+			<tr>
+				<td>Height</td>
+				<td class="right">{{ user.profile.height }}</td>
+			</tr>
+			<tr>
+				<td>Weight</td>
+				<td class="right">{{ user.profile.weight }}</td>
+			</tr>
+			<tr>
+				<td>Are metric units preferred?</td>
+				<td class="right">{{ user.profile.showmetric }}</td>
+			</tr>
+			
 		</table>
 		<br><br>
 		<div style="text-align: center"><button class="button"><a href="{% url 'prototype:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>

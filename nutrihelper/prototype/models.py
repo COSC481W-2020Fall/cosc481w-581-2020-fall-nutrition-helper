@@ -54,7 +54,7 @@ class Profile(models.Model):
 
     #currently just gets the associated user
     def __str__(self):
-    	return self.user
+    	return self.user.username
 
 	# chops off extra zeros if unnecessary for display
     def chop_zeros(self, value):
