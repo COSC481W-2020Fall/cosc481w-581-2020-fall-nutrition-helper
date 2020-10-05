@@ -7,6 +7,14 @@
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
 	</head>
+    <style>
+        body {
+            margin-top: 10%;
+            }
+        table {
+            border-spacing: 15px;
+        }
+    </style>
     <body>
         <p>{{ form.non_field_errors }}</p>
         <p>{{ form.username.errors }}</p>

@@ -6,6 +6,20 @@
 		<meta charset="UTF-8">
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+        <script>
+            function registerRedirect()
+            {
+                window.location.href="{% url 'prototype:register_account' %}"
+            }
+        </script>
+        <style>
+        body {
+            margin-top: 10%;
+            }
+        table {
+            border-spacing: 15px;
+        }
+        </style>
 	</head>
     <body>
         {% if form.errors %}
@@ -35,6 +49,13 @@
         <tr>
             <td></td>
             <td><input type="submit" value="Login"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td> 
+                </br> 
+                <input type="button" value="Create Account" onclick="registerRedirect();">
+            </td>
         </tr>
         </table>
 
