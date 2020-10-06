@@ -70,82 +70,28 @@
 		<br>
 		<br>
 		
-    How many meals did you have today?
-    <select id= "UI"name="number of meals">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select><br>
-    <!-- The food intake has required field and optional
-    required field is more general info and optional input is for more specific info-->
-    <br>*What did you eat for breakfast?
-     <input required type="text" placeholder="" onclick="" /></br>
-    Calories: <input optional type="number" placeholder="" onclick=""/></br>
-    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
-    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
-    Protein: <input optional type="number" placeholder="" onclick=""/>g</br><hr>
-    <br>*What did you have for lunch?
-    <input required type="text" placeholder="" onclick="" /></br>
-    Calories: <input optional type="number" placeholder="" onclick=""/></br>
-    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
-    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
-    Protein: <input optional type="number" placeholder="" onclick=""/>g</br><hr>
-
-    <br>*What did you have for dinner?
-    <input required type="text" placeholder="" onclick=""/></br>
-    Calories: <input optional type="number" placeholder="" onclick=""/></br>
-    Total Fat:<input optional type="number" placeholder="" onclick=""/>g</br>
-    Cholesterol: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Sodium: <input optional type="number" placeholder="" onclick=""/>mg</br>
-    Total Carbohydrates: <input optional type="number" placeholder="" onclick=""/>g</br>
-    Protein: <input optional type="number" placeholder="" onclick=""/>g</br>
-    
-</form>
 	
 		<table class="facts" style="background-color: white">
 		<form>
 			<tr>
-				<td>Username</td>
-				<td class="right">{{ user.username }} -- <input required type="text" placeholder="" onclick="" /></br></td>
-			</tr>
-			<tr>
-				<td>Email Address</td>
-				<td class="right">{{ user.email }}</td>
-			</tr>
-			<tr>
-				<td>First Name</td>
-				<td class="right">{{ user.first_name }}</td>
-			</tr>
-			<tr>
-				<td>Last Name</td>
-				<td class="right">{{ user.last_name }}</td>
-			</tr>
-			<tr>
 				<td>Gender</td>
-				<td class="right">{{ user.profile.gender }} -- <select id= "UI"name="gender"><option value="M">M</option><option value="F">F</option><option value="X">X</option></select><br></td>
+				<td class="right">{{ user.profile.gender }} <select id= "UI"name="gender"><option value="M">M</option><option value="F">F</option><option value="X">X</option></select><br></td>
 			</tr>
 			<tr>
 				<td>Birthdate</td>
-				<td class="right">{{ user.profile.birthdate }} -- <input required type="text" placeholder="" onclick="" /></td>
+				<td class="right"><input required type="text" value="{{ user.profile.birthdate }}" onclick="" /></td>
 			</tr>
 			<tr>
 				<td>Height</td>
-				<td class="right">{{ user.profile.height }} -- <input required type="number" placeholder="" onclick="" /></td>
+				<td class="right"><input required type="number" value="{{ user.profile.height }}" onclick="" /></td>
 			</tr>
 			<tr>
 				<td>Weight</td>
-				<td class="right">{{ user.profile.weight }} -- <input required type="number" placeholder="" onclick="" /></td>
+				<td class="right"><input required type="number" value="{{ user.profile.weight }}" onclick="" size="90" /></td>
 			</tr>
 			<tr>
 				<td>Are metric units preferred?</td>
-				<td class="right">{{ user.profile.showmetric }} -- <input required type="text" placeholder="" onclick="" /></td>
+				<td class="right"><input required type="text" value="{{ user.profile.showmetric }}" onclick="" /></td>
 			</tr>
 			<input  type="submit" Value="Submit" onclick="">
 			</form>

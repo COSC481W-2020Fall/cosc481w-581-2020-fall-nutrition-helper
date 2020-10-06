@@ -3,12 +3,13 @@ import decimal
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
-from django.views.generic.edit import FormView
+from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import FormView, UpdateView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
+from django.contrib.auth.models import User
 
 from .models import Food
 from .models import Profile
@@ -88,13 +89,18 @@ class SearchResultsView(ListView):
 
 
 def get_user_profile(request, username):
-    user = User.objects.get(username=username)
-    return render(request, 'prototype/profile.html', {"user":user})
+        user = User.objects.get(username=username)
+        return render(request, 'prototype/profile.html', {"user":user})
+        
+def get_user_profile(request, username):
+        user = User.objects.get(username=username)
+        return render(request, 'prototype/update_profile.html', {"user":user})
 
 
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'prototype/profile.html'
+    
     
 class UpdateProfile(UpdateView):
     model = Profile
@@ -103,6 +109,10 @@ class UpdateProfile(UpdateView):
     template_name = 'prototype/profile_update.html'
     slug_field = 'username'
     slug_url_kwarg = 'slug'
+    context_object_name = 'profile'
+    
+    
+        
 
 class LoginView(auth_views.LoginView):
 	template_name = "prototype/login.html"
