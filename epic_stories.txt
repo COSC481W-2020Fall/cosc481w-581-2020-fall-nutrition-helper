@@ -1,0 +1,21 @@
+Epic Stories
+
+As a user, I want to track my food intake so that I can build healthier eating habits in the long and short term.
+
+A more up to date version of this task list can be found at https://github.com/COSC481W-2020Fall/cosc481w-581-2020-fall-nutrition-helper/issues/52
+
+Tasks:
+Add user accounts (Michael)
+  Login Page
+  Logout Page
+  Change Password Page
+  Register Account Page
+Finish adding all the foods to the database (John)
+Build a page where the user can add information about their food intake
+  Function that allows user to record what, how much, and when they ate
+  Function that automatically totals nutrition information
+Save user data and make it available for only that user to view (Bryce)
+  Create model to contain user data
+  Function that saves data to specific user
+  Function that retrieves user’s past data
+  Format and display data in user-friendly way
