@@ -26,25 +26,8 @@ body{
 		</style>
 			 </head>
 	<body style="background-size:cover">
-		<table class="01" width="100%" style="background-color: black;">
-				<tr>
-					<th style="text-align: left;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
-					
-					<th><form action="{% url 'prototype:search' %}" method="get">
-						<input name="term" type="search" placeholder="Search..." size="100%" />
-						<button type="submit" name="search">&#128269;</button>
-					</form></th>
-					
-					<th><a href="../description">How it works</a> </th>
-					<th><a href="../search">Search</a></th>
-                    {% if user.is_authenticated %}
-                    <th><a href="../profile">{{ user.username }}'s Profile</a>
-                    <th><a href="../logout">Logout</a>
-                    {% else %}
-					<th><a href ="../login">Login/Register</a></th>
-                    {% endif %}
-				</tr>
-		</table>
+		{% include "prototype/navigation_bar.html" %}
+        
 		<h1 style="color: green;"><center><u>How It Works</u></center></h1>
 		<p>A simple webpage that can access the USDA nutrition facts database<br> through two buttons: "Egg" and "Broccoli".<br>
 		The buttons will be basic buttons with text on them.<br>
