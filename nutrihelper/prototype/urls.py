@@ -18,7 +18,8 @@ urlpatterns = [
     path('description/', views.DescriptionView.as_view(), name='description'),
     # /prototype/search/
     path('search/', views.SearchResultsView.as_view(), name='search'),
-    
+    # /Prototype/Food_intake
+    path('Food_intake/',views.FoodIntakeView.as_view(), name='Food_intake'),
     # /prototype/profile/
 	path('profile/', views.ProfileView.as_view(), name='profile'),
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial

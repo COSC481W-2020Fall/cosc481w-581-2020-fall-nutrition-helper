@@ -8,14 +8,13 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
 	</head>
     <style>
-        body {
-            margin-top: 10%;
-            }
         table {
             border-spacing: 15px;
         }
     </style>
     <body>
+        {% include "prototype/navigation_bar.html" %}
+        
         {% if user.is_authenticated %}
         <p>You are already logged in.</p>
         {% else %}
