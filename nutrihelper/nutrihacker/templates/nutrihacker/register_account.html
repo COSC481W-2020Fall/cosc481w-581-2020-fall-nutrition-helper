@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Nutrition Helper</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 	</head>
     <style>
         table {
@@ -13,7 +13,7 @@
         }
     </style>
     <body>
-        {% include "prototype/navigation_bar.html" %}
+        {% include "nutrihacker/navigation_bar.html" %}
         
         {% if user.is_authenticated %}
         <p>You are already logged in.</p>
@@ -22,7 +22,7 @@
         <p>{{ form.username.errors }}</p>
         <p>{{ form.password1.errors }}</p>
         <p>{{ form.password2.errors }}</p>
-        <form method="post" action="{% url 'prototype:register_account' %}">
+        <form method="post" action="{% url 'nutrihacker:register_account' %}">
         {% csrf_token %}
         
         <table align="center" width="25%">

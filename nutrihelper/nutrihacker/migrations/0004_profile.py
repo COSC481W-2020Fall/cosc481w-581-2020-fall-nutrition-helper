@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('prototype', '0003_auto_20200925_2117'),
+        ('nutrihacker', '0003_auto_20200925_2117'),
     ]
 
     operations = [

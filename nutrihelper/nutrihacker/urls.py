@@ -8,30 +8,30 @@ from . import views
 # this file is included as a url pattern in ../nutrihelper/urls.py
 # lists routes urls to views
 
-app_name = 'prototype'
+app_name = 'nutrihacker'
 urlpatterns = [
-	# /prototype/
+	# /nutrihacker/
     path('', views.IndexView.as_view(), name='index'),
-	# /prototype/nutrifacts/
+	# /nutrihacker/nutrifacts/
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
-	# /prototype/description/
+	# /nutrihacker/description/
     path('description/', views.DescriptionView.as_view(), name='description'),
-    # /prototype/search/
+    # /nutrihacker/search/
     path('search/', views.SearchResultsView.as_view(), name='search'),
-    # /Prototype/Food_intake
+    # /nutrihacker/Food_intake
     path('Food_intake/',views.FoodIntakeView.as_view(), name='Food_intake'),
-    # /prototype/profile/
+    # /nutrihacker/profile/
 	path('profile/', views.ProfileView.as_view(), name='profile'),
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
     
-    # /prototype/login/
+    # /nutrihacker/login/
     path('login/', views.LoginView.as_view(), name='login'),
-    # /prototype/logout/
+    # /nutrihacker/logout/
     path('logout/', views.LogoutView.as_view(), name='logout'),
-    # /prototype/change_password/
+    # /nutrihacker/change_password/
     path('change_password/', views.PasswordChangeView.as_view(), name='change_password'),
-    # /prototype/register_account/
+    # /nutrihacker/register_account/
     path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
     
 ]

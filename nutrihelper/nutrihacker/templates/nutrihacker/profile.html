@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Nutrition Facts</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
 			table, td {
 				border: 3px solid black;
@@ -24,7 +24,7 @@
 				border-right: 3px solid black;
 			}
 			body {
-				background-image: url("{% static 'prototype/images/background.jpg' %}");
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
 			a {
 				text-decoration: none;
@@ -48,7 +48,7 @@
 		</style>
 	</head>
 	<body style="background-size: cover">
-		{% include "prototype/navigation_bar.html" %}
+		{% include "nutrihacker/navigation_bar.html" %}
         
 		<br>
 		<br>
@@ -92,6 +92,6 @@
 			
 		</table>
 		<br><br>
-		<div style="text-align: center"><button class="button"><a href="{% url 'prototype:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
+		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
 
 </html>

@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'prototype.apps.PrototypeConfig',
+    'nutrihacker.apps.NutrihackerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,8 +120,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/prototype/login/'
+LOGIN_URL = '/nutrihacker/login/'
 
-LOGIN_REDIRECT_URL = '/prototype/'
+LOGIN_REDIRECT_URL = '/nutrihacker/'
 
-LOGOUT_REDIRECT_URL = '/prototype/'
+LOGOUT_REDIRECT_URL = '/nutrihacker/'

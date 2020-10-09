@@ -14,12 +14,12 @@ from .models import Food
 from .models import Profile
 
 class IndexView(TemplateView):
-	template_name = 'prototype/index.html'
+	template_name = 'nutrihacker/index.html'
 
 class DescriptionView(TemplateView):
-	template_name = 'prototype/description.html'
+	template_name = 'nutrihacker/description.html'
 class FoodIntakeView(TemplateView):
-	template_name = 'prototype/Food_intake.html'
+	template_name = 'nutrihacker/Food_intake.html'
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
@@ -31,7 +31,7 @@ def chop_zeros(value):
 # displays the nutrition information of a food
 class FactsView(DetailView):
 	model = Food
-	template_name = 'prototype/nutrifacts.html'
+	template_name = 'nutrihacker/nutrifacts.html'
 	
 	# overrides DetailView get_context_data
 	def get_context_data(self, **kwargs):
@@ -72,7 +72,7 @@ class FactsView(DetailView):
 # displays the food that match a search, passed to the template as a list
 class SearchResultsView(ListView):
 	model = Food
-	template_name = 'prototype/search.html'
+	template_name = 'nutrihacker/search.html'
 	
 	# overrides ListView get_queryset to find names containing search term and pass them to template
 	def get_queryset(self):
@@ -89,27 +89,27 @@ class SearchResultsView(ListView):
 
 def get_user_profile(request, username):
     user = User.objects.get(username=username)
-    return render(request, 'prototype/profile.html', {"user":user})
+    return render(request, 'nutrihacker/profile.html', {"user":user})
 
 
 class ProfileView(ListView):
 	model = Profile
-	template_name = 'prototype/profile.html'
+	template_name = 'nutrihacker/profile.html'
 
 class LoginView(auth_views.LoginView):
-	template_name = "prototype/login.html"
+	template_name = "nutrihacker/login.html"
 
 class LogoutView(auth_views.LogoutView):
-	template_name = "prototype/logout.html"
+	template_name = "nutrihacker/logout.html"
 
 class PasswordChangeView(auth_views.PasswordChangeView):
-    template_name = "prototype/change_password.html"
-    success_url = reverse_lazy('prototype:index')
+    template_name = "nutrihacker/change_password.html"
+    success_url = reverse_lazy('nutrihacker:index')
     
 class RegisterAccountView(FormView):
-    template_name = 'prototype/register_account.html'
+    template_name = 'nutrihacker/register_account.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('prototype:index')
+    success_url = reverse_lazy('nutrihacker:index')
     
     # called when valid form data has been POSTed
     # redirects to success_url

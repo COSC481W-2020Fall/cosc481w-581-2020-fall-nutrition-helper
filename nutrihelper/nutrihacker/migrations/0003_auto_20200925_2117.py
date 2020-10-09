@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('prototype', '0002_auto_20200925_2113'),
+        ('nutrihacker', '0002_auto_20200925_2113'),
     ]
 
     operations = [
