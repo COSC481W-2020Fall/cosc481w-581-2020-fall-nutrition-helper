@@ -1,0 +1,22 @@
+{% load static %}
+
+<table class="01" width="100%" style="background-color: black;">
+        <tr>
+            <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+            
+            <th><form action="{% url 'nutrihacker:search' %}" method="get">
+                <input name="term" type="search" placeholder="Search..." size="100%" />
+                <button type="submit" name="search">&#128269;</button>
+            </form></th>
+            
+            <th><a href="{% url 'nutrihacker:description' %}">How it works</a> </th>
+            <th><a href="{% url 'nutrihacker:search' %}">Search</a></th>
+            <th><a href="{% url 'nutrihacker:Food_intake' %}">Daily Log</a></th>
+            {% if user.is_authenticated %}
+            <th><a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
+            <th><a href="{% url 'nutrihacker:logout' %}">Logout</a>
+            {% else %}
+            <th><a href ="{% url 'nutrihacker:login' %}">Login/Register</a></th>
+            {% endif %}
+        </tr>
+</table>

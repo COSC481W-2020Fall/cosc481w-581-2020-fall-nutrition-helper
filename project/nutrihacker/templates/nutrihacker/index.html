@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Helper</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+	</head>
+	<body style="background-size:cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+		<p class="p1">This website helps with meal planning and provides nutrition information.</p>
+		<br>
+
+		<!--  Form that submits food value as GET request (shouldn't change the database)  
+			  Field = "food" Value="Broccoli" or "Egg"  -->
+
+		{% comment %}
+		<table class="t02" width="70%" align="right">
+			<form action="{% url 'nutrihacker:nutrifacts' %}" method="GET">
+			<tr>
+					<th><button id= "demo" class="B" type="submit" name="food" value="broccoli"/> <img src="{% static 'nutrihacker/images/broccoli.jpg' %}" alt="Vegan option" width="120px" height="120px"> <br> Broccoli</th>
+					<th><button class="B" type="submit" name="food" value="egg"/> <img src="{% static 'nutrihacker/images/eggs.png' %}" alt="Vegan option" width="120px" height="120px"> <br> Eggs</th>
+			</tr>
+				</form>
+		</table>
+		{% endcomment %}
+
+
+			</table>
+
+	</body>
+</html>

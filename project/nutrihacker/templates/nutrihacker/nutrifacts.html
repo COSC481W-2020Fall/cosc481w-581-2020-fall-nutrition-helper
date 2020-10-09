@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 10px;
+			}
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+			body {
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			a:hover {
+				color: blue;
+			}
+			.button {
+				padding: 15px 30px;
+				border: none;
+				display: inline-block;
+				margin: 4px 2px;
+			}
+			input {
+				width: 48px;
+			}
+			label {
+				color: white;
+			}
+		</style>
+	</head>
+	<body style="background-size: cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+		<h1 style="color: white"><center>Nutrition Facts: {{ food.name }}</center></h1>
+		<br>
+		<form action="{% url 'nutrihacker:nutrifacts' food.id %}" method="GET">
+			<center>
+				<label style="color: white">Number of portions: </label>
+				<input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}">
+				<button type="submit" value="Submit">Calculate</button>
+			</center>
+		</form>
+		<br>
+		<table class="facts" style="background-color: white">
+			<tr>
+				<td>Serving Size</td>
+				<td class="right">{{ food.servingSize }}g</td>
+			</tr>
+			<tr>
+				<td>Calories</td>
+				<td class="right">{{ food.calories }}</td>
+			</tr>
+			<tr>
+				<td>Total Fat</td>
+				<td class="right">{{ food.totalFat }}g</td>
+			</tr>
+			<tr>
+				<td>Cholesterol</td>
+				<td class="right">{{ food.cholesterol }}mg</td>
+			</tr>
+			<tr>
+				<td>Sodium</td>
+				<td class="right">{{ food.sodium }}mg</td>
+			</tr>
+			<tr>
+				<td>Total Carbohydrates</td>
+				<td class="right">{{ food.totalCarb }}g</td>
+			</tr>
+			<tr>
+				<td>Protein</td>
+				<td class="right">{{ food.protein }}g</td>
+			</tr>
+		</table>
+		<br><br>
+		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
+	</body>
+</html>
