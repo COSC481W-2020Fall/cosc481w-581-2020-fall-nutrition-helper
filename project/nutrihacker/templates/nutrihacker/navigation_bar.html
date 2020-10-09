@@ -2,7 +2,7 @@
 
 <table class="01" width="100%" style="background-color: black;">
         <tr>
-            <th style="text-align: left;"><a href=""><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+            <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
             
             <th><form action="{% url 'nutrihacker:search' %}" method="get">
                 <input name="term" type="search" placeholder="Search..." size="100%" />
