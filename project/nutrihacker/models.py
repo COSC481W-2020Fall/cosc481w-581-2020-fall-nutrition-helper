@@ -67,8 +67,15 @@ class Profile(models.Model):
 	def __str__(self):
 		return self.user.username
 
-	def get_imperial_weight(self):
-		return self.weight * 2.2046
+	# chops off extra zeros if unnecessary for display
+    def chop_zeros(self, value):
+        if value == value.to_integral():
+            return value.quantize(decimal.Decimal(1))
+        else:
+            return value.normalize()
+
+    def get_imperial_weight(self):
+        return self.weight * 2.2046
 
 	def get_imperial_height(self):
 		return self.height * 3.28084
@@ -92,6 +99,17 @@ class Profile(models.Model):
 			'weight':chop_zeros(self.weight),
 			'showmetric':self.showmetric
 		}
+#Reporting the consumption of a food. At this time only one food at a time, but in the future it might have a different table for each food attached to the eatreport.
+class EatReport(models.Model):
+	#many to one with users and with food
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    food = models.ForeignKey(Food, on_delete = models.CASCADE)
+    portion = models.DecimalField(max_digits=3, decimal_places=2)
+    timestamp = models.DateTimeField()
+    
+    #currently just gets the associated user
+    def __str__(self):
+    	return self.user.username + ", " + self.food.name + " x" + self.portion + ", " + self.timestamp
 
 # User's allergies. In the future maybe this should be related to profile instead of user.
 class Allergy(models.Model):
