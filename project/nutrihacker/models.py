@@ -61,32 +61,25 @@ class Profile(models.Model):
 	height = models.DecimalField(max_digits=5, decimal_places=2)
 	weight = models.DecimalField(max_digits=5, decimal_places=2)
 	showmetric = models.BooleanField()
-
-
+    
+    
 	#currently just gets the associated user
 	def __str__(self):
 		return self.user.username
-
-	# chops off extra zeros if unnecessary for display
-    def chop_zeros(self, value):
-        if value == value.to_integral():
-            return value.quantize(decimal.Decimal(1))
-        else:
-            return value.normalize()
-
-    def get_imperial_weight(self):
-        return self.weight * 2.2046
-
-	def get_imperial_height(self):
-		return self.height * 3.28084
-
-	def get_imperial_feet_and_inches(self):
-		feet = Floor(self.get_imperial_height())
-		inches = (self.get_imperial_height() - feet) * 12
-		return {
-				'feet':feet,
-				'inches': inches
-		}
+    
+    #def get_imperial_weight(self):
+     #   return self.weight * 2.2046
+    
+	#def get_imperial_height(self):
+	#	return self.height * 3.28084
+    
+	#def get_imperial_feet_and_inches(self):
+	#	feet = Floor(self.get_imperial_height())
+	#	inches = (self.get_imperial_height() - feet) * 12
+	#	return {
+	#			'feet':feet,
+	#			'inches': inches
+	#	}
 	
 	
 	# returns dictionary containing nutrient data fields
