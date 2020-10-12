@@ -2,6 +2,7 @@ import decimal
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
@@ -11,6 +12,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 from .models import Food

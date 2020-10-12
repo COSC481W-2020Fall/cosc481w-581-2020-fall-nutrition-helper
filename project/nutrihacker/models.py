@@ -189,6 +189,7 @@ class MealFood(models.Model):
 
 class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, default="Custom Recipe")
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.now)
 
