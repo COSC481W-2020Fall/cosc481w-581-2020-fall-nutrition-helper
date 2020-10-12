@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Diet and Allergies</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+	</head>
+    <style>
+        table, td {
+            border: 3px solid black;
+            border-collapse: collapse;
+            border-right: 0px;
+            padding: 10px;
+            background-color: white;
+        }
+        .list {
+            width: 35%;
+            margin: auto;
+            font-size: 24px;
+        }
+        .right {
+            border-left: 0px;
+            border-right: 3px solid black;
+        }
+        body {
+            background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+        }
+        a {
+            text-decoration: none;
+            align: center;
+        }
+        a:hover {
+            color: blue;
+        }
+        .button {
+            padding: 15px 30px;
+            border: none;
+            display: inline-block;
+            margin: 4px 2px;
+        }
+        input {
+            width: 200px;
+        }
+        label {
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+        }
+	</style>
+	<body style="background-size: cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+        <h1>Allergies</h1>
+		<table class="list">
+			{% for allergy in user_allergy_list %}
+                <tr><td class="right">{{ allergy.name }}</td></tr>
+            {% endfor %}
+		</table>
+        <br>
+        <form method="POST" action="{% url 'nutrihacker:add_allergy' %}">
+        {% csrf_token %}
+            <p>{{ allergy_choice_form }}</p>
+            <input type="submit" />
+        </form>
+        <br> <br>
+        <h1>Diet Preferences</h1>
+		<table class="list">
+			{% for preference in user_preference_list %}
+                <tr><td class="right">{{ preference.name }}</td></tr>
+            {% endfor %}
+		</table>
+        <br>
+        <form method="POST" action="{% url 'nutrihacker:add_diet_preference' %}">
+        {% csrf_token %}
+            <p>{{ diet_choice_form }}</p>
+            <input type="submit" />
+        </form>
+		<br><br>
+		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:profile' %}" alt="Return">Return to Profile</a></button></div>
+</html>
