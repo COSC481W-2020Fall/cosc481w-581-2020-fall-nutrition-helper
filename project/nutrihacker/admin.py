@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from .models import Food, Profile, Allergy, DietPreference, DailyLog, MealLog, MealFood, EatReport
+from .models import Food, Profile, Allergy, DietPreference, DailyLog, MealLog, MealFood, EatReport, Recipe, RecipeFood
 
 
 # registers models in the admin site
@@ -21,6 +21,8 @@ admin.site.register(MealFood)
 # registers the Profile model in the admin site
 admin.site.register(EatReport)
 
+admin.site.register(Recipe)
+admin.site.register(RecipeFood)
 
 # Register your models here.
 class RecipeAdmin(admin.ModelAdmin):

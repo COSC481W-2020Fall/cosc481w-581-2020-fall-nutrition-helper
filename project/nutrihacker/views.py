@@ -183,44 +183,44 @@ class RegisterAccountView(FormView):
 ##-------------- Recipe Views --------------------------------------
 class DetailRecipe(DetailView):
     model = Recipe
-    template_name='recipe/detail_recipe.html'
+    template_name='nutrihacker/recipe/detail_recipe.html'
 
 class ListRecipe(ListView):
     model = Recipe
     context_object_name = 'carts'
-    template_name='recipe/list_recipe.html'
+    template_name='nutrihacker/recipe/list_recipe.html'
 
 class CreateRecipe(CreateView):
     model = Recipe
-    template_name = 'recipe/create_recipe.html'
+    template_name = 'nutrihacker/recipe/create_recipe.html'
 
 class UpdateRecipe(UpdateView):
     model = Recipe
-    template_name = 'recipe/update_recipe.html'
+    template_name = 'nutrihacker/recipe/update_recipe.html'
 
 class DeleteRecipe(DeleteView):
     model = Recipe
-    template_name = 'recipe/delete_recipe.html'
+    template_name = 'nutrihacker/recipe/delete_recipe.html'
 
 
 ##-------------- RecipeFood Views --------------------------------------
 class DetailRecipeFood(DetailView):
     model = RecipeFood
-    template_name='recipefood/detail_recipefood.html'
+    template_name='nutrihacker/recipefood/detail_recipefood.html'
 
 class ListRecipeFood(ListView):
     model = RecipeFood
     context_object_name = 'cartitems'
-    template_name='recipefood/list_recipefood.html'
+    template_name='nutrihacker/recipefood/list_recipefood.html'
 
 class CreateRecipeFood(CreateView):
     model = RecipeFood
-    template_name = 'recipefood/create_recipefood.html'
+    template_name = 'nutrihacker/recipefood/create_recipefood.html'
 
 class UpdateRecipeFood(UpdateView):
     model = RecipeFood
-    template_name = 'recipefood/update_recipefood.html'
+    template_name = 'nutrihacker/recipefood/update_recipefood.html'
 
 class DeleteRecipeFood(DeleteView):
     model = RecipeFood
-    template_name = 'recipefood/delete_recipefood.html'
+    template_name = 'nutrihacker/recipefood/delete_recipefood.html'
