@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -205,22 +205,22 @@ class DeleteRecipe(DeleteView):
 
 ##-------------- RecipeFood Views --------------------------------------
 class DetailRecipeFood(DetailView):
-    model = RecipeItem
+    model = RecipeFood
     template_name='recipefood/detail_recipefood.html'
 
 class ListRecipeFood(ListView):
-    model = RecipeItem
+    model = RecipeFood
     context_object_name = 'cartitems'
     template_name='recipefood/list_recipefood.html'
 
 class CreateRecipeFood(CreateView):
-    model = RecipeItem
+    model = RecipeFood
     template_name = 'recipefood/create_recipefood.html'
 
 class UpdateRecipeFood(UpdateView):
-    model = RecipeItem
+    model = RecipeFood
     template_name = 'recipefood/update_recipefood.html'
 
 class DeleteRecipeFood(DeleteView):
-    model = RecipeItem
+    model = RecipeFood
     template_name = 'recipefood/delete_recipefood.html'
