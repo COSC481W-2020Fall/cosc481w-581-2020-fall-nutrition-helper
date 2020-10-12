@@ -2,15 +2,22 @@ import decimal
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.contrib import messages
 
+
+from .models import Food
+from .models import Profile
+from .models import EatReport, Recipe, RecipeFood
 from .models import Food, Profile, Allergy, DietPreference
 from .forms import AllergyChoiceForm, DietChoiceForm
 
@@ -93,9 +100,20 @@ def get_user_profile(request, username):
     return render(request, 'nutrihacker/profile.html', {"user":user})
 
 
+
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
+    
+    
+class UpdateProfile(UpdateView):
+    model = Profile
+    fields = ['gender', 'height', 'weight', 'birthdate', 'showmetric'] # Keep listing whatever fields 
+    # the combined UserProfile and User exposes.
+    slug_field = 'username'
+    slug_url_kwarg = 'slug'
+    context_object_name = 'profile'
+    template_name = 'nutrihacker/profile.html'
 
 # Page to add dietary preferences and allergies.
 # Login is required to view    
@@ -159,3 +177,78 @@ class RegisterAccountView(FormView):
         user = authenticate(username=username, password=raw_password)
         login(self.request, user)
         return super().form_valid(form)
+
+
+##-------------- Recipe Views --------------------------------------
+class DetailRecipe(DetailView):
+    model = Recipe
+    fields = '__all__'
+    template_name='nutrihacker/recipe/detail_recipe.html'
+
+class ListRecipe(ListView):
+    model = Recipe
+    context_object_name = 'recipes'
+    fields = '__all__'
+    template_name='nutrihacker/recipe/list_recipe.html'
+
+class CreateRecipe(CreateView):
+    model = Recipe
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipe/create_recipe.html'
+
+class UpdateRecipe(UpdateView):
+    model = Recipe
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipe/update_recipe.html'
+
+class DeleteRecipe(DeleteView):
+    model = Recipe
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipe/delete_recipe.html'
+
+
+##-------------- RecipeFood Views --------------------------------------
+class DetailRecipeFood(DetailView):
+    model = RecipeFood
+    fields = '__all__'
+    template_name='nutrihacker/recipefood/detail_recipefood.html'
+
+class ListRecipeFood(ListView):
+    model = RecipeFood
+    context_object_name = 'recipefoods'
+    fields = '__all__'
+    template_name='nutrihacker/recipefood/list_recipefood.html'
+
+class CreateRecipeFood(CreateView):
+    model = RecipeFood
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipefood/create_recipefood.html'
+
+
+
+class UpdateRecipeFood(UpdateView):
+    model = RecipeFood
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipefood/update_recipefood.html'
+
+class DeleteRecipeFood(DeleteView):
+    model = RecipeFood
+    fields = '__all__'
+    success_url= "../"
+    template_name = 'nutrihacker/recipefood/delete_recipefood.html'
+
+@login_required
+def add_to_recipe(request,food_id):
+    food = get_object_or_404(Food, pk=food_id)
+    amount = 1 #hard coded for now
+    recipe,created = Recipe.objects.get_or_create(user=request.user, active=True)
+    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, amount=amount)
+    recipe.add_to_recipe(book_id)
+    recipefood.save()
+    messages.success(request, "Recipe updated!")
+    return redirect('recipe')

@@ -1,7 +1,8 @@
 from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.conf import settings 
+from django.conf import settings
+from django import forms 
 
 from . import views
 
@@ -20,10 +21,21 @@ urlpatterns = [
     path('search/', views.SearchResultsView.as_view(), name='search'),
     # /nutrihacker/Food_intake
     path('Food_intake/',views.FoodIntakeView.as_view(), name='Food_intake'),
+    
+    
+    
+    #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
 	path('profile/', views.ProfileView.as_view(), name='profile'),
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
+    # For updating user profiles
+    # url(r'^update_profile/(?P<slug>[\-\w]+)/$', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
+    
+    
+    
+    #----------------------   ALLERGY STUFF   -----------------------------------------------
     
     # /nutrihacker/diet_and_allergies/
     path('diet_and_allergies/', views.DietAndAllergiesView.as_view(), name='diet_and_allergies'),
@@ -32,6 +44,8 @@ urlpatterns = [
     # /nutrihacker/add_diet_preference/
     path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
     
+    
+    #----------------------   CREDENTIAL STUFF   -----------------------------------------------
     # /nutrihacker/login/
     path('login/', views.LoginView.as_view(), name='login'),
     # /nutrihacker/logout/
@@ -41,4 +55,25 @@ urlpatterns = [
     # /nutrihacker/register_account/
     path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
     
+    
+    #----------------------   RECIPE STUFF   -----------------------------------------------
+    
+    path('recipe/', views.ListRecipe, name='list-recipe'),
+    path('recipe/create/', views.CreateRecipe.as_view(), name='create_recipe'),
+    path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail_recipe'),
+    path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
+    path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
+    
+    
+    path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
+    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create_recipefood'),
+    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
+    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
+    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
+    
+    #----------------------   ??? STUFF   -----------------------------------------------
+    
+    
+    
+    #---------------------------------------------------------------------
 ]

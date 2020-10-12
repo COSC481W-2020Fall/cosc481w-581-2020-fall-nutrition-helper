@@ -3,6 +3,7 @@ import decimal
 from django.db import models
 from django.db.models.functions import Floor
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # for display purposes
 # chops off extra zeros if unnecessary
@@ -61,25 +62,25 @@ class Profile(models.Model):
 	height = models.DecimalField(max_digits=5, decimal_places=2)
 	weight = models.DecimalField(max_digits=5, decimal_places=2)
 	showmetric = models.BooleanField()
-
-
+    
+    
 	#currently just gets the associated user
 	def __str__(self):
 		return self.user.username
-
-	def get_imperial_weight(self):
-		return self.weight * 2.2046
-
-	def get_imperial_height(self):
-		return self.height * 3.28084
-
-	def get_imperial_feet_and_inches(self):
-		feet = Floor(self.get_imperial_height())
-		inches = (self.get_imperial_height() - feet) * 12
-		return {
-				'feet':feet,
-				'inches': inches
-		}
+    
+    #def get_imperial_weight(self):
+     #   return self.weight * 2.2046
+    
+	#def get_imperial_height(self):
+	#	return self.height * 3.28084
+    
+	#def get_imperial_feet_and_inches(self):
+	#	feet = Floor(self.get_imperial_height())
+	#	inches = (self.get_imperial_height() - feet) * 12
+	#	return {
+	#			'feet':feet,
+	#			'inches': inches
+	#	}
 	
 	
 	# returns dictionary containing nutrient data fields
@@ -92,6 +93,17 @@ class Profile(models.Model):
 			'weight':chop_zeros(self.weight),
 			'showmetric':self.showmetric
 		}
+#Reporting the consumption of a food. At this time only one food at a time, but in the future it might have a different table for each food attached to the eatreport.
+class EatReport(models.Model):
+	#many to one with users and with food
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    food = models.ForeignKey(Food, on_delete = models.CASCADE)
+    portion = models.DecimalField(max_digits=3, decimal_places=2)
+    timestamp = models.DateTimeField()
+    
+    #currently just gets the associated user
+    def __str__(self):
+    	return self.user.username + ", " + self.food.name + " x" + self.portion + ", " + self.timestamp
 
 # User's allergies. In the future maybe this should be related to profile instead of user.
 class Allergy(models.Model):
@@ -174,3 +186,25 @@ class MealFood(models.Model):
 
 	def __str__(self):
 		return self.food.name
+
+class Recipe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, default="Custom Recipe")
+    in_progress = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=datetime.now)
+
+class RecipeFood(models.Model):
+    recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=1)
+    amount_unit = models.CharField(max_length=50, default="g")
+
+    def __str__(self):
+        return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
+
+
+
+
+
+
+
