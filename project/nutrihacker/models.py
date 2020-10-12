@@ -89,5 +89,25 @@ class Profile(models.Model):
             'showmetric':self.showmetric
 		}
 
+# User's allergies. In the future maybe this should be related to profile instead of user.
+class Allergy(models.Model):
+    users = models.ManyToManyField(User)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=1000)
+    
+    def __str__(self):
+        return self.name
+        
+    class Meta:
+        # correct spelling of plural form of allergy
+        verbose_name_plural = "Allergies"
 
+# Dietary preferences i.e vegetarian, pescatarian, keto, etc. Similar to allergies.
+class DietPreference(models.Model):
+    users = models.ManyToManyField(User)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=1000)
+    
+    def __str__(self):
+        return self.name
 
