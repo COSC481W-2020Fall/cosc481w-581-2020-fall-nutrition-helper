@@ -4,6 +4,14 @@ from django.db import models
 from django.db.models.functions import Floor
 from django.contrib.auth.models import User
 
+# for display purposes
+# chops off extra zeros if unnecessary
+def chop_zeros(value):
+	if value == value.to_integral():
+		return value.quantize(decimal.Decimal(1))
+	else:
+		return value.normalize()
+
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
@@ -20,74 +28,127 @@ class Food(models.Model):
 	def __str__(self):
 		return self.name
 
-	# for display purposes
-	# chops off extra zeros if unnecessary
-	def chop_zeros(self, value):
-		if value == value.to_integral():
-			return value.quantize(decimal.Decimal(1))
-		else:
-			return value.normalize()
+	# returns dictionary containing just nutrients
+	def get_nutrients(self):
+		return {
+			'calories':self.calories,
+			'totalFat':self.totalFat,
+			'cholesterol':self.cholesterol,
+			'sodium':self.sodium,
+			'totalCarb':self.totalCarb,
+			'protein':self.protein
+		}
 
 	# returns dictionary containing nutrient data fields
 	def get_facts(self):
 		return {
 			'name':self.name,
-			'servingSize':self.chop_zeros(self.servingSize),
+			'servingSize':chop_zeros(self.servingSize),
 			'calories':self.calories,
-			'totalFat':self.chop_zeros(self.totalFat),
-			'cholesterol':self.chop_zeros(self.cholesterol),
-			'sodium':self.chop_zeros(self.sodium),
-			'totalCarb':self.chop_zeros(self.totalCarb),
-			'protein':self.chop_zeros(self.protein)
+			'totalFat':chop_zeros(self.totalFat),
+			'cholesterol':chop_zeros(self.cholesterol),
+			'sodium':chop_zeros(self.sodium),
+			'totalCarb':chop_zeros(self.totalCarb),
+			'protein':chop_zeros(self.protein)
 		}
 
 #User data model for database
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
-    gender = models.CharField(max_length=1)
-    birthdate = models.DateField()
-    height = models.DecimalField(max_digits=5, decimal_places=2)
-    weight = models.DecimalField(max_digits=5, decimal_places=2)
-    showmetric = models.BooleanField()
+	user = models.OneToOneField(User, on_delete = models.CASCADE)
+	gender = models.CharField(max_length=1)
+	birthdate = models.DateField()
+	height = models.DecimalField(max_digits=5, decimal_places=2)
+	weight = models.DecimalField(max_digits=5, decimal_places=2)
+	showmetric = models.BooleanField()
 
 
-    #currently just gets the associated user
-    def __str__(self):
-    	return self.user.username
+	#currently just gets the associated user
+	def __str__(self):
+		return self.user.username
 
-	# chops off extra zeros if unnecessary for display
-    def chop_zeros(self, value):
-        if value == value.to_integral():
-            return value.quantize(decimal.Decimal(1))
-        else:
-            return value.normalize()
+	def get_imperial_weight(self):
+		return self.weight * 2.2046
 
-    def get_imperial_weight(self):
-        return self.weight * 2.2046
+	def get_imperial_height(self):
+		return self.height * 3.28084
 
-    def get_imperial_height(self):
-        return self.height * 3.28084
-
-    def get_imperial_feet_and_inches(self):
-        feet = Floor(self.get_imperial_height())
-        inches = (self.get_imperial_height() - feet) * 12
-        return {
-                'feet':feet,
-                'inches': inches
-        }
-    
-    
-    # returns dictionary containing nutrient data fields
-    def get_metric_profile(self):
-        return {
-            'user':self.user,
-            'gender':self.gender,
-            'birthdate':self.birthdate,
-            'height':self.chop_zeros(self.height),
-            'weight':self.chop_zeros(self.weight),
-            'showmetric':self.showmetric
+	def get_imperial_feet_and_inches(self):
+		feet = Floor(self.get_imperial_height())
+		inches = (self.get_imperial_height() - feet) * 12
+		return {
+				'feet':feet,
+				'inches': inches
+		}
+	
+	
+	# returns dictionary containing nutrient data fields
+	def get_metric_profile(self):
+		return {
+			'user':self.user,
+			'gender':self.gender,
+			'birthdate':self.birthdate,
+			'height':chop_zeros(self.height),
+			'weight':chop_zeros(self.weight),
+			'showmetric':self.showmetric
 		}
 
+# daily log of meals
+class DailyLog(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	date = models.DateField()
 
+	def __str__(self):
+		return str(self.date)
 
+	# function that calculates total nutrition information of the daily log
+	def calc_total(self):
+		total = {
+			'calories':0,
+			'totalFat':0,
+			'cholesterol':0,
+			'sodium':0,
+			'totalCarb':0,
+			'protein':0
+		}
+
+		# gets list of meal logs for this daily log
+		meal_log_list = MealLog.objects.filter(daily_log__user__id=self.user.id)
+		
+		# for each meal log
+		for m_log in meal_log_list:
+			# gets list of meal foods in current meal log
+			meal_food_list = MealFood.objects.filter(meal_log__id=m_log.id)
+			
+			# for each meal food
+			for m_food in meal_food_list:
+				# gets nutrients of current food
+				nutrients = m_food.food.get_nutrients()
+				
+				# for each nutrient
+				for key in total:
+					# adds the food's nutrients times the portion size
+					total[key] += nutrients[key] * m_food.portions
+
+		# chops all unnecessary zeros
+		for key in total:
+			total[key] = chop_zeros(total[key])
+		
+		return total
+
+# meal log that contains time and key to daily log
+class MealLog(models.Model):
+	log_time = models.DateTimeField()
+	daily_log = models.ForeignKey(DailyLog, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return str(self.log_time)
+
+# meal food model that contains key to meal log, key to food, and portion size
+class MealFood(models.Model):
+	meal_log = models.ForeignKey(MealLog, on_delete=models.CASCADE)
+	food = models.OneToOneField(Food, on_delete=models.CASCADE)
+	portions = models.DecimalField(max_digits=5, decimal_places=2)
+
+	def __str__(self):
+		return self.food.name
