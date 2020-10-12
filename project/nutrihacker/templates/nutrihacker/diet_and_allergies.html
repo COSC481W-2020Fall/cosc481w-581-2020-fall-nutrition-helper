@@ -41,7 +41,7 @@
             margin: 4px 2px;
         }
         input {
-            width: 48px;
+            width: 200px;
         }
         label {
             color: white;
@@ -60,6 +60,12 @@
                 <tr><td class="right">{{ allergy.name }}</td></tr>
             {% endfor %}
 		</table>
+        <br>
+        <form method="POST" action="{% url 'nutrihacker:add_allergy' %}">
+        {% csrf_token %}
+            <p>{{ allergy_choice_form }}</p>
+            <input type="submit" />
+        </form>
         <br> <br>
         <h1>Diet Preferences</h1>
 		<table class="list">
@@ -67,6 +73,12 @@
                 <tr><td class="right">{{ preference.name }}</td></tr>
             {% endfor %}
 		</table>
+        <br>
+        <form method="POST" action="{% url 'nutrihacker:add_diet_preference' %}">
+        {% csrf_token %}
+            <p>{{ diet_choice_form }}</p>
+            <input type="submit" />
+        </form>
 		<br><br>
-		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
+		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:profile' %}" alt="Return">Return to Profile</a></button></div>
 </html>

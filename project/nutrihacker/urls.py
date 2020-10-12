@@ -25,8 +25,12 @@ urlpatterns = [
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
     
-    # /nutrihacker/diet_and_allergies
+    # /nutrihacker/diet_and_allergies/
     path('diet_and_allergies/', views.DietAndAllergiesView.as_view(), name='diet_and_allergies'),
+    # /nutrihacker/add_allergy/
+    path('add_allergy/', views.AddAllergyView.as_view(), name='add_allergy'),
+    # /nutrihacker/add_diet_preference/
+    path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
     
     # /nutrihacker/login/
     path('login/', views.LoginView.as_view(), name='login'),

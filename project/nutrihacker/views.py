@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from .models import Food, Profile, Allergy, DietPreference
+from .forms import AllergyChoiceForm, DietChoiceForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -100,21 +101,39 @@ class ProfileView(ListView):
 # Login is required to view    
 class DietAndAllergiesView(LoginRequiredMixin, ListView):
     model = Allergy
-    template_name = 'nutrihacker/diet_and_allergy.html'
-    context_object_name = 'allergy_list'
+    template_name = 'nutrihacker/diet_and_allergies.html'
+    context_object_name = 'user_allergy_list'
     
     # gets allergies of current user, passed to the template
-#    def get_queryset(self):
-#        user = self.request.user
-#        return user.allergy_set.all()
-            
+    def get_queryset(self):
+        user = self.request.user
+        return user.allergy_set.all()
+     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context['preference_list'] = DietPreference.objects.all()
         context['user_preference_list'] = user.dietpreference_set.all()
-        context['user_allergy_list'] = user.allergy_set.all()
+        context['allergy_choice_form'] = AllergyChoiceForm()
+        context['diet_choice_form'] = DietChoiceForm()
         return context
+
+class AddAllergyView(FormView):
+    form_class = AllergyChoiceForm
+    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        
+    def form_valid(self, form):
+        allergy = form.cleaned_data.get('allergy_select')
+        allergy.users.add(self.request.user)
+        return super(AddAllergyView, self).form_valid(form)
+        
+class AddDietPreferenceView(FormView):
+    form_class = DietChoiceForm
+    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        
+    def form_valid(self, form):
+        diet = form.cleaned_data.get('diet_select')
+        diet.users.add(self.request.user)
+        return super(AddDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
