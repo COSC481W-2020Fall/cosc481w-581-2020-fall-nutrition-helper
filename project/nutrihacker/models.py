@@ -55,42 +55,42 @@ class Food(models.Model):
 #User data model for database
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
-    gender = models.CharField(max_length=1)
-    birthdate = models.DateField()
-    height = models.DecimalField(max_digits=5, decimal_places=2)
-    weight = models.DecimalField(max_digits=5, decimal_places=2)
-    showmetric = models.BooleanField()
+	user = models.OneToOneField(User, on_delete = models.CASCADE)
+	gender = models.CharField(max_length=1)
+	birthdate = models.DateField()
+	height = models.DecimalField(max_digits=5, decimal_places=2)
+	weight = models.DecimalField(max_digits=5, decimal_places=2)
+	showmetric = models.BooleanField()
 
 
-    #currently just gets the associated user
-    def __str__(self):
-    	return self.user.username
+	#currently just gets the associated user
+	def __str__(self):
+		return self.user.username
 
 	def get_imperial_weight(self):
-        return self.weight * 2.2046
+		return self.weight * 2.2046
 
-    def get_imperial_height(self):
-        return self.height * 3.28084
+	def get_imperial_height(self):
+		return self.height * 3.28084
 
-    def get_imperial_feet_and_inches(self):
-        feet = Floor(self.get_imperial_height())
-        inches = (self.get_imperial_height() - feet) * 12
-        return {
-                'feet':feet,
-                'inches': inches
-        }
-    
-    
-    # returns dictionary containing nutrient data fields
-    def get_metric_profile(self):
-        return {
-            'user':self.user,
-            'gender':self.gender,
-            'birthdate':self.birthdate,
-            'height':chop_zeros(self.height),
-            'weight':chop_zeros(self.weight),
-            'showmetric':self.showmetric
+	def get_imperial_feet_and_inches(self):
+		feet = Floor(self.get_imperial_height())
+		inches = (self.get_imperial_height() - feet) * 12
+		return {
+				'feet':feet,
+				'inches': inches
+		}
+	
+	
+	# returns dictionary containing nutrient data fields
+	def get_metric_profile(self):
+		return {
+			'user':self.user,
+			'gender':self.gender,
+			'birthdate':self.birthdate,
+			'height':chop_zeros(self.height),
+			'weight':chop_zeros(self.weight),
+			'showmetric':self.showmetric
 		}
 
 # daily log of meals
