@@ -99,23 +99,22 @@ def get_user_profile(request, username):
 
 def get_user_profile(request, username):
         user = User.objects.get(username=username)
-        return render(request, 'prototype/update_profile.html', {"user":user})
+        return render(request, 'nutrihacker/update_profile.html', {"user":user})
 
 
 class ProfileView(ListView):
 	model = Profile
-	template_name = 'prototype/profile.html'
+	template_name = 'nutrihacker/profile.html'
     
     
 class UpdateProfile(UpdateView):
     model = Profile
     fields = ['gender', 'height', 'weight', 'birthdate', 'showmetric'] # Keep listing whatever fields 
     # the combined UserProfile and User exposes.
-    template_name = 'prototype/profile_update.html'
     slug_field = 'username'
     slug_url_kwarg = 'slug'
     context_object_name = 'profile'
-	template_name = 'nutrihacker/profile.html'
+    template_name = 'nutrihacker/profile.html'
 
 # Page to add dietary preferences and allergies.
 # Login is required to view    
