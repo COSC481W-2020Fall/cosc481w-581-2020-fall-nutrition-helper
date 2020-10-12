@@ -8,10 +8,10 @@ from django.views.generic.edit import FormView
 from django.db.models import Q
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
-from .models import Food
-from .models import Profile
+from .models import Food, Profile, Allergy, DietPreference
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -95,6 +95,26 @@ def get_user_profile(request, username):
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
+
+# Page to add dietary preferences and allergies.
+# Login is required to view    
+class DietAndAllergiesView(LoginRequiredMixin, ListView):
+    model = Allergy
+    template_name = 'nutrihacker/diet_and_allergy.html'
+    context_object_name = 'allergy_list'
+    
+    # gets allergies of current user, passed to the template
+#    def get_queryset(self):
+#        user = self.request.user
+#        return user.allergy_set.all()
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['preference_list'] = DietPreference.objects.all()
+        context['user_preference_list'] = user.dietpreference_set.all()
+        context['user_allergy_list'] = user.allergy_set.all()
+        return context
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
