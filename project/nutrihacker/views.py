@@ -194,16 +194,19 @@ class ListRecipe(ListView):
 class CreateRecipe(CreateView):
     model = Recipe
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipe/create_recipe.html'
 
 class UpdateRecipe(UpdateView):
     model = Recipe
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipe/update_recipe.html'
 
 class DeleteRecipe(DeleteView):
     model = Recipe
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipe/delete_recipe.html'
 
 
@@ -222,6 +225,7 @@ class ListRecipeFood(ListView):
 class CreateRecipeFood(CreateView):
     model = RecipeFood
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipefood/create_recipefood.html'
 
 
@@ -229,11 +233,13 @@ class CreateRecipeFood(CreateView):
 class UpdateRecipeFood(UpdateView):
     model = RecipeFood
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipefood/update_recipefood.html'
 
 class DeleteRecipeFood(DeleteView):
     model = RecipeFood
     fields = '__all__'
+    success_url= "../"
     template_name = 'nutrihacker/recipefood/delete_recipefood.html'
 
 @login_required
