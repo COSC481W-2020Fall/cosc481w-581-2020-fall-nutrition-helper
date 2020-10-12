@@ -18,17 +18,17 @@ Project is created with:
 We are getting all of our nutrition information from the USDA database found here: https://fdc.nal.usda.gov/
 
 ## Running the Web Server
-1. Make sure you are inside the directory 'nutrihelper'
+1. Make sure you are inside the directory 'project'
 2. Run `python manage.py migrate`
 3. Run `python manage.py runserver`
 4. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
-5. Enter the address followed by /prototype into your browser: `http://127.0.0.1:8000/prototype/`.
+5. Enter the address followed by nutrihacker into your browser: `http://127.0.0.1:8000/nutrihacker/`.
 
 ### Running the Web Server on AWS
 1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
 2. Run `python manage.py runserver 0.0.0.0:8000`
     * You may get the message `Error: That port is already in use.` In this case, run `sudo fuser -k 8000/tcp` to kill any processses on that port.
-3. Enter the public ip followed by :8000/prototype into your browser: `http://[PUBLIC_IP]:8000/prototype`
+3. Enter the public ip followed by :8000/nutrihacker into your browser: `http://[PUBLIC_IP]:8000/nutrihacker`
 
 ## Members
 * Bryce VanAsselt
