@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 10px;
+			}
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+			body {
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			a:hover {
+				color: blue;
+			}
+			.button {
+				padding: 15px 30px;
+				border: none;
+				display: inline-block;
+				margin: 4px 2px;
+			}
+			input {
+				width: 48px;
+			}
+			label {
+				color: white;
+			}
+		</style>
+	</head>
+	<body style="background-size: cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+		<br>
+		<br>
+		<table class="facts" style="background-color: white">
+			<tr>
+				<td>Username</td>
+				<td class="right">{{ user.username }}</td>
+			</tr>
+			<tr>
+				<td>Email Address</td>
+				<td class="right">{{ user.email }}</td>
+			</tr>
+			<tr>
+				<td>First Name</td>
+				<td class="right">{{ user.first_name }}</td>
+			</tr>
+			<tr>
+				<td>Last Name</td>
+				<td class="right">{{ user.last_name }}</td>
+			</tr>
+			<tr>
+				<td>Gender</td>
+				<td class="right">{{ user.profile.gender }}</td>
+			</tr>
+			<tr>
+				<td>Birthdate</td>
+				<td class="right">{{ user.profile.birthdate }}</td>
+			</tr>
+			<tr>
+				<td>Height</td>
+				<td class="right">{{ user.profile.height }}</td>
+			</tr>
+			<tr>
+				<td>Weight</td>
+				<td class="right">{{ user.profile.weight }}</td>
+			</tr>
+			<tr>
+				<td>Are metric units preferred?</td>
+				<td class="right">{{ user.profile.showmetric }}</td>
+			</tr>
+			
+		</table>
+		<br><br>
+		<div style="text-align: center">
+            <button class="button"><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="Return">Diet Preferences and Allergies</a></button>
+            <br><br>
+            <button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">RETURN TO SEARCH</a></button>
+        </div>
+
+</html>
