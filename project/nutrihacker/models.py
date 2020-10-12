@@ -169,7 +169,7 @@ class MealLog(models.Model):
 # meal food model that contains key to meal log, key to food, and portion size
 class MealFood(models.Model):
 	meal_log = models.ForeignKey(MealLog, on_delete=models.CASCADE)
-	food = models.OneToOneField(Food, on_delete=models.CASCADE)
+	food = models.ForeignKey(Food, on_delete=models.CASCADE)
 	portions = models.DecimalField(max_digits=5, decimal_places=2)
 
 	def __str__(self):
