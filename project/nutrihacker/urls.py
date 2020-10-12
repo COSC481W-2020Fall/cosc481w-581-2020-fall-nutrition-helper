@@ -56,18 +56,19 @@ urlpatterns = [
     
     
     #----------------------   RECIPE STUFF   -----------------------------------------------
+    
     path('recipe/', views.ListRecipe, name='list-recipe'),
-    path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail-recipe'),
-    path('recipe/create/', views.CreateRecipe.as_view(), name='create-recipe'),
-    path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update-recipe'),
-    path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete-recipe'),
+    path('recipe/create/', views.CreateRecipe.as_view(), name='create_recipe'),
+    path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail_recipe'),
+    path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
+    path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
     
     
-    path('recipefood/', views.ListRecipeFood.as_view(), name='list-recipefood'),
-    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail-recipefood'),
-    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create-recipefood'),
-    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update-recipefood'),
-    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete-recipefood'),
+    path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
+    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create_recipefood'),
+    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
+    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
+    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
     
     #----------------------   ??? STUFF   -----------------------------------------------
     

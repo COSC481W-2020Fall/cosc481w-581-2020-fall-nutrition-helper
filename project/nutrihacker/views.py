@@ -99,9 +99,6 @@ def get_user_profile(request, username):
     user = User.objects.get(username=username)
     return render(request, 'nutrihacker/profile.html', {"user":user})
 
-def get_user_profile(request, username):
-        user = User.objects.get(username=username)
-        return render(request, 'nutrihacker/update_profile.html', {"user":user})
 
 
 class ProfileView(ListView):
@@ -185,44 +182,67 @@ class RegisterAccountView(FormView):
 ##-------------- Recipe Views --------------------------------------
 class DetailRecipe(DetailView):
     model = Recipe
+    fields = '__all__'
     template_name='nutrihacker/recipe/detail_recipe.html'
 
 class ListRecipe(ListView):
     model = Recipe
-    context_object_name = 'carts'
+    context_object_name = 'recipes'
+    fields = '__all__'
     template_name='nutrihacker/recipe/list_recipe.html'
 
 class CreateRecipe(CreateView):
     model = Recipe
+    fields = '__all__'
     template_name = 'nutrihacker/recipe/create_recipe.html'
 
 class UpdateRecipe(UpdateView):
     model = Recipe
+    fields = '__all__'
     template_name = 'nutrihacker/recipe/update_recipe.html'
 
 class DeleteRecipe(DeleteView):
     model = Recipe
+    fields = '__all__'
     template_name = 'nutrihacker/recipe/delete_recipe.html'
 
 
 ##-------------- RecipeFood Views --------------------------------------
 class DetailRecipeFood(DetailView):
     model = RecipeFood
+    fields = '__all__'
     template_name='nutrihacker/recipefood/detail_recipefood.html'
 
 class ListRecipeFood(ListView):
     model = RecipeFood
-    context_object_name = 'cartitems'
+    context_object_name = 'recipefoods'
+    fields = '__all__'
     template_name='nutrihacker/recipefood/list_recipefood.html'
 
 class CreateRecipeFood(CreateView):
     model = RecipeFood
+    fields = '__all__'
     template_name = 'nutrihacker/recipefood/create_recipefood.html'
+
+
 
 class UpdateRecipeFood(UpdateView):
     model = RecipeFood
+    fields = '__all__'
     template_name = 'nutrihacker/recipefood/update_recipefood.html'
 
 class DeleteRecipeFood(DeleteView):
     model = RecipeFood
+    fields = '__all__'
     template_name = 'nutrihacker/recipefood/delete_recipefood.html'
+
+@login_required
+def add_to_recipe(request,food_id):
+    food = get_object_or_404(Food, pk=food_id)
+    amount = 1 #hard coded for now
+    recipe,created = Recipe.objects.get_or_create(user=request.user, active=True)
+    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, amount=amount)
+    recipe.add_to_recipe(book_id)
+    recipefood.save()
+    messages.success(request, "Recipe updated!")
+    return redirect('recipe')
