@@ -22,3 +22,11 @@ admin.site.register(MealFood)
 admin.site.register(EatReport)
 
 
+# Register your models here.
+class RecipeAdmin(admin.ModelAdmin):
+    pass
+
+
+# Register your models here.
+class RecipeFoodAdmin(admin.ModelAdmin):
+    pass

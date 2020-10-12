@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 
 from .models import Food
 from .models import Profile
-from .models import EatReport
+from .models import EatReport, Recipe, RecipeFood
 from .models import Food, Profile, Allergy, DietPreference
 from .forms import AllergyChoiceForm, DietChoiceForm
 
@@ -178,3 +178,49 @@ class RegisterAccountView(FormView):
         user = authenticate(username=username, password=raw_password)
         login(self.request, user)
         return super().form_valid(form)
+
+
+##-------------- Recipe Views --------------------------------------
+class DetailRecipe(DetailView):
+    model = Recipe
+    template_name='recipe/detail_recipe.html'
+
+class ListRecipe(ListView):
+    model = Recipe
+    context_object_name = 'carts'
+    template_name='recipe/list_recipe.html'
+
+class CreateRecipe(CreateView):
+    model = Recipe
+    template_name = 'recipe/create_recipe.html'
+
+class UpdateRecipe(UpdateView):
+    model = Recipe
+    template_name = 'recipe/update_recipe.html'
+
+class DeleteRecipe(DeleteView):
+    model = Recipe
+    template_name = 'recipe/delete_recipe.html'
+
+
+##-------------- RecipeFood Views --------------------------------------
+class DetailRecipeFood(DetailView):
+    model = RecipeItem
+    template_name='recipefood/detail_recipefood.html'
+
+class ListRecipeFood(ListView):
+    model = RecipeItem
+    context_object_name = 'cartitems'
+    template_name='recipefood/list_recipefood.html'
+
+class CreateRecipeFood(CreateView):
+    model = RecipeItem
+    template_name = 'recipefood/create_recipefood.html'
+
+class UpdateRecipeFood(UpdateView):
+    model = RecipeItem
+    template_name = 'recipefood/update_recipefood.html'
+
+class DeleteRecipeFood(DeleteView):
+    model = RecipeItem
+    template_name = 'recipefood/delete_recipefood.html'

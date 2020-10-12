@@ -20,6 +20,10 @@ urlpatterns = [
     path('search/', views.SearchResultsView.as_view(), name='search'),
     # /nutrihacker/Food_intake
     path('Food_intake/',views.FoodIntakeView.as_view(), name='Food_intake'),
+    
+    
+    
+    #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
 	path('profile/', views.ProfileView.as_view(), name='profile'),
     # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
@@ -28,6 +32,10 @@ urlpatterns = [
     # url(r'^update_profile/(?P<slug>[\-\w]+)/$', views.UpdateProfile.as_view(), name='update_profile'),
     path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
     
+    
+    
+    #----------------------   ALLERGY STUFF   -----------------------------------------------
+    
     # /nutrihacker/diet_and_allergies/
     path('diet_and_allergies/', views.DietAndAllergiesView.as_view(), name='diet_and_allergies'),
     # /nutrihacker/add_allergy/
@@ -35,6 +43,8 @@ urlpatterns = [
     # /nutrihacker/add_diet_preference/
     path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
     
+    
+    #----------------------   CREDENTIAL STUFF   -----------------------------------------------
     # /nutrihacker/login/
     path('login/', views.LoginView.as_view(), name='login'),
     # /nutrihacker/logout/
@@ -44,4 +54,24 @@ urlpatterns = [
     # /nutrihacker/register_account/
     path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
     
+    
+    #----------------------   RECIPE STUFF   -----------------------------------------------
+    path('recipe/', views.ListRecipe, name='list-carts'),
+    path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail-recipe'),
+    path('recipe/create/', views.CreateRecipe.as_view(), name='create-recipe'),
+    path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update-recipe'),
+    path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete-recipe'),
+    
+    
+    path('recipefood/', views.ListRecipeFood.as_view(), name='list-recipefood'),
+    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail-recipefood'),
+    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create-recipefood'),
+    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update-recipefood'),
+    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete-recipefood'),
+    
+    #----------------------   ??? STUFF   -----------------------------------------------
+    
+    
+    
+    #---------------------------------------------------------------------
 ]
