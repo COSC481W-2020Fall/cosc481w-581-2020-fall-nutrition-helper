@@ -25,17 +25,17 @@
         <form method="post" action="{% url 'nutrihacker:register_account' %}">
         {% csrf_token %}
         
-        <table align="center" width="25%">
+        <table align="center" width="45%">
 
-        <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.password1.label_tag }}</td>
-            <td>{{ form.password1 }}</td>
-        </tr>
-        <tr>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password1.label_tag }}</td>
+                <td>{{ form.password1 }}</td>
+            </tr>
+            <tr>
             <td>{{ form.password2.label_tag }}</td>
             <td>{{ form.password2 }}</td>
         </tr>
