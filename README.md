@@ -19,10 +19,9 @@ We are getting all of our nutrition information from the USDA database found her
 
 ## Running the Web Server
 1. Make sure you are inside the directory 'project'
-2. Run `python manage.py migrate`
-3. Run `python manage.py runserver`
-4. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
-5. Enter the address followed by nutrihacker into your browser: `http://127.0.0.1:8000/nutrihacker/`.
+2. Run `python manage.py runserver`
+3. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
+4. Enter the address followed by nutrihacker into your browser: `http://127.0.0.1:8000/nutrihacker/`.
 
 ### Running the Web Server on AWS
 1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
