@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Intake Log</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    <style>
+        input {
+            width: revert;
+            padding: revert;
+            margin: revert;
+        }
+        td{
+        color: black;
+        }
+        .addbtn{
+            border-radius:90%;
+            cursor: pointer;
+        }
+        .addbtn:hover{
+             background-color: green;
+        }
+        .row1{
+            font-size: 40px;
+        }
+        .row2{
+            text-decoration-line: underline;
+            text-decoration-style: double;
+        }
+        .portionbtn{
+            cursor: pointer;
+            padding: 0px 5px;
+        }
+        .sbmtbtn{
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .sbmtbtn:hover{
+            background-color: green;
+        }
+    </style>
+    <script>
+        function addFood(){
+            var food= document.getElementById("search").value;
+        }
+        function addAnotherFood(){
+            var table = document.getElementById("table1");
+            //var food = document.getElementById();
+            var row = table.insertRow(4);
+
+        }
+        function logFood(){
+
+        }
+
+    </script>
+</head>
+<body>
+    {% include "nutrihacker/navigation_bar.html" %}
+    <form method="POST" action="{% url 'nutrihacker:record_log' %}">
+        {% csrf_token %}
+        <table id="table1" align="center">
+        
+            {{ log_form.as_table }}
+
+            <tr>
+                <td style="text-align: right">Add Another food</td>
+                <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
+                                                    onclick="addAnotherFood()"/></td>
+            </tr>
+        </table>
+        <input class="sbmtbtn" type="submit" value="Submit"/>
+    </form>
+    {% comment %}
+    <table class="FoodINTable" width="50%" align="center">
+        <form>
+            <tr>
+                <th class="row1" colspan="2">Daily Log</th>
+            </tr>
+
+            <tr>
+                <th class="row2" colspan="2">Record What You Ate</th>
+            </tr>
+
+            <tr>
+                <td style="text-align: right">Date:</td>
+                <td style="text-align: left"><input type="date"/></td>
+            </tr>
+
+            <tr>
+                <td style="text-align: right">Time:</td>
+                <td style="text-align: left"><input type="time"/></td>
+            </tr>
+
+            <tr>
+                <td style="text-align: right">Food:</td>
+                <td style="text-align: left"><input id="search" type="search"></a></td>
+            </tr>
+            <tr>
+                <td style="text-align: right">Portion:</td>
+                <td style="text-align: left"><input class="portionbtn" type="number" min="0" max="99" width="50%"/></td>
+            </tr>
+            <tr>
+                <td style="text-align: right">Add Another food</td>
+                <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
+                                                    onclick="addAnotherFood()"/></td>
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input class="sbmtbtn" type="submit" value="Submit" onclick="logFood()"/>
+            </tr>
+            </td>
+        </form>
+    </table>
+    {% endcomment %}
+    <p id="demo"></p>
+</body>
+</html>
