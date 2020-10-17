@@ -57,11 +57,11 @@ class Food(models.Model):
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
 	user = models.OneToOneField(User, on_delete = models.CASCADE)
-	gender = models.CharField(max_length=1)
-	birthdate = models.DateField()
-	height = models.DecimalField(max_digits=5, decimal_places=2)
-	weight = models.DecimalField(max_digits=5, decimal_places=2)
-	showmetric = models.BooleanField()
+	gender = models.CharField(max_length=1, null=True)
+	birthdate = models.DateField(null=True)
+	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+	showmetric = models.BooleanField(default=True)
     
     
 	#currently just gets the associated user
