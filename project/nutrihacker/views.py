@@ -7,12 +7,11 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
 from django.db.models import Q
+from django.contrib import messages
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib import messages
 
 from .models import Food, Recipe, RecipeFood
 from .models import DailyLog, MealLog, MealFood
@@ -27,34 +26,40 @@ class IndexView(TemplateView):
 class DescriptionView(TemplateView):
 	template_name = 'nutrihacker/description.html'
 
+# Daily log page, login required
 class LogView(LoginRequiredMixin, TemplateView):
     template_name = 'nutrihacker/log.html'
 
+    # override get_context_data to include form html
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
         context['log_form'] = LogForm()
         return context
 
+# saves submitted info to database
 class RecordLogView(FormView):
     form_class = LogForm
     success_url = reverse_lazy('nutrihacker:log')
     
+    # override form_valid to create model instances from submitted info
     def form_valid(self, form):
+        # get and clean the data from the form
         date = form.cleaned_data.get('date')
         time = form.cleaned_data.get('time')
         food = form.cleaned_data.get('food')
         portions = form.cleaned_data.get('portions')
         
-        try:
+        try: # searches for an existing daily log for this day and user
             daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
-        except DailyLog.DoesNotExist:
+        except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
             daily_log = DailyLog.create(self.request.user, date)
             daily_log.save()
 
+        # creates the meal log for this time
         meal_log = MealLog.create(time, daily_log)
         meal_log.save()
 
+        # creates the meal food for this meal log
         meal_food = MealFood.create(meal_log, food, portions)
         meal_food.save()
 
