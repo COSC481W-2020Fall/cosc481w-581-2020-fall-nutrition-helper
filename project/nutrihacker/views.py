@@ -14,20 +14,52 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from .models import Food, Recipe, RecipeFood
+from .models import DailyLog, MealLog, MealFood
+from .models import Profile, Allergy, DietPreference
 
-from .models import Food
-from .models import Profile
-from .models import EatReport, Recipe, RecipeFood
-from .models import Food, Profile, Allergy, DietPreference
 from .forms import AllergyChoiceForm, DietChoiceForm
+from .forms import LogForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
 
 class DescriptionView(TemplateView):
 	template_name = 'nutrihacker/description.html'
-class FoodIntakeView(TemplateView):
-	template_name = 'nutrihacker/Food_intake.html'
+
+class LogView(LoginRequiredMixin, TemplateView):
+    template_name = 'nutrihacker/log.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['log_form'] = LogForm()
+        return context
+
+class RecordLogView(FormView):
+    form_class = LogForm
+    success_url = reverse_lazy('nutrihacker:log')
+    
+    def form_valid(self, form):
+        date = form.cleaned_data.get('date')
+        time = form.cleaned_data.get('time')
+        food = form.cleaned_data.get('food')
+        portions = form.cleaned_data.get('portions')
+        
+        try:
+            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
+        except DailyLog.DoesNotExist:
+            daily_log = DailyLog.create(self.request.user, date)
+            daily_log.save()
+
+        meal_log = MealLog.create(time, daily_log)
+        meal_log.save()
+
+        meal_food = MealFood.create(meal_log, food, portions)
+        meal_food.save()
+
+        return super(RecordLogView, self).form_valid(form)
+
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):

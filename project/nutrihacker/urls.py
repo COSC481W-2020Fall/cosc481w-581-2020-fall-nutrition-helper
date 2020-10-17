@@ -19,9 +19,13 @@ urlpatterns = [
     path('description/', views.DescriptionView.as_view(), name='description'),
     # /nutrihacker/search/
     path('search/', views.SearchResultsView.as_view(), name='search'),
-    # /nutrihacker/Food_intake
-    path('Food_intake/',views.FoodIntakeView.as_view(), name='Food_intake'),
     
+    #----------------------   LOG STUFF   -----------------------------------------------
+
+    # /nutrihacker/log
+    path('log/', views.LogView.as_view(), name='log'),
+    # /nutrihacker/record_log
+    path('record_log/', views.RecordLogView.as_view(), name='record_log'),
     
     
     #------------------------- PROFILE STUFF ---------------------------------------------------

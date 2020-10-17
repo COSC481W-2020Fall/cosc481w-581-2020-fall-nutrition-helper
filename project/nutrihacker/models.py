@@ -93,17 +93,6 @@ class Profile(models.Model):
 			'weight':chop_zeros(self.weight),
 			'showmetric':self.showmetric
 		}
-#Reporting the consumption of a food. At this time only one food at a time, but in the future it might have a different table for each food attached to the eatreport.
-class EatReport(models.Model):
-	#many to one with users and with food
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
-    food = models.ForeignKey(Food, on_delete = models.CASCADE)
-    portion = models.DecimalField(max_digits=3, decimal_places=2)
-    timestamp = models.DateTimeField()
-    
-    #currently just gets the associated user
-    def __str__(self):
-    	return self.user.username + ", " + self.food.name + " x" + self.portion + ", " + self.timestamp
 
 # User's allergies. In the future maybe this should be related to profile instead of user.
 class Allergy(models.Model):
@@ -131,6 +120,11 @@ class DietPreference(models.Model):
 class DailyLog(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateField()
+
+	@classmethod
+	def create(cls, user, date):
+		daily_log = cls(user=user, date=date)
+		return daily_log
 
 	def __str__(self):
 		return str(self.date)
@@ -172,8 +166,13 @@ class DailyLog(models.Model):
 
 # meal log that contains time and key to daily log
 class MealLog(models.Model):
-	log_time = models.DateTimeField()
+	log_time = models.TimeField()
 	daily_log = models.ForeignKey(DailyLog, on_delete=models.CASCADE)
+
+	@classmethod
+	def create(cls, log_time, daily_log):
+		meal_log = cls(log_time=log_time, daily_log=daily_log)
+		return meal_log
 
 	def __str__(self):
 		return str(self.log_time)
@@ -183,6 +182,11 @@ class MealFood(models.Model):
 	meal_log = models.ForeignKey(MealLog, on_delete=models.CASCADE)
 	food = models.ForeignKey(Food, on_delete=models.CASCADE)
 	portions = models.DecimalField(max_digits=5, decimal_places=2)
+
+	@classmethod
+	def create(cls, meal_log, food, portions):
+		meal_food = cls(meal_log=meal_log, food=food, portions=portions)
+		return meal_food
 
 	def __str__(self):
 		return self.food.name
