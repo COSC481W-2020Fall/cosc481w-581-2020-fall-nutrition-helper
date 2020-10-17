@@ -12,6 +12,8 @@
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 10px;
+				color: black;
+				text-align: revert;
 			}
 			.facts {
 				width: 35%;
@@ -28,7 +30,7 @@
 			}
 			a {
 				text-decoration: none;
-				align: center;
+				text-align: center;
 			}
 			a:hover {
 				color: blue;
@@ -41,6 +43,8 @@
 			}
 			input {
 				width: 48px;
+				padding: revert;
+				margin: revert;
 			}
 			label {
 				color: white;
@@ -91,6 +95,6 @@
 			</tr>
 		</table>
 		<br><br>
-		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
+		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">Return to Search</a></button></div>
 	</body>
 </html>
