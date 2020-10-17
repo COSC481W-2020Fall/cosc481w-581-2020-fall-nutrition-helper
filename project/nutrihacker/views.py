@@ -163,8 +163,8 @@ class DietAndAllergiesView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         profile = Profile.objects.get(user=self.request.user)
         context['user_preference_list'] = profile.dietpreference_set.all()
-        context['allergy_choice_form'] = AllergyChoiceForm()
-        context['diet_choice_form'] = DietChoiceForm()
+        context['allergy_choice_form'] = AllergyChoiceForm(current_profile=profile)
+        context['diet_choice_form'] = DietChoiceForm(current_profile=profile)
         return context
 
 class AddAllergyView(FormView):
@@ -180,7 +180,7 @@ class AddAllergyView(FormView):
 class AddDietPreferenceView(FormView):
     form_class = DietChoiceForm
     success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-        
+    
     def form_valid(self, form):
         profile = Profile.objects.get(user=self.request.user)
         diet = form.cleaned_data.get('diet_select')
