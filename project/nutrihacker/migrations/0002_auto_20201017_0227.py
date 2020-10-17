@@ -25,11 +25,6 @@ class Migration(migrations.Migration):
             # ],
         # ),
         migrations.AlterField(
-            model_name='meallog',
-            name='log_time',
-            field=models.TimeField(),
-        ),
-        migrations.AlterField(
             model_name='profile',
             name='birthdate',
             field=models.DateField(null=True),

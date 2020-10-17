@@ -156,13 +156,13 @@ class DietAndAllergiesView(LoginRequiredMixin, ListView):
     
     # gets allergies of current user, passed to the template
     def get_queryset(self):
-        user = self.request.user
-        return user.allergy_set.all()
+        profile = Profile.objects.get(user=self.request.user)
+        return profile.allergy_set.all()
      
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-        context['user_preference_list'] = user.dietpreference_set.all()
+        profile = Profile.objects.get(user=self.request.user)
+        context['user_preference_list'] = profile.dietpreference_set.all()
         context['allergy_choice_form'] = AllergyChoiceForm()
         context['diet_choice_form'] = DietChoiceForm()
         return context
@@ -172,8 +172,9 @@ class AddAllergyView(FormView):
     success_url = reverse_lazy('nutrihacker:diet_and_allergies')
         
     def form_valid(self, form):
+        profile = Profile.objects.get(user=self.request.user)
         allergy = form.cleaned_data.get('allergy_select')
-        allergy.users.add(self.request.user)
+        allergy.profiles.add(profile)
         return super(AddAllergyView, self).form_valid(form)
         
 class AddDietPreferenceView(FormView):
@@ -181,8 +182,9 @@ class AddDietPreferenceView(FormView):
     success_url = reverse_lazy('nutrihacker:diet_and_allergies')
         
     def form_valid(self, form):
+        profile = Profile.objects.get(user=self.request.user)
         diet = form.cleaned_data.get('diet_select')
-        diet.users.add(self.request.user)
+        diet.profiles.add(profile)
         return super(AddDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):

@@ -96,7 +96,7 @@ class Profile(models.Model):
 
 # User's allergies. In the future maybe this should be related to profile instead of user.
 class Allergy(models.Model):
-    users = models.ManyToManyField(User, blank=True)
+    profiles = models.ManyToManyField(Profile, blank=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     
@@ -109,7 +109,7 @@ class Allergy(models.Model):
 
 # Dietary preferences i.e vegetarian, pescatarian, keto, etc. Similar to allergies.
 class DietPreference(models.Model):
-    users = models.ManyToManyField(User, blank=True)
+    profiles = models.ManyToManyField(Profile, blank=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     
