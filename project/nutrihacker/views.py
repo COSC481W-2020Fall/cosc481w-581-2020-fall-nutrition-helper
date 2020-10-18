@@ -1,6 +1,6 @@
 import decimal
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect  
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
@@ -18,7 +18,7 @@ from .models import Food, Recipe, RecipeFood
 from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
-from .forms import AllergyChoiceForm, DietChoiceForm
+from .forms import AllergyChoiceForm, DietChoiceForm, AllergyDeleteForm, DietDeleteForm
 from .forms import LogForm
 
 class IndexView(TemplateView):
@@ -149,25 +149,21 @@ class UpdateProfile(UpdateView):
 
 # Page to add dietary preferences and allergies.
 # Login is required to view    
-class DietAndAllergiesView(LoginRequiredMixin, ListView):
+class DietAndAllergiesView(LoginRequiredMixin, TemplateView):
     model = Allergy
     template_name = 'nutrihacker/diet_and_allergies.html'
-    context_object_name = 'user_allergy_list'
-    
-    # gets allergies of current user, passed to the template
-    def get_queryset(self):
-        profile = Profile.objects.get(user=self.request.user)
-        return profile.allergy_set.all()
      
+    # passes add/delete allergy/diet preference forms to the template
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = Profile.objects.get(user=self.request.user)
-        context['user_preference_list'] = profile.dietpreference_set.all()
         context['allergy_choice_form'] = AllergyChoiceForm(current_profile=profile)
         context['diet_choice_form'] = DietChoiceForm(current_profile=profile)
+        context['allergy_delete_form'] = AllergyDeleteForm(current_profile=profile)
+        context['diet_delete_form'] = DietDeleteForm(current_profile=profile)
         return context
 
-class AddAllergyView(FormView):
+class AddAllergyView(LoginRequiredMixin, FormView):
     form_class = AllergyChoiceForm
     success_url = reverse_lazy('nutrihacker:diet_and_allergies')
         
@@ -177,7 +173,7 @@ class AddAllergyView(FormView):
         allergy.profiles.add(profile)
         return super(AddAllergyView, self).form_valid(form)
         
-class AddDietPreferenceView(FormView):
+class AddDietPreferenceView(LoginRequiredMixin, FormView):
     form_class = DietChoiceForm
     success_url = reverse_lazy('nutrihacker:diet_and_allergies')
     
@@ -186,6 +182,28 @@ class AddDietPreferenceView(FormView):
         diet = form.cleaned_data.get('diet_select')
         diet.profiles.add(profile)
         return super(AddDietPreferenceView, self).form_valid(form)
+        
+class DeleteAllergyView(LoginRequiredMixin, FormView):
+    form_class = AllergyDeleteForm
+    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        
+    def form_valid(self, form):
+        profile = Profile.objects.get(user=self.request.user)
+        allergy_list = form.cleaned_data.get('allergy_checkbox')
+        for allergy in allergy_list:
+            allergy.profiles.remove(profile)
+        return super(DeleteAllergyView, self).form_valid(form)
+        
+class DeleteDietPreferenceView(LoginRequiredMixin, FormView):
+    form_class = DietDeleteForm
+    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        
+    def form_valid(self, form):
+        profile = Profile.objects.get(user=self.request.user)
+        diet_list = form.cleaned_data.get('diet_checkbox')
+        for diet in diet_list:
+            diet.profiles.remove(profile)
+        return super(DeleteDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"

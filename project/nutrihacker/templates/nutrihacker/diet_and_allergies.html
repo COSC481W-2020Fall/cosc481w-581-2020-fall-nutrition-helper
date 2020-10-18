@@ -42,9 +42,10 @@
         }
         input {
             width: 200px;
+            color: green;
         }
         label {
-            color: white;
+            color: green;
         }
         h1 {
             text-align: center;
@@ -55,27 +56,39 @@
 		{% include "nutrihacker/navigation_bar.html" %}
         
         <h1>Allergies</h1>
-		<table class="list">
-			{% for allergy in user_allergy_list %}
-                <tr><td class="right">{{ allergy.name }}</td></tr>
-            {% endfor %}
-		</table>
-        <br>
+        <form method="POST" action="{% url 'nutrihacker:delete_allergy' %}">
+            {% csrf_token %}
+            {% if allergy_delete_form.allergy_checkbox|length != 0 %}
+            <table class="list">
+                {% for allergy in allergy_delete_form.allergy_checkbox %}
+                    <tr><td class="right" width="90%">{{ allergy.choice_label }}</td><td class="right">{{ allergy.tag }}</td></tr>
+                {% endfor %}
+            </table>
+            <br>
+            <input type="submit" value="Remove Selected" />
+            {% endif %}
+        </form>
         <form method="POST" action="{% url 'nutrihacker:add_allergy' %}">
-        {% csrf_token %}
+            {% csrf_token %}
             <p>{{ allergy_choice_form }}</p>
             <input type="submit" />
         </form>
         <br> <br>
         <h1>Diet Preferences</h1>
-		<table class="list">
-			{% for preference in user_preference_list %}
-                <tr><td class="right">{{ preference.name }}</td></tr>
-            {% endfor %}
-		</table>
-        <br>
+		<form method="POST" action="{% url 'nutrihacker:delete_diet_preference' %}">
+            {% csrf_token %}
+            {% if diet_delete_form.diet_checkbox|length != 0 %}
+            <table class="list">
+                {% for diet in diet_delete_form.diet_checkbox %}
+                    <tr><td class="right" width="90%">{{ diet.choice_label }}</td><td class="right">{{ diet.tag }}</td></tr>
+                {% endfor %}
+            </table>
+            <br>
+            <input type="submit" value="Remove Selected" />
+            {% endif %}
+        </form>
         <form method="POST" action="{% url 'nutrihacker:add_diet_preference' %}">
-        {% csrf_token %}
+            {% csrf_token %}
             <p>{{ diet_choice_form }}</p>
             <input type="submit" />
         </form>
