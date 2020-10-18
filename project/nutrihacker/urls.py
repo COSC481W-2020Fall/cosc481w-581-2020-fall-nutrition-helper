@@ -47,6 +47,11 @@ urlpatterns = [
     path('add_allergy/', views.AddAllergyView.as_view(), name='add_allergy'),
     # /nutrihacker/add_diet_preference/
     path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
+    # /nutrihacker/delete_allergy/
+    path('delete_allergy/', views.DeleteAllergyView.as_view(), name='delete_allergy'),
+    # /nutrihacker/delete_diet_preference/
+    path('delete_diet_preference/', views.DeleteDietPreferenceView.as_view(), name='delete_diet_preference'),
+    
     
     
     #----------------------   CREDENTIAL STUFF   -----------------------------------------------

@@ -25,6 +25,25 @@ class DietChoiceForm(forms.Form):
         if self.current_profile != None:
             self.fields['diet_select'].queryset = DietPreference.objects.exclude(profiles=self.current_profile)
 
+# creates a form of checkboxes for deleting allergies, dynamically removes allergies if profile doesn't have them
+class AllergyDeleteForm(forms.Form):
+    allergy_checkbox = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, queryset=Allergy.objects.all())
+    def __init__(self,*args,**kwargs):
+        self.current_profile = kwargs.pop('current_profile', None) 
+        super(AllergyDeleteForm,self).__init__(*args,**kwargs)
+        # only include allergy selection if they've already been added to the profile
+        if self.current_profile != None:
+            self.fields['allergy_checkbox'].queryset = Allergy.objects.filter(profiles=self.current_profile)
+         
+class DietDeleteForm(forms.Form):
+    diet_checkbox = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False, queryset=DietPreference.objects.all())
+    def __init__(self,*args,**kwargs):
+        self.current_profile = kwargs.pop('current_profile', None) 
+        super(DietDeleteForm,self).__init__(*args,**kwargs)
+        # only include diet selection if they've already been added to the profile
+        if self.current_profile != None:
+            self.fields['diet_checkbox'].queryset = DietPreference.objects.filter(profiles=self.current_profile)
+
 class LogForm(forms.Form):
 	date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 	time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
