@@ -74,11 +74,9 @@ for i in range(10000):      #10000
     #getting nutrition numbers from food_nutrient.csv
     while x <= 169750:      #169750
         if fdcId == int(nutrientSheet['fdc_id'].values[x]):
-            print("adding nutrition details")
             start = True
             if int(nutrientSheet['nutrient_id'].values[x]) == 1253:
                 cholesterol = Decimal(nutrientSheet['amount'].values[x])
-                print("cholesterol: " + str(cholesterol))
             if int(nutrientSheet['nutrient_id'].values[x]) == 1003:
                 protein = Decimal(nutrientSheet['amount'].values[x])
             if int(nutrientSheet['nutrient_id'].values[x]) == 1005:
