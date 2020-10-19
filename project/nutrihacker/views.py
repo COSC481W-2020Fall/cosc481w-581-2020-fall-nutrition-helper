@@ -53,13 +53,14 @@ class RecordLogView(FormView):
         # get data from the form
         date = form.cleaned_data.get('date')
         time = form.cleaned_data.get('time')
-        fp_field_number = int(form.cleaned_data.get('extra_field_count')) + 1
+        # get number of foods in form
+        food_number = int(form.cleaned_data.get('extra_field_count')) + 1
         
         food = {}
         portions = {}
 
         # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-        for i in range(1, fp_field_number+1):
+        for i in range(1, food_number+1):
             food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
             portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
@@ -74,7 +75,7 @@ class RecordLogView(FormView):
         meal_log.save()
 
         # creates a meal food for each food for this meal log
-        for i in range(1, fp_field_number+1):
+        for i in range(1, food_number+1):
             meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
             meal_food.save()
 
