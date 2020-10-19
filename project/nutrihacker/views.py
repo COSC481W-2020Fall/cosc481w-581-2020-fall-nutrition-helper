@@ -41,14 +41,28 @@ class RecordLogView(FormView):
     form_class = LogForm
     success_url = reverse_lazy('nutrihacker:log')
     
+    # override get_form_kwargs to get number of extra fields
+    def get_form_kwargs(self):
+        kwargs = super(RecordLogView, self).get_form_kwargs()
+        kwargs['extra'] = kwargs['data']['extra_field_count']
+        
+        return kwargs
+
     # override form_valid to create model instances from submitted info
     def form_valid(self, form):
-        # get and clean the data from the form
+        # get data from the form
         date = form.cleaned_data.get('date')
         time = form.cleaned_data.get('time')
-        food = form.cleaned_data.get('food')
-        portions = form.cleaned_data.get('portions')
+        fp_field_number = int(form.cleaned_data.get('extra_field_count')) + 1
         
+        food = {}
+        portions = {}
+
+        # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+        for i in range(1, fp_field_number+1):
+            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+
         try: # searches for an existing daily log for this day and user
             daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
         except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
@@ -59,9 +73,10 @@ class RecordLogView(FormView):
         meal_log = MealLog.create(time, daily_log)
         meal_log.save()
 
-        # creates the meal food for this meal log
-        meal_food = MealFood.create(meal_log, food, portions)
-        meal_food.save()
+        # creates a meal food for each food for this meal log
+        for i in range(1, fp_field_number+1):
+            meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
+            meal_food.save()
 
         return super(RecordLogView, self).form_valid(form)
 
