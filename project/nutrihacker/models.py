@@ -175,7 +175,7 @@ class MealLog(models.Model):
 		return meal_log
 
 	def __str__(self):
-		return str(self.log_time)
+		return str(self.daily_log.date) + " " + str(self.log_time)
 
 # meal food model that contains key to meal log, key to food, and portion size
 class MealFood(models.Model):
@@ -189,7 +189,7 @@ class MealFood(models.Model):
 		return meal_food
 
 	def __str__(self):
-		return self.food.name
+		return str(self.meal_log.daily_log.date) + " " + str(self.meal_log.log_time) + " " + self.food.name
 
 class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
