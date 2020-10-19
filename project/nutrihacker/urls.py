@@ -70,6 +70,11 @@ urlpatterns = [
     path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
     path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
     
+    path('record_recipe/', views.RecordRecipeView.as_view(), name='record_recipe'),
+    
+    
+    
+    
     
     path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
     path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create_recipefood'),
