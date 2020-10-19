@@ -1,0 +1,18 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Log</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+
+</head>
+<body>
+{% include "nutrihacker/navigation_bar.html" %}
+
+{{dailylog.date}}
+{{}}
+
+</body>
+</html>
