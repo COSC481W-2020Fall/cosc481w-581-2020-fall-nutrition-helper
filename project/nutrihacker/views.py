@@ -18,7 +18,7 @@ from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
 from .forms import AllergyChoiceForm, DietChoiceForm, AllergyDeleteForm, DietDeleteForm
-from .forms import LogForm
+from .forms import LogForm, RecipeForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -161,20 +161,22 @@ def get_user_profile(request, username):
     return render(request, 'nutrihacker/profile.html', {"user":user})
 
 
-
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
-    
-    
-class UpdateProfile(UpdateView):
+
+
+class UpdateProfile(UpdateView, LoginRequiredMixin):
     model = Profile
-    fields = ['gender', 'height', 'weight', 'birthdate', 'showmetric'] # Keep listing whatever fields 
-    # the combined UserProfile and User exposes.
-    slug_field = 'username'
-    slug_url_kwarg = 'slug'
-    context_object_name = 'profile'
-    template_name = 'nutrihacker/profile.html'
+    pk_url_kwarg = 'profile_id'
+    fields = '__all__'
+    success_url= '../../profile/'
+    login_url = '../../nutrihacker/login/'
+    template_name = 'nutrihacker/update_profile.html'
+    
+    def get_object(self):
+        return get_object_or_404(Profile, id=self.kwargs.get('profile_id'))
+
 
 # Page to add dietary preferences and allergies.
 # Login is required to view    
@@ -265,6 +267,11 @@ class DetailRecipe(DetailView):
     model = Recipe
     fields = '__all__'
     template_name='nutrihacker/recipe/detail_recipe.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(DetailRecipe, self).get_context_data(**kwargs)
+        context['detail_list'] = Recipe.objects.all()
+        return context
 
 class ListRecipe(ListView):
     model = Recipe
@@ -289,6 +296,54 @@ class DeleteRecipe(DeleteView):
     fields = '__all__'
     success_url= "../"
     template_name = 'nutrihacker/recipe/delete_recipe.html'
+    
+    
+    
+    # Daily log page, login required
+class RecipeView(LoginRequiredMixin, TemplateView):
+    template_name = 'nutrihacker/recipe/create_recipe.html'
+
+    # override get_context_data to include form html
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe_form'] = RecipeForm()
+        return context
+
+# saves submitted info to database
+class RecordRecipeView(FormView):
+    form_class = RecipeForm
+    success_url = reverse_lazy('nutrihacker:profile')
+    
+    # override get_form_kwargs to get number of extra fields
+    def get_form_kwargs(self):
+        kwargs = super(RecordLogView, self).get_form_kwargs()
+        kwargs['extra'] = kwargs['data']['extra_field_count']
+        
+        return kwargs
+
+    # override form_valid to create model instances from submitted info
+    def form_valid(self, form):
+        # get number of foods in form
+        food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+        
+        food = {}
+        portions = {}
+
+        # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+        for i in range(1, food_number+1):
+            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+
+        
+        recipe = Recipe.create(self.request.user)
+        recipe.save()
+
+        # creates a meal food for each food for this meal log
+        for i in range(1, food_number+1):
+            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
+            recipe_food.save()
+
+        return super(RecordRecipeView, self).form_valid(form)
 
 
 ##-------------- RecipeFood Views --------------------------------------

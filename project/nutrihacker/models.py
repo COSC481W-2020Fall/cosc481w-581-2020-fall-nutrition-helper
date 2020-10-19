@@ -196,6 +196,15 @@ class Recipe(models.Model):
     name = models.CharField(max_length=50, default="Custom Recipe")
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.now)
+    
+    @classmethod
+    def create(cls, user):
+        recipe = cls(user=user)
+        return recipe
+    
+    def __str__(self):
+        return str(self.name)
+        
 
 class RecipeFood(models.Model):
     recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
@@ -203,8 +212,15 @@ class RecipeFood(models.Model):
     amount = models.IntegerField(default=1)
     amount_unit = models.CharField(max_length=50, default="g")
 
+    @classmethod
+    def create(cls, meal_log, food, portions):
+        meal_food = cls(recipe=recipe, food=food, amount=portions)
+        return meal_food
+
     def __str__(self):
         return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
+        
+        
 
 #fdcid model for database
 class BrandedIds(models.Model):
