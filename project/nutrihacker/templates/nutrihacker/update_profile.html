@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Nutrition Facts</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'prototype/style.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
 			table, td {
 				border: 3px solid black;
@@ -24,7 +24,7 @@
 				border-right: 3px solid black;
 			}
 			body {
-				background-image: url("{% static 'prototype/images/background.jpg' %}");
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
 			a {
 				text-decoration: none;
@@ -39,9 +39,6 @@
 				display: inline-block;
 				margin: 4px 2px;
 			}
-			input {
-				width: 48px;
-			}
 			label {
 				color: white;
 			}
@@ -50,53 +47,70 @@
 	<body style="background-size: cover">
 		<table class="01" width="100%" style="background-color: black;">
 				<tr>
-					<th style="text-align: left;"><a href="../"><img src="{% static 'prototype/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
+					<th style="text-align: left;"><a href="../"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
 					
-					<th><form action="{% url 'prototype:search' %}" method="get">
+					<th><form action="{% url 'nutrihacker:search' %}" method="get">
 						<input name="term" type="search" placeholder="Search..." size="100%" />
 						<button type="submit" name="search">&#128269;</button>
 					</form></th>
 					
-					<th><a href="../description">How it works</a> </th>
-					<th><a href="../search">Search</a></th>
+					<th><a href="../../description">How it works</a> </th>
+					<th><a href="../../search">Search</a></th>
                     {% if user.is_authenticated %}
-                    <th><a href="../profile">{{ user.username }}'s Profile</a>
-                    <th><a href="../logout">Logout</a>
+                    <th><a href="../../profile">{{ user.username }}'s Profile</a>
+                    <th><a href="../../logout">Logout</a>
                     {% else %}
-					<th><a href ="../login">Login/Register</a></th>
+					<th><a href ="../../login">Login/Register</a></th>
                     {% endif %}
 				</tr>
 		</table>
 		<br>
 		<br>
 		
+	<form method="POST">{% csrf_token %}
+    
+      <!-- form variable -->    
+      {{ form.as_p }} 
+
+      <input type="submit" name="sumbit">
+    </form>
 	
-		<table class="facts" style="background-color: white">
-		<form>
+	
+	
+	<h1 style="color: magenta">THE BELOW TABLE DOESN'T WORK FOR SOME ARCANE REASON BUT THE ABOVE ONE DOES</h1>
+	
+	
+	  <form method="POST">{% csrf_token %}
+		<table class="facts" style="background-color: white" style="width:50%">
 			<tr>
-				<td>Gender</td>
-				<td class="right">{{ user.profile.gender }} <select id= "UI"name="gender"><option value="M">M</option><option value="F">F</option><option value="X">X</option></select><br></td>
+				<td><label for="id_gender">Gender:</label>Gender:</td>
+				<td>{{ user.profile.gender }}</td>
+				<td><select id= "UI" name="gender" required id="id_gender"><option value="M">M</option><option value="F">F</option><option value="X">X</option></select><br></td>
 			</tr>
 			<tr>
-				<td>Birthdate</td>
-				<td class="right"><input required type="text" value="{{ user.profile.birthdate }}" onclick="" /></td>
+				<td><label for="id_birthdate">Birthdate:</label>Birthdate:</td>
+				<td>{{ user.profile.birthdate }}</td>
+				<td><input required type="text" value="" onclick="" width="480" height="480" required id="id_birthdate" size="800" /></td>
 			</tr>
 			<tr>
-				<td>Height</td>
-				<td class="right"><input required type="number" value="{{ user.profile.height }}" onclick="" /></td>
+				<td><label for="id_height">Height:</label>Height:</td>
+				<td>{{ user.profile.height }} cm</td>
+				<td><input required type="number" value="" onclick="" width="48" height="48" required id="id_height" step="0.01"/></td>
 			</tr>
 			<tr>
-				<td>Weight</td>
-				<td class="right"><input required type="number" value="{{ user.profile.weight }}" onclick="" size="90" /></td>
+				<td><label for="id_weight">Weight:</label>Weight:</td>
+				<td>{{ user.profile.weight }} kg</td>
+				<td><input required type="number" value="" onclick="" width="48" height="48" required id="id_weight" /></td>
 			</tr>
-			<tr>
+			<tr width="80%">
 				<td>Are metric units preferred?</td>
-				<td class="right"><input required type="text" value="{{ user.profile.showmetric }}" onclick="" /></td>
+				<td>{{ user.profile.showmetric }}</td>
+				<td><select id= "UI"name="gender" required id="id_showmetric"><option value=True>True</option><option value=False>False</option></select><br></td>
 			</tr>
-			<input  type="submit" Value="Submit" onclick="">
+			</table>
+			<br><br>
+			<input  type="submit" name="submit" class="button" Value="Submit" style="padding: 15px 30px; border: none; display: inline-block;	margin: 4px 2px;"></button>
 			</form>
-		</table>
-		<br><br>
-		<div style="text-align: center"><button class="button"><a href="{% url 'prototype:search' %}" alt="Return">RETURN TO SEARCH</a></button></div>
+			<br><br>
 	</body>
 </html>
