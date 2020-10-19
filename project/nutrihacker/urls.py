@@ -30,12 +30,9 @@ urlpatterns = [
     
     #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
-	path('profile/', views.ProfileView.as_view(), name='profile'),
-    # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
-    url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
     # For updating user profiles
-    # url(r'^update_profile/(?P<slug>[\-\w]+)/$', views.UpdateProfile.as_view(), name='update_profile'),
-    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/<profile_id>/', views.UpdateProfile.as_view(), name='update_profile'),
     
     
     
@@ -79,10 +76,6 @@ urlpatterns = [
     path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
     path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
     path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
-    
-    #----------------------   ??? STUFF   -----------------------------------------------
-    
-    
     
     #---------------------------------------------------------------------
 ]

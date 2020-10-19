@@ -153,20 +153,22 @@ def get_user_profile(request, username):
     return render(request, 'nutrihacker/profile.html', {"user":user})
 
 
-
 class ProfileView(ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
-    
-    
-class UpdateProfile(UpdateView):
+
+
+class UpdateProfile(UpdateView, LoginRequiredMixin):
     model = Profile
-    fields = ['gender', 'height', 'weight', 'birthdate', 'showmetric'] # Keep listing whatever fields 
-    # the combined UserProfile and User exposes.
-    slug_field = 'username'
-    slug_url_kwarg = 'slug'
-    context_object_name = 'profile'
-    template_name = 'nutrihacker/profile.html'
+    pk_url_kwarg = 'profile_id'
+    fields = '__all__'
+    success_url= '../../profile/'
+    login_url = '../../nutrihacker/login/'
+    template_name = 'nutrihacker/update_profile.html'
+    
+    def get_object(self):
+        return get_object_or_404(Profile, id=self.kwargs.get('profile_id'))
+
 
 # Page to add dietary preferences and allergies.
 # Login is required to view    
