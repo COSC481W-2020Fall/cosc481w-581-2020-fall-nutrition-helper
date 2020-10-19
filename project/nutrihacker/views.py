@@ -40,8 +40,12 @@ class LogView(LoginRequiredMixin, TemplateView):
 # saves submitted info to database
 class RecordLogView(FormView):
     form_class = LogForm
-    success_url = reverse_lazy('nutrihacker:displayLog')
-    
+    dailylogID = 0
+    success_url = reverse_lazy('nutrihacker:displayLog',kwargs={'pk':dailylogID})
+
+    def get_success_url(self):
+        return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
         kwargs = super(RecordLogView, self).get_form_kwargs()
@@ -70,7 +74,7 @@ class RecordLogView(FormView):
         except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
             daily_log = DailyLog.create(self.request.user, date)
             daily_log.save()
-
+        self.dailylogID = daily_log.id
         # creates the meal log for this time
         meal_log = MealLog.create(time, daily_log)
         meal_log.save()
@@ -82,9 +86,9 @@ class RecordLogView(FormView):
 
         return super(RecordLogView, self).form_valid(form)
 
-class displayLogView(LoginRequiredMixin, TemplateView):
+class DisplayLogView(LoginRequiredMixin, DetailView):
     template_name = 'nutrihacker/displayLog.html'
-
+    model = DailyLog
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
