@@ -16,7 +16,7 @@ def chop_zeros(value):
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=100)
 	servingSize = models.DecimalField(max_digits=8, decimal_places=2)
 	calories = models.IntegerField()
 	totalFat = models.DecimalField(max_digits=8, decimal_places=2)
@@ -206,9 +206,12 @@ class RecipeFood(models.Model):
     def __str__(self):
         return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
 
+#fdcid model for database
+class BrandedIds(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fdcIds = models.IntegerField(default=0)
 
-
-
-
-
+    #currently just gets the name
+    def fdcId(self):
+        return self.fdcId
 
