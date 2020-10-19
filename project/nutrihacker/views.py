@@ -14,7 +14,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .models import Food, Recipe, RecipeFood
+from .models import Food, Recipe, RecipeFood, RecipePreset
 from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
@@ -22,10 +22,10 @@ from .forms import AllergyChoiceForm, DietChoiceForm, AllergyDeleteForm, DietDel
 from .forms import LogForm
 
 class IndexView(TemplateView):
-	template_name = 'nutrihacker/index.html'
+    template_name = 'nutrihacker/index.html'
 
 class DescriptionView(TemplateView):
-	template_name = 'nutrihacker/description.html'
+    template_name = 'nutrihacker/description.html'
 
 class LogView(LoginRequiredMixin, TemplateView):
     template_name = 'nutrihacker/log.html'
@@ -63,68 +63,92 @@ class RecordLogView(FormView):
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
-	if value == value.to_integral():
-		return value.quantize(decimal.Decimal(1))
-	else:
-		return value.normalize()
+    if value == value.to_integral():
+        return value.quantize(decimal.Decimal(1))
+    else:
+        return value.normalize()
 
 # displays the nutrition information of a food
 class FactsView(DetailView):
-	model = Food
-	template_name = 'nutrihacker/nutrifacts.html'
-	
-	# overrides DetailView get_context_data
-	def get_context_data(self, **kwargs):
-		# get context
-		context = super().get_context_data(**kwargs)
-	
-		# if there is a GET request
-		if self.request.method == 'GET':
-			# get the query value
-			query = self.request.GET.get('portions')
-			
-			# if query empty
-			if query == None:
-				# set to 1
-				query = decimal.Decimal(1)
-			else:
-				# convert query to python decimal
-				query = decimal.Decimal(query)
-		# no GET request
-		else:
-			# set query to 1
-			query = decimal.Decimal(1)
+    model = Food
+    template_name = 'nutrihacker/nutrifacts.html'
 
-		# pass query as 'portions'
-		context['portions'] = query
-		
-		# multiply nutrition data fields by query and chop trailing zeros
-		context['food'].servingSize = chop_zeros(query * context['food'].servingSize)
-		context['food'].calories = chop_zeros(query * context['food'].calories)
-		context['food'].totalFat = chop_zeros(query * context['food'].totalFat)
-		context['food'].cholesterol = chop_zeros(query * context['food'].cholesterol)
-		context['food'].sodium = chop_zeros(query * context['food'].sodium)
-		context['food'].totalCarb = chop_zeros(query * context['food'].totalCarb)
-		context['food'].protein = chop_zeros(query * context['food'].protein)
+    # overrides DetailView get_context_data
+    def get_context_data(self, **kwargs):
+        # get context
+        context = super().get_context_data(**kwargs)
 
-		return context
+        # if there is a GET request
+        if self.request.method == 'GET':
+            # get the query value
+            query = self.request.GET.get('portions')
+
+            # if query empty
+            if query == None:
+                # set to 1
+                query = decimal.Decimal(1)
+            else:
+                # convert query to python decimal
+                query = decimal.Decimal(query)
+        # no GET request
+        else:
+            # set query to 1
+            query = decimal.Decimal(1)
+
+        # pass query as 'portions'
+        context['portions'] = query
+
+        # multiply nutrition data fields by query and chop trailing zeros
+        context['food'].servingSize = chop_zeros(query * context['food'].servingSize)
+        context['food'].calories = chop_zeros(query * context['food'].calories)
+        context['food'].totalFat = chop_zeros(query * context['food'].totalFat)
+        context['food'].cholesterol = chop_zeros(query * context['food'].cholesterol)
+        context['food'].sodium = chop_zeros(query * context['food'].sodium)
+        context['food'].totalCarb = chop_zeros(query * context['food'].totalCarb)
+        context['food'].protein = chop_zeros(query * context['food'].protein)
+
+        return context
 
 # displays the food that match a search, passed to the template as a list
-class SearchResultsView(ListView):
-	model = Food
-	template_name = 'nutrihacker/search.html'
-	
-	# overrides ListView get_queryset to find names containing search term and pass them to template
-	def get_queryset(self):
-		query = self.request.GET.get('term')
-		# TODO: change the case of no query terms from returning all food items to returning an empty list
-		if (query == None):
-			return Food.objects.all()
-		else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
-			object_list = Food.objects.filter(
-				Q(name__icontains = query)
-			)
-			return object_list
+class SearchFoodResultsView(ListView):
+    model = Food
+    template_name = 'nutrihacker/search.html'
+    context_object_name = 'food_list'
+
+    # overrides ListView get_queryset to find names containing search term and pass them to template
+    def get_queryset(self):
+
+        query = self.request.GET.get('term')
+        if (query == None):
+            return Food.objects.all()
+        else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
+            food_list = Food.objects.filter(
+                Q(name__icontains = query)
+            )
+
+
+            return food_list
+
+
+class SearchRecipeResultsView(ListView):
+    model = RecipePreset
+    template_name = 'nutrihacker/search.html'
+    context_object_name = 'recipe_list'
+
+    # overrides ListView get_queryset to find names containing search term and pass them to template
+    def get_querysett(self):
+
+        query = self.request.GET.get('term')
+        if (query == None):
+            return RecipePreset.objects.all()
+        else: # If there are any recipes containing the query, they will be in the resulting object_list which is used by search.html in a for loop
+            recipe_list = RecipePreset.objects.filter(
+                Q(name__icontains = query)
+            )
+
+
+            return recipe_list
+
 
 
 def get_user_profile(request, username):
@@ -134,8 +158,8 @@ def get_user_profile(request, username):
 
 
 class ProfileView(ListView):
-	model = Profile
-	template_name = 'nutrihacker/profile.html'
+    model = Profile
+    template_name = 'nutrihacker/profile.html'
     
     
 class UpdateProfile(UpdateView):
@@ -206,10 +230,10 @@ class DeleteDietPreferenceView(LoginRequiredMixin, FormView):
         return super(DeleteDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):
-	template_name = "nutrihacker/login.html"
+    template_name = "nutrihacker/login.html"
 
 class LogoutView(auth_views.LogoutView):
-	template_name = "nutrihacker/logout.html"
+    template_name = "nutrihacker/logout.html"
 
 class PasswordChangeView(auth_views.PasswordChangeView):
     template_name = "nutrihacker/change_password.html"
