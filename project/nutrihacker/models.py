@@ -16,7 +16,7 @@ def chop_zeros(value):
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=100)
 	servingSize = models.DecimalField(max_digits=8, decimal_places=2)
 	calories = models.IntegerField()
 	totalFat = models.DecimalField(max_digits=8, decimal_places=2)
@@ -175,7 +175,7 @@ class MealLog(models.Model):
 		return meal_log
 
 	def __str__(self):
-		return str(self.log_time)
+		return str(self.daily_log.date) + " " + str(self.log_time)
 
 # meal food model that contains key to meal log, key to food, and portion size
 class MealFood(models.Model):
@@ -189,7 +189,7 @@ class MealFood(models.Model):
 		return meal_food
 
 	def __str__(self):
-		return self.food.name
+		return str(self.meal_log.daily_log.date) + " " + str(self.meal_log.log_time) + " " + self.food.name
 
 class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -206,9 +206,12 @@ class RecipeFood(models.Model):
     def __str__(self):
         return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
 
+#fdcid model for database
+class BrandedIds(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fdcIds = models.IntegerField(default=0)
 
-
-
-
-
+    #currently just gets the name
+    def fdcId(self):
+        return self.fdcId
 

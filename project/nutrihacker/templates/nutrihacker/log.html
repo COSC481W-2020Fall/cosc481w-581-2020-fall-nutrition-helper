@@ -2,120 +2,134 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Daily Intake Log</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-    <style>
-        input {
-            width: revert;
-            padding: revert;
-            margin: revert;
-        }
-        td{
-        color: black;
-        }
-        .addbtn{
-            border-radius:90%;
-            cursor: pointer;
-        }
-        .addbtn:hover{
-             background-color: green;
-        }
-        .row1{
-            font-size: 40px;
-        }
-        .row2{
-            text-decoration-line: underline;
-            text-decoration-style: double;
-        }
-        .portionbtn{
-            cursor: pointer;
-            padding: 0px 5px;
-        }
-        .sbmtbtn{
-            font-size: 22px;
-            cursor: pointer;
-        }
-        .sbmtbtn:hover{
-            background-color: green;
-        }
-    </style>
-    <script>
-        function addFood(){
-            var food= document.getElementById("search").value;
-        }
-        function addAnotherFood(){
-            var table = document.getElementById("table1");
-            //var food = document.getElementById();
-            var row = table.insertRow(4);
-
-        }
-        function logFood(){
-
-        }
-
-    </script>
-</head>
-<body>
-    {% include "nutrihacker/navigation_bar.html" %}
-    <form method="POST" action="{% url 'nutrihacker:record_log' %}">
-        {% csrf_token %}
-        <table id="table1" align="center">
-        
-            {{ log_form.as_table }}
-
-            <tr>
-                <td style="text-align: right">Add Another food</td>
-                <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
-                                                    onclick="addAnotherFood()"/></td>
-            </tr>
-        </table>
-        <input class="sbmtbtn" type="submit" value="Submit"/>
-    </form>
-    {% comment %}
-    <table class="FoodINTable" width="50%" align="center">
-        <form>
-            <tr>
-                <th class="row1" colspan="2">Daily Log</th>
-            </tr>
-
-            <tr>
-                <th class="row2" colspan="2">Record What You Ate</th>
-            </tr>
-
-            <tr>
-                <td style="text-align: right">Date:</td>
-                <td style="text-align: left"><input type="date"/></td>
-            </tr>
-
-            <tr>
-                <td style="text-align: right">Time:</td>
-                <td style="text-align: left"><input type="time"/></td>
-            </tr>
-
-            <tr>
-                <td style="text-align: right">Food:</td>
-                <td style="text-align: left"><input id="search" type="search"></a></td>
-            </tr>
-            <tr>
-                <td style="text-align: right">Portion:</td>
-                <td style="text-align: left"><input class="portionbtn" type="number" min="0" max="99" width="50%"/></td>
-            </tr>
-            <tr>
-                <td style="text-align: right">Add Another food</td>
-                <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
-                                                    onclick="addAnotherFood()"/></td>
-
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input class="sbmtbtn" type="submit" value="Submit" onclick="logFood()"/>
-            </tr>
-            </td>
+    <head>
+        <meta charset="UTF-8">
+        <title>Daily Log</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+        <style>
+            h1, h2 {
+                color: white;
+                text-align: center;
+            }
+            label {
+                color: white;
+                text-align: right;
+                margin-right: 10px;
+            }
+            input, select {
+                width: revert;
+                padding: revert;
+                margin: revert;
+            }
+            th {
+                text-align: right;
+            }
+            td {
+                color: black;
+                text-align: left;
+            }
+            .addbtn{
+                border-radius:90%;
+                cursor: pointer;
+            }
+            .addbtn:hover{
+                 background-color: green;
+            }
+            .row1{
+                font-size: 40px;
+            }
+            .row2{
+                text-decoration-line: underline;
+                text-decoration-style: double;
+            }
+            .portionbtn{
+                cursor: pointer;
+                padding: 0px 5px;
+            }
+            .sbmtbtn{
+                font-size: 22px;
+                cursor: pointer;
+            }
+            .sbmtbtn:hover{
+                background-color: green;
+            }
+        </style>
+        <script type="text/javascript">
+            
+        </script>
+    </head>
+    <body>
+        {% include "nutrihacker/navigation_bar.html" %}
+        <h1>Daily Log</h1>
+        <h2>Record what you ate!</h2>
+        <form method="POST" action="{% url 'nutrihacker:record_log' %}">
+            {% csrf_token %}
+            <table id="formtable" align="center">
+                {{ log_form.as_table }}
+            </table>
+            <br>
+            <table align="center">
+                <tr>
+                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
+                                                        onclick="addAnotherFood()"></td>
+                    <td style="text-align: right; color: white">Add another food</td>
+                </tr>
+            </table>
+            <br>
+            <input class="sbmtbtn" type="submit" value="Submit">
         </form>
-    </table>
-    {% endcomment %}
-    <p id="demo"></p>
-</body>
+    </body>
+    <script type="text/javascript">
+        var extra_count = Number(document.getElementById("id_extra_field_count").value);
+        var food_number = 2;
+        
+        // adds another food and portions field to the form
+        function addAnotherFood() {
+            // get the table
+            var table = document.getElementById("formtable");
+            // get all table rows
+            var rows = table.getElementsByTagName("tr");
+            
+            // select rows 3 and 4 (original food and portions field)
+            var f_row = rows[2];
+            var p_row = rows[3];
+            
+            // clone the rows
+            var f_clone = f_row.cloneNode(true);
+            var p_clone = p_row.cloneNode(true);
+            
+            // remove the hidden element
+            p_clone.getElementsByTagName("input")[1].remove();
+
+            // get the label and select elements from the food row
+            var f_label = f_clone.getElementsByTagName("label")[0];
+            var f_select = f_clone.getElementsByTagName("select")[0];
+            
+            // get the label and input elements from the portions row
+            var p_label = p_clone.getElementsByTagName("label")[0];
+            var p_input = p_clone.getElementsByTagName("input")[0];
+
+            // set the for, name, and id
+            f_label.setAttribute("for", "id_food" + food_number);
+            f_select.setAttribute("name", "food" + food_number);
+            f_select.id = "id_food" + food_number;
+
+            // repeat for portions, initialize value to 1
+            p_label.setAttribute("for", "id_portions" + food_number);
+            p_input.setAttribute("name", "portions" + food_number);
+            p_input.id = "id_portions" + food_number;
+            p_input.value = 1;
+
+            // append rows to the table
+            table.appendChild(f_clone);
+            table.appendChild(p_clone);
+
+            // increment counters
+            food_number++;
+            extra_count++;
+
+            // update hidden value
+            document.getElementById("id_extra_field_count").value = extra_count;
+        }
+    </script>
 </html>
