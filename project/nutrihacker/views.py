@@ -30,6 +30,7 @@ class DescriptionView(TemplateView):
 class LogView(LoginRequiredMixin, TemplateView):
     template_name = 'nutrihacker/log.html'
 
+
     # override get_context_data to include form html
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,7 +40,7 @@ class LogView(LoginRequiredMixin, TemplateView):
 # saves submitted info to database
 class RecordLogView(FormView):
     form_class = LogForm
-    success_url = reverse_lazy('nutrihacker:log')
+    success_url = reverse_lazy('nutrihacker:displayLog')
     
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
@@ -80,6 +81,9 @@ class RecordLogView(FormView):
             meal_food.save()
 
         return super(RecordLogView, self).form_valid(form)
+
+class displayLogView(LoginRequiredMixin, TemplateView):
+    template_name = 'nutrihacker/displayLog.html'
 
 # for display purposes
 # chops off extra zeros if unnecessary

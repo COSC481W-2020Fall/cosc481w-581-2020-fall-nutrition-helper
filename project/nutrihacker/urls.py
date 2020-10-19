@@ -26,7 +26,8 @@ urlpatterns = [
     path('log/', views.LogView.as_view(), name='log'),
     # /nutrihacker/record_log
     path('record_log/', views.RecordLogView.as_view(), name='record_log'),
-    
+     # /nutrihacker/displayLog
+    path('displayLog/', views.DisplayLogView.as_view(), name='displayLog'),
     
     #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
