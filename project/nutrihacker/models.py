@@ -13,6 +13,21 @@ def chop_zeros(value):
 	else:
 		return value.normalize()
 
+class RecipePreset(models.Model):
+	#id auto generated
+	name = models.CharField(max_length=50)
+	ingredientOne = models.CharField(max_length=50)
+	ingredientTwo = models.CharField(max_length=50)
+	ingredientThree = models.CharField(max_length=50)
+	ingredientFour = models.CharField(max_length=50)
+	ingredientFive = models.CharField(max_length=50)
+	ingredientSix = models.CharField(max_length=50)
+	ingredientSeven = models.CharField(max_length=50)
+	ingredientEight = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.name
+
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
