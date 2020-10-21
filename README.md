@@ -20,14 +20,32 @@ We are getting all of our nutrition information from the USDA database found her
 ## Running the Web Server
 1. Make sure you are inside the directory 'project'
 2. Run `python manage.py runserver`
-3. You should see the line `Starting development server at http://127.0.0.1:8000/`. The exact address may vary.
-4. Enter the address followed by nutrihacker into your browser: `http://127.0.0.1:8000/nutrihacker/`.
+3. You should see the line `Starting development server at http://127.0.0.1:8000/`
+4. Enter the address followed by nutrihacker into your browser: http://127.0.0.1:8000/nutrihacker/
 
-### Running the Web Server on AWS
-1. Add the public ip to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
-2. Run `python manage.py runserver 0.0.0.0:8000`
+### Running the Web Server on AWS for Teammates
+1. Connect to the EC2 instance
+2. Run `source django-env/bin/activate` to start the virtual environment
+3. Navigate to the project directory: `cd 481/project`
+4. Run `python manage.py runserver 0.0.0.0:8000`
+    * Add `nohup` at the beginning to keep the server running after disconnecting from the session
+5. To stop the server, run `ps aux | awk '/runserver/ {print $2}'` and get the PID (first result), then run `kill [PID]`
+6. Site address: http://3.88.6.165:8000/nutrihacker/
+
+### Running the Web Server on Your Own AWS Server
+1. Install Python packages from requirements.txt
+2. Install latest version of SQLite
+    1. Rename existing sqlite3 file in `/usr/bin` to something else, such as sqlite3.7
+    2. [Download source code from SQLite website](https://www.sqlite.org/download.html)
+    3. [Compile and install the binaries](https://sqlite.org/src/doc/trunk/README.md)
+    4. [Tell Python to use the new version of SQLite](https://stackoverflow.com/a/55775310)
+    5. Verify that your system is also using the latest version: `sqlite3 --version`
+3. Add the public ip of your server to ALLOWED_HOSTS in nutrihelper/nutrihelper/settings.py 
+4. Activate the virtual environment if you are using one
+5. Run `python manage.py runserver 0.0.0.0:8000`
     * You may get the message `Error: That port is already in use.` In this case, run `sudo fuser -k 8000/tcp` to kill any processses on that port.
-3. Enter the public ip followed by :8000/nutrihacker into your browser: `http://[PUBLIC_IP]:8000/nutrihacker`
+6. Address will be the public ip followed by :8000/nutrihacker: `http://[PUBLIC_IP]:8000/nutrihacker`
+7. If the website doesn't load, it's probably due to the security group for your EC2 instance. Add a rule for Custom TCP on port 8000.
 
 ## Members
 * Bryce VanAsselt
