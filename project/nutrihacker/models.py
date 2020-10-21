@@ -225,8 +225,8 @@ class Recipe(models.Model):
 class RecipeFood(models.Model):
     recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=1)
-    amount_unit = models.CharField(max_length=50, default="g")
+    portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    portions_unit = models.CharField(max_length=50, default="g")
 
     @classmethod
     def create(cls, recipe, food, amount):
