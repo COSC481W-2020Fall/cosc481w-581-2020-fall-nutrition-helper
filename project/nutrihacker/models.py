@@ -213,9 +213,9 @@ class RecipeFood(models.Model):
     amount_unit = models.CharField(max_length=50, default="g")
 
     @classmethod
-    def create(cls, meal_log, food, portions):
-        meal_food = cls(recipe=recipe, food=food, amount=portions)
-        return meal_food
+    def create(cls, recipe, food, amount):
+        recipe_food = cls(recipe=recipe, food=food, amount=amount)
+        return recipe_food
 
     def __str__(self):
         return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit

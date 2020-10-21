@@ -314,9 +314,13 @@ class RecordRecipeView(FormView):
     form_class = RecipeForm
     success_url = reverse_lazy('nutrihacker:profile')
     
+    
+    #def get_success_url(self):
+     #   return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+    
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
-        kwargs = super(RecordLogView, self).get_form_kwargs()
+        kwargs = super(RecordRecipeView, self).get_form_kwargs()
         kwargs['extra'] = kwargs['data']['extra_field_count']
         
         return kwargs
@@ -327,12 +331,12 @@ class RecordRecipeView(FormView):
         food_number = int(form.cleaned_data.get('extra_field_count')) + 1
         
         food = {}
-        portions = {}
+        amount = {}
 
         # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
         for i in range(1, food_number+1):
             food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+            amount['amount'+str(i)] = form.cleaned_data.get('amount'+str(i))
 
         
         recipe = Recipe.create(self.request.user)
@@ -340,7 +344,7 @@ class RecordRecipeView(FormView):
 
         # creates a meal food for each food for this meal log
         for i in range(1, food_number+1):
-            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
+            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], amount['amount'+str(i)])
             recipe_food.save()
 
         return super(RecordRecipeView, self).form_valid(form)
