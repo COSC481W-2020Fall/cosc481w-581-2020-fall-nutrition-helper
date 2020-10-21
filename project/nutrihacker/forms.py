@@ -79,8 +79,6 @@ class LogForm(forms.Form):
 # form for users to log their meals
 class RecipeForm(forms.Form):
 	# form fields
-	date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
-	time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), required=True)
 	food1 = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(), required=True)
 	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
 	# hidden field that keeps track of how many extra fields have been added
@@ -99,7 +97,7 @@ class RecipeForm(forms.Form):
 		# add extra fields
 		for i in range(int(extra_fields)):
 			food_field = 'food%s' % (i+2)
-			portions_field = 'portions%s' % (i+2)
+			portions_field = 'portion%s' % (i+2)
 
 			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
 				required=True

@@ -330,9 +330,13 @@ class RecordRecipeView(FormView):
     form_class = RecipeForm
     success_url = reverse_lazy('nutrihacker:profile')
     
+    
+    #def get_success_url(self):
+     #   return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+    
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
-        kwargs = super(RecordLogView, self).get_form_kwargs()
+        kwargs = super(RecordRecipeView, self).get_form_kwargs()
         kwargs['extra'] = kwargs['data']['extra_field_count']
         
         return kwargs
@@ -397,9 +401,9 @@ class DeleteRecipeFood(DeleteView):
 @login_required
 def add_to_recipe(request,food_id):
     food = get_object_or_404(Food, pk=food_id)
-    amount = 1 #hard coded for now
+    portions = 1 #hard coded for now
     recipe,created = Recipe.objects.get_or_create(user=request.user, active=True)
-    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, amount=amount)
+    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, portions=portions)
     recipe.add_to_recipe(book_id)
     recipefood.save()
     messages.success(request, "Recipe updated!")
