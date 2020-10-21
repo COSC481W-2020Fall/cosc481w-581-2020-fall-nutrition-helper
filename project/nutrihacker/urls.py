@@ -18,7 +18,8 @@ urlpatterns = [
 	# /nutrihacker/description/
     path('description/', views.DescriptionView.as_view(), name='description'),
     # /nutrihacker/search/
-    path('search/', views.SearchResultsView.as_view(), name='search'),
+    path('search/', views.SearchFoodView.as_view(), name='search'),
+    path('search-recipe/', views.SearchRecipeView.as_view(), name='search-recipe'),
     
     #----------------------   LOG STUFF   -----------------------------------------------
 
@@ -26,16 +27,14 @@ urlpatterns = [
     path('log/', views.LogView.as_view(), name='log'),
     # /nutrihacker/record_log
     path('record_log/', views.RecordLogView.as_view(), name='record_log'),
-    
+     # /nutrihacker/displayLog
+    path('displayLog/<int:pk>/', views.DisplayLogView.as_view(), name='displayLog'),
     
     #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
-	path('profile/', views.ProfileView.as_view(), name='profile'),
-    # I don't know what this does for the user profile page, might be unnessesary but I got it from a tutorial
-    url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
     # For updating user profiles
-    # url(r'^update_profile/(?P<slug>[\-\w]+)/$', views.UpdateProfile.as_view(), name='update_profile'),
-    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/<profile_id>/', views.UpdateProfile.as_view(), name='update_profile'),
     
     
     
@@ -68,10 +67,15 @@ urlpatterns = [
     #----------------------   RECIPE STUFF   -----------------------------------------------
     
     path('recipe/', views.ListRecipe, name='list-recipe'),
-    path('recipe/create/', views.CreateRecipe.as_view(), name='create_recipe'),
+    path('recipe/create/', views.RecipeView.as_view(), name='create_recipe'),
     path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail_recipe'),
     path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
     path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
+    
+    path('record_recipe/', views.RecordRecipeView.as_view(), name='record_recipe'),
+    
+    
+    
     
     
     path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
@@ -79,10 +83,6 @@ urlpatterns = [
     path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
     path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
     path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
-    
-    #----------------------   ??? STUFF   -----------------------------------------------
-    
-    
     
     #---------------------------------------------------------------------
 ]

@@ -13,10 +13,26 @@ def chop_zeros(value):
 	else:
 		return value.normalize()
 
+class RecipePreset(models.Model):
+	#id auto generated
+	name = models.CharField(max_length=30)
+	ingredientOne = models.CharField(max_length=30)
+	ingredientTwo = models.CharField(max_length=30)
+	ingredientThree = models.CharField(max_length=30)
+	ingredientFour = models.CharField(max_length=30)
+	ingredientFive = models.CharField(max_length=30)
+	ingredientSix = models.CharField(max_length=30)
+	ingredientSeven = models.CharField(max_length=30)
+	ingredientEight = models.CharField(max_length=30)
+
+	def __str__(self):
+		return self.name
+
+
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=100)
 	servingSize = models.DecimalField(max_digits=8, decimal_places=2)
 	calories = models.IntegerField()
 	totalFat = models.DecimalField(max_digits=8, decimal_places=2)
@@ -196,19 +212,38 @@ class Recipe(models.Model):
     name = models.CharField(max_length=50, default="Custom Recipe")
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.now)
+    
+    @classmethod
+    def create(cls, user):
+        recipe = cls(user=user)
+        return recipe
+    
+    def __str__(self):
+        return str(self.name)
+        
 
 class RecipeFood(models.Model):
     recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=1)
-    amount_unit = models.CharField(max_length=50, default="g")
+    portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    portions_unit = models.CharField(max_length=50, default="g")
+
+    @classmethod
+    def create(cls, recipe, food, portions):
+        recipe_food = cls(recipe=recipe, food=food, portions=portions)
+        return recipe_food
 
     def __str__(self):
-        return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
+        return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions) + self.portions_unit
+        
+        
 
+#fdcid model for database
+class BrandedIds(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fdcIds = models.IntegerField(default=0)
 
-
-
-
-
+    #currently just gets the name
+    def fdcId(self):
+        return self.fdcId
 

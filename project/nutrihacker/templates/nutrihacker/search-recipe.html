@@ -9,46 +9,48 @@
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
-        
+
 		<p>This website helps with meal planning and provides nutrition information.</p>
 		<br>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<th><form action="{% url 'nutrihacker:search' %}" method="get">
-                <input name="term" type="search" placeholder="Search Food's" size="100%" />
+		<th><form action="{% url 'nutrihacker:search-recipe' %}" method="get">
+                <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
                 <button type="submit" name="search">&#128269;</button>
             </form>
 		</th>
 		<table class="t02" width="70%" align="center" style="background-color:black;padding:10px" >
 			<tr><th>
-				<h1>Food Results</h1>
+				<h1>Recipe Results</h1>
 			</th>
-				<th>servingSize </th>
-				<th>calories </th>
-				<th>totalFat </th>
-				<th>cholesterol </th>
-				<th>sodium </th>
-				<th>totalCarb </th>
-				<th>protein </th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
+				<th>Ingredient</th>
 			</tr>
 			<!-- For loop that loops for each food that the query returned -->
-				{% for food in object_list %}
+				{% for recipe in object_list %}
 				<tr>
-				<th>			
+				<th>
 				<!-- Button of the food in question -->
-				<a href="{% url 'nutrihacker:nutrifacts' food.id %}"><button class="B">{{ food.name }}</button></a>
+				<a href="#"><button class="B">{{ recipe.name }}</button></a>
 				</th>
 				<!-- Convenient food information at a glance -->
-				<th>{{ food.servingSize }}g</th>
-				<th>{{ food.calories }}</th>
-				<th>{{ food.totalFat }}g</th>
-				<th>{{ food.cholesterol }}mg</th>
-				<th>{{ food.sodium }}mg</th>
-				<th>{{ food.totalCarb }}g</th>
-				<th>{{ food.protein }}g</th>
+				<th>{{ recipe.ingredientOne }}</th>
+				<th>{{ recipe.ingredientTwo }}</th>
+				<th>{{ recipe.ingredientThree }}</th>
+				<th>{{ recipe.ingredientFour }}</th>
+				<th>{{ recipe.ingredientFive }}</th>
+				<th>{{ recipe.ingredientSix }}</th>
+				<th>{{ recipe.ingredientSeven }}</th>
+				<th>{{ recipe.ingredientEight }}</th>
 				</tr>
 				{% endfor %}
 		</table>
-		
+
 				<br>
 				<br>
 	</body>

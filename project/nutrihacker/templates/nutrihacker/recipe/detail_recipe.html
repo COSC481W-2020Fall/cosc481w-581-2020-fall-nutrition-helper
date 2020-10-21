@@ -5,13 +5,12 @@
     </head>
 
     <body>
-<form method="POST">{% csrf_token %}
-    
-<!-- form variable -->    
- {{ form.as_p }} 
-
-  <input type="submit" name="sumbit">
-</form>
+{% for detail_list in object_list %}
+{{ detail.product}}
+{{ detail.type }}
+{{ detail.brand }}
+{{ detail.measurement }}
+{% endfor %}
     </body>
 
 </html>
