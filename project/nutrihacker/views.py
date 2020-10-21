@@ -347,12 +347,12 @@ class RecordRecipeView(FormView):
         food_number = int(form.cleaned_data.get('extra_field_count')) + 1
         
         food = {}
-        amount = {}
+        portions = {}
 
         # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
         for i in range(1, food_number+1):
             food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-            amount['amount'+str(i)] = form.cleaned_data.get('amount'+str(i))
+            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
         
         recipe = Recipe.create(self.request.user)
@@ -360,7 +360,7 @@ class RecordRecipeView(FormView):
 
         # creates a meal food for each food for this meal log
         for i in range(1, food_number+1):
-            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], amount['amount'+str(i)])
+            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
             recipe_food.save()
 
         return super(RecordRecipeView, self).form_valid(form)
@@ -401,9 +401,9 @@ class DeleteRecipeFood(DeleteView):
 @login_required
 def add_to_recipe(request,food_id):
     food = get_object_or_404(Food, pk=food_id)
-    amount = 1 #hard coded for now
+    portions = 1 #hard coded for now
     recipe,created = Recipe.objects.get_or_create(user=request.user, active=True)
-    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, amount=amount)
+    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, portions=portions)
     recipe.add_to_recipe(book_id)
     recipefood.save()
     messages.success(request, "Recipe updated!")

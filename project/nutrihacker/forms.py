@@ -80,11 +80,11 @@ class LogForm(forms.Form):
 class RecipeForm(forms.Form):
 	# form fields
 	food1 = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(), required=True)
-	amount1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
 	# hidden field that keeps track of how many extra fields have been added
 	extra_field_count = forms.CharField(widget=forms.HiddenInput())
 
-	amount1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+	portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
 	# override __init__ to create dynamic number of food and portions fields
 	def __init__(self, *args, **kwargs):
@@ -97,11 +97,11 @@ class RecipeForm(forms.Form):
 		# add extra fields
 		for i in range(int(extra_fields)):
 			food_field = 'food%s' % (i+2)
-			amount_field = 'amount%s' % (i+2)
+			portions_field = 'portion%s' % (i+2)
 
 			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
 				required=True
 			)
-			self.fields[amount_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
+			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
 			)

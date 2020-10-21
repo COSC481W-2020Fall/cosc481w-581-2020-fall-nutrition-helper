@@ -229,12 +229,12 @@ class RecipeFood(models.Model):
     portions_unit = models.CharField(max_length=50, default="g")
 
     @classmethod
-    def create(cls, recipe, food, amount):
-        recipe_food = cls(recipe=recipe, food=food, amount=amount)
+    def create(cls, recipe, food, portions):
+        recipe_food = cls(recipe=recipe, food=food, portions=portions)
         return recipe_food
 
     def __str__(self):
-        return  self.client + " - " + self.food + ", " + self.amount + self.amount_unit
+        return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions) + self.portions_unit
         
         
 
