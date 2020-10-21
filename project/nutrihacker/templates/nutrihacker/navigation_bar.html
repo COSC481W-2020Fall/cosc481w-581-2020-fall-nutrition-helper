@@ -1,16 +1,31 @@
 {% load static %}
 
 <table class="01" width="100%" style="background-color: black;">
+    <style>
+
+    .sub-menu{
+  position: relative;
+  display: inline-block;
+    }
+
+    .sub-menu-1 a{
+    display: block;
+    }
+
+
+
+    </style>
         <tr>
             <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
-            
-            <th><form action="{% url 'nutrihacker:search' %}" method="get">
-                <input name="term" type="search" placeholder="Search..." size="100%" />
-                <button type="submit" name="search">&#128269;</button>
-            </form></th>
-            
+
             <th><a href="{% url 'nutrihacker:description' %}">How it works</a> </th>
-            <th><a href="{% url 'nutrihacker:search' %}">Search</a></th>
+            <div class="sub-menu"><th><a href="{% url 'nutrihacker:search' %}">Search</a>
+            <div class="sub-menu-1">
+                <a href="{% url 'nutrihacker:search' %}">Food</a>
+                <a href="{% url 'nutrihacker:search-recipe' %}">Recipe</a>
+            </div>
+            </th>
+            </div>
             {% if user.is_authenticated %}
             <th><a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
             <th><a href="{% url 'nutrihacker:logout' %}">Logout</a>
@@ -19,3 +34,5 @@
             {% endif %}
         </tr>
 </table>
+
+

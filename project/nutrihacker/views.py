@@ -13,7 +13,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
-from .models import Food, Recipe, RecipeFood
+from .models import Food, Recipe, RecipeFood, RecipePreset
 from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
@@ -139,7 +139,7 @@ class FactsView(DetailView):
 		return context
 
 # displays the food that match a search, passed to the template as a list
-class SearchResultsView(ListView):
+class SearchFoodView(ListView):
 	model = Food
 	template_name = 'nutrihacker/search.html'
 	
@@ -154,6 +154,22 @@ class SearchResultsView(ListView):
 				Q(name__icontains = query)
 			)
 			return object_list
+
+
+class SearchRecipeView(ListView):
+    model = RecipePreset
+    template_name = 'nutrihacker/search-recipe.html'
+
+    # overrides ListView get_queryset to find names containing search term and pass them to template
+    def get_queryset(self):
+        query = self.request.GET.get('term')
+        if (query == None):
+            return RecipePreset.objects.all()
+        else:
+            object_list = RecipePreset.objects.filter(
+                Q(name__icontains=query)
+            )
+            return object_list
 
 
 def get_user_profile(request, username):

@@ -18,7 +18,8 @@ urlpatterns = [
 	# /nutrihacker/description/
     path('description/', views.DescriptionView.as_view(), name='description'),
     # /nutrihacker/search/
-    path('search/', views.SearchResultsView.as_view(), name='search'),
+    path('search/', views.SearchFoodView.as_view(), name='search'),
+    path('search-recipe/', views.SearchRecipeView.as_view(), name='search-recipe'),
     
     #----------------------   LOG STUFF   -----------------------------------------------
 
