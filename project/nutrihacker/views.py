@@ -229,6 +229,10 @@ class AddAllergyView(LoginRequiredMixin, FormView):
         allergy = form.cleaned_data.get('allergy_select')
         allergy.profiles.add(profile)
         return super(AddAllergyView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        return HttpResponseRedirect(self.get_success_url())
         
 class AddDietPreferenceView(LoginRequiredMixin, FormView):
     form_class = DietChoiceForm
