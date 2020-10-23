@@ -81,10 +81,6 @@
             <br>
             <input class="sbmtbtn" type="submit" value="Submit">
         </form>
-		<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Send message">
-</form>
     </body>
     <script type="text/javascript">
         var extra_count = Number(document.getElementById("id_extra_field_count").value);

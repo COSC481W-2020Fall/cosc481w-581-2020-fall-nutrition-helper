@@ -210,8 +210,10 @@ class MealFood(models.Model):
 class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, default="Custom Recipe")
-    in_progress = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.now)
+    instruction = models.TextField(default="")
+    servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
     
     @classmethod
     def create(cls, user):
@@ -226,7 +228,6 @@ class RecipeFood(models.Model):
     recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
-    portions_unit = models.CharField(max_length=50, default="g")
 
     @classmethod
     def create(cls, recipe, food, portions):
