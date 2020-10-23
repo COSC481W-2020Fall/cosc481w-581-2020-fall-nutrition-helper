@@ -43,13 +43,13 @@ urlpatterns = [
     # /nutrihacker/diet_and_allergies/
     path('diet_and_allergies/', views.DietAndAllergiesView.as_view(), name='diet_and_allergies'),
     # /nutrihacker/add_allergy/
-    path('add_allergy/', views.AddAllergyView.as_view(), name='add_allergy'),
+    path('add_allergy/', views.add_allergy, name='add_allergy'),
     # /nutrihacker/add_diet_preference/
-    path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
+    path('add_diet_preference/', views.add_diet_preference, name='add_diet_preference'),
     # /nutrihacker/delete_allergy/
-    path('delete_allergy/', views.DeleteAllergyView.as_view(), name='delete_allergy'),
+    path('delete_allergy/', views.delete_allergy, name='delete_allergy'),
     # /nutrihacker/delete_diet_preference/
-    path('delete_diet_preference/', views.DeleteDietPreferenceView.as_view(), name='delete_diet_preference'),
+    path('delete_diet_preference/', views.delete_diet_preference, name='delete_diet_preference'),
     
     
     
