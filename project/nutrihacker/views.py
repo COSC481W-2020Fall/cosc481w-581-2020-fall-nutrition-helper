@@ -220,51 +220,55 @@ class DietAndAllergiesView(LoginRequiredMixin, TemplateView):
         context['diet_delete_form'] = DietDeleteForm(current_profile=profile)
         return context
 
-class AddAllergyView(LoginRequiredMixin, FormView):
-    form_class = AllergyChoiceForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+# adds allergy to user from the AllergyChoiceForm form, always redirects back to DietAndAllergiesView        
+def add_allergy(request):
+    if request.method == 'POST':
+        form = AllergyChoiceForm(request.POST)
         
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        allergy = form.cleaned_data.get('allergy_select')
-        allergy.profiles.add(profile)
-        return super(AddAllergyView, self).form_valid(form)
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            allergy = form.cleaned_data.get('allergy_select')
+            allergy.profiles.add(profile)
     
-    def form_invalid(self, form):
-        print(form.errors)
-        return HttpResponseRedirect(self.get_success_url())
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# adds diet preference to user from the DietChoiceForm form, always redirects back to DietAndAllergiesView
+def add_diet_preference(request):
+    if request.method == 'POST':
+        form = DietChoiceForm(request.POST)
         
-class AddDietPreferenceView(LoginRequiredMixin, FormView):
-    form_class = DietChoiceForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            diet = form.cleaned_data.get('diet_select')
+            diet.profiles.add(profile)
     
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        diet = form.cleaned_data.get('diet_select')
-        diet.profiles.add(profile)
-        return super(AddDietPreferenceView, self).form_valid(form)
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# deletes allergies from user from the AllergyDeleteForm form, always redirects back to DietAndAllergiesView  
+def delete_allergy(request):
+    if request.method == 'POST':
+        form = AllergyDeleteForm(request.POST)
         
-class DeleteAllergyView(LoginRequiredMixin, FormView):
-    form_class = AllergyDeleteForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            allergy_list = form.cleaned_data.get('allergy_checkbox')
+            for allergy in allergy_list:
+                allergy.profiles.remove(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# deletes diet preferences from user from the DietDeleteForm form, always redirects back to DietAndAllergiesView  
+def delete_diet_preference(request):
+    if request.method == 'POST':
+        form = DietDeleteForm(request.POST)
         
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        allergy_list = form.cleaned_data.get('allergy_checkbox')
-        for allergy in allergy_list:
-            allergy.profiles.remove(profile)
-        return super(DeleteAllergyView, self).form_valid(form)
-        
-class DeleteDietPreferenceView(LoginRequiredMixin, FormView):
-    form_class = DietDeleteForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-        
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        diet_list = form.cleaned_data.get('diet_checkbox')
-        for diet in diet_list:
-            diet.profiles.remove(profile)
-        return super(DeleteDietPreferenceView, self).form_valid(form)
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            diet_list = form.cleaned_data.get('diet_checkbox')
+            for diet in diet_list:
+                diet.profiles.remove(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
