@@ -1,5 +1,7 @@
 import decimal
 
+from dal import autocomplete
+
 from django.http import HttpResponse, HttpResponseRedirect  
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
@@ -25,6 +27,19 @@ class IndexView(TemplateView):
 
 class DescriptionView(TemplateView):
 	template_name = 'nutrihacker/description.html'
+
+# autocomplete search for foods
+class FoodAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		if not self.request.user.is_authenticated:
+			return Food.objects.none()
+
+		qs = Food.objects.all()
+
+		if self.q:
+			qs = qs.filter(name__icontains=self.q)
+
+		return qs
 
 # Daily log page, login required
 class LogView(LoginRequiredMixin, TemplateView):
