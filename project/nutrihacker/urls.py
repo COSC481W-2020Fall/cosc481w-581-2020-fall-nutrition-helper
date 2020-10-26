@@ -17,23 +17,24 @@ urlpatterns = [
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
 	# /nutrihacker/description/
     path('description/', views.DescriptionView.as_view(), name='description'),
+    # /nutrihacker/food_autocomplete
+    path('food_autocomplete/', views.FoodAutocomplete.as_view(), name='food_autocomplete'),
     # /nutrihacker/search/
-    path('search/', views.SearchResultsView.as_view(), name='search'),
+    path('search/', views.SearchFoodView.as_view(), name='search'),
+    path('search-recipe/', views.SearchRecipeView.as_view(), name='search-recipe'),
     
     #----------------------   LOG STUFF   -----------------------------------------------
 
     # /nutrihacker/log
     path('log/', views.LogView.as_view(), name='log'),
-    # /nutrihacker/record_log
-    path('record_log/', views.RecordLogView.as_view(), name='record_log'),
-     # /nutrihacker/displayLog
+    # /nutrihacker/displayLog
     path('displayLog/<int:pk>/', views.DisplayLogView.as_view(), name='displayLog'),
     
     #------------------------- PROFILE STUFF ---------------------------------------------------
     # /nutrihacker/profile/
     path('profile/', views.ProfileView.as_view(), name='profile'),
     # For updating user profiles
-    path('update_profile/<profile_id>/', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
     
     
     
@@ -42,13 +43,13 @@ urlpatterns = [
     # /nutrihacker/diet_and_allergies/
     path('diet_and_allergies/', views.DietAndAllergiesView.as_view(), name='diet_and_allergies'),
     # /nutrihacker/add_allergy/
-    path('add_allergy/', views.AddAllergyView.as_view(), name='add_allergy'),
+    path('add_allergy/', views.add_allergy, name='add_allergy'),
     # /nutrihacker/add_diet_preference/
-    path('add_diet_preference/', views.AddDietPreferenceView.as_view(), name='add_diet_preference'),
+    path('add_diet_preference/', views.add_diet_preference, name='add_diet_preference'),
     # /nutrihacker/delete_allergy/
-    path('delete_allergy/', views.DeleteAllergyView.as_view(), name='delete_allergy'),
+    path('delete_allergy/', views.delete_allergy, name='delete_allergy'),
     # /nutrihacker/delete_diet_preference/
-    path('delete_diet_preference/', views.DeleteDietPreferenceView.as_view(), name='delete_diet_preference'),
+    path('delete_diet_preference/', views.delete_diet_preference, name='delete_diet_preference'),
     
     
     
@@ -65,23 +66,13 @@ urlpatterns = [
     
     #----------------------   RECIPE STUFF   -----------------------------------------------
     
-    path('recipe/', views.ListRecipe, name='list-recipe'),
-    path('recipe/create/', views.CreateRecipe.as_view(), name='create_recipe'),
+    path('recipe/', views.ListRecipe.as_view(), name='list_recipe'),
+    path('recipe/create/', views.RecipeView.as_view(), name='create_recipe'),
     path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail_recipe'),
     path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
     path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
     
     path('record_recipe/', views.RecordRecipeView.as_view(), name='record_recipe'),
-    
-    
-    
-    
-    
-    path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
-    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create_recipefood'),
-    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
-    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
-    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
     
     #---------------------------------------------------------------------
 ]

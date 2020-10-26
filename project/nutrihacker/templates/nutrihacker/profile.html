@@ -79,11 +79,11 @@
 			</tr>
 			<tr>
 				<td>Height</td>
-				<td class="right">{{ user.profile.height }}</td>
+				<td class="right">{{ user.profile.get_height_str }}</td>
 			</tr>
 			<tr>
 				<td>Weight</td>
-				<td class="right">{{ user.profile.weight }}</td>
+				<td class="right">{{ user.profile.get_weight_str }}</td>
 			</tr>
 			<tr>
 				<td>Are metric units preferred?</td>
@@ -97,8 +97,9 @@
 				and Allergies</a></button>
 			<br><br>
 			<button class="button"><a href="{% url 'nutrihacker:log' %}" alt="Daily Log">Daily Log</a></button>
-            <button class="button"><a href="{% url 'nutrihacker:update_profile' user.profile.id %}" alt="Update Profile">Update Profile</a></button>
+            <button class="button"><a href="{% url 'nutrihacker:update_profile' %}" alt="Update Profile">Update Profile</a></button>
 			<button class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create Recipe</a></button>
+			<button class="button"><a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">View Your Recipes</a></button>
             <button class="button"><a href="{% url 'nutrihacker:change_password' %}" alt="Change Password">Change Password</a></button>
             <br><br>
 		</div>

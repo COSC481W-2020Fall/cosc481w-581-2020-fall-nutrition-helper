@@ -40,77 +40,42 @@
 				margin: 4px 2px;
 			}
 			label {
-				color: white;
+				color: green;
 			}
 		</style>
 	</head>
 	<body style="background-size: cover">
-		<table class="01" width="100%" style="background-color: black;">
-				<tr>
-					<th style="text-align: left;"><a href="../"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
-					
-					<th><form action="{% url 'nutrihacker:search' %}" method="get">
-						<input name="term" type="search" placeholder="Search..." size="100%" />
-						<button type="submit" name="search">&#128269;</button>
-					</form></th>
-					
-					<th><a href="../../description">How it works</a> </th>
-					<th><a href="../../search">Search</a></th>
-                    {% if user.is_authenticated %}
-                    <th><a href="../../profile">{{ user.username }}'s Profile</a>
-                    <th><a href="../../logout">Logout</a>
-                    {% else %}
-					<th><a href ="../../login">Login/Register</a></th>
-                    {% endif %}
-				</tr>
-		</table>
-		<br>
-		<br>
-		
-	<form method="POST">{% csrf_token %}
-    
-      <!-- form variable -->    
-      {{ form.as_p }} 
-
-      <input type="submit" name="sumbit">
-    </form>
-	
-	
-	
-	<h1 style="color: magenta">THE BELOW TABLE DOESN'T WORK FOR SOME ARCANE REASON BUT THE ABOVE ONE DOES</h1>
-	
-	
-	  <form method="POST">{% csrf_token %}
-		<table class="facts" style="background-color: white" style="width:50%">
-			<tr>
-				<td><label for="id_gender">Gender:</label>Gender:</td>
-				<td>{{ user.profile.gender }}</td>
-				<td><select id= "UI" name="gender" required id="id_gender"><option value="M">M</option><option value="F">F</option><option value="X">X</option></select><br></td>
-			</tr>
-			<tr>
-				<td><label for="id_birthdate">Birthdate:</label>Birthdate:</td>
-				<td>{{ user.profile.birthdate }}</td>
-				<td><input required type="text" value="" onclick="" width="480" height="480" required id="id_birthdate" size="800" /></td>
-			</tr>
-			<tr>
-				<td><label for="id_height">Height:</label>Height:</td>
-				<td>{{ user.profile.height }} cm</td>
-				<td><input required type="number" value="" onclick="" width="48" height="48" required id="id_height" step="0.01"/></td>
-			</tr>
-			<tr>
-				<td><label for="id_weight">Weight:</label>Weight:</td>
-				<td>{{ user.profile.weight }} kg</td>
-				<td><input required type="number" value="" onclick="" width="48" height="48" required id="id_weight" /></td>
-			</tr>
-			<tr width="80%">
-				<td>Are metric units preferred?</td>
-				<td>{{ user.profile.showmetric }}</td>
-				<td><select id= "UI"name="gender" required id="id_showmetric"><option value=True>True</option><option value=False>False</option></select><br></td>
-			</tr>
-			</table>
-			<br><br>
-			<input  type="submit" name="submit" class="button" Value="Submit" style="padding: 15px 30px; border: none; display: inline-block;	margin: 4px 2px;"></button>
-			</form>
+        {% include "nutrihacker/navigation_bar.html" %}
+        <br>
+        <br>
+        <p>{{ form.errors }}</p>
+        <form method="POST" action="{% url 'nutrihacker:update_profile' %}">
+            {% csrf_token %}
+            <table class="facts" style="background-color: white" style="width:50%">
+                <tr>
+                    <td>{{ form.gender.label_tag }}</td>
+                    <td>{{ form.gender }}<br></td>
+                </tr>
+                <tr>
+                    <td>{{ form.birthdate.label_tag }}</td>
+                    <td>{{ form.birthdate }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.height.label_tag }}</td>
+                    <td>{{ form.height }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.weight.label_tag }}</td>
+                    <td>{{ form.weight }}</td>
+                </tr>
+                <tr width="80%">
+                    <td>Are metric units preferred?</td>
+                    <td>{{ form.showmetric }}<br></td>
+                </tr>
+            </table>
+            <br><br>
+            <input  type="submit" value="Update" style="padding: 15px 30px; border: none; display: inline-block;	margin: 4px 2px;"></button>
+        </form>
 			<br><br>
 	</body>
 </html>

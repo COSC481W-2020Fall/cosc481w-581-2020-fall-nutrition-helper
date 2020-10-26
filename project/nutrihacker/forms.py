@@ -1,5 +1,8 @@
+from datetime import datetime
+from dal import autocomplete
+
 from django import forms
-from django.forms import BaseFormSet, formset_factory
+from django.utils.translation import ugettext as _
 
 from .models import Food, Allergy, DietPreference
 
@@ -49,7 +52,10 @@ class LogForm(forms.Form):
 	# form fields
 	date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
 	time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), required=True)
-	food1 = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(), required=True)
+	food1 = forms.ModelChoiceField(
+		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
+		required=True
+	)
 	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
 	# hidden field that keeps track of how many extra fields have been added
 	extra_field_count = forms.CharField(widget=forms.HiddenInput())
@@ -70,18 +76,36 @@ class LogForm(forms.Form):
 			portions_field = 'portions%s' % (i+2)
 
 			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
-				required=True
+				widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
 			)
 			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
 			)
+
+	# override clean to add other errors
+	def clean(self):
+		cleaned_data = super(LogForm, self).clean()
+		
+		now = datetime.now().replace(second=0, microsecond=0)
+		
+		# raises an error if date/time is in the future
+		if cleaned_data['date'] > now.date():
+			self.add_error('date', forms.ValidationError(_('Invalid date: cannot log the future'), code='future date'))
+		elif cleaned_data['time'] > now.time():
+			self.add_error('time', forms.ValidationError(_('Invalid time: cannot log the future'), code='future time'))
+		
+		return cleaned_data
             
-# form for users to log their meals
+# form for users to log their recipes
 class RecipeForm(forms.Form):
-	# form fields
-	date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
-	time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), required=True)
-	food1 = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(), required=True)
+    # form fields
+	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
+	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
+	food1 = forms.ModelChoiceField(
+		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
+		required=True
+	)
 	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
 	# hidden field that keeps track of how many extra fields have been added
 	extra_field_count = forms.CharField(widget=forms.HiddenInput())
@@ -102,7 +126,7 @@ class RecipeForm(forms.Form):
 			portions_field = 'portions%s' % (i+2)
 
 			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
-				required=True
+				widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
 			)
 			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
