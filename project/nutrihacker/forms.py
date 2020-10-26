@@ -1,6 +1,8 @@
+from datetime import datetime
 from dal import autocomplete
 
 from django import forms
+from django.utils.translation import ugettext as _
 
 from .models import Food, Allergy, DietPreference
 
@@ -79,6 +81,20 @@ class LogForm(forms.Form):
 			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
 			)
+
+	# override clean to add other errors
+	def clean(self):
+		cleaned_data = super(LogForm, self).clean()
+		
+		now = datetime.now().replace(second=0, microsecond=0)
+		
+		# raises an error if date/time is in the future
+		if cleaned_data['date'] > now.date():
+			self.add_error('date', forms.ValidationError(_('Invalid date: cannot log the future'), code='future date'))
+		elif cleaned_data['time'] > now.time():
+			self.add_error('time', forms.ValidationError(_('Invalid time: cannot log the future'), code='future time'))
+		
+		return cleaned_data
             
 # form for users to log their meals
 class RecipeForm(forms.Form):

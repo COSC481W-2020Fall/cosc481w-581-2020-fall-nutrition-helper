@@ -1,13 +1,14 @@
 import decimal
 
 from dal import autocomplete
+from datetime import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect  
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
+from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView, FormMixin
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, login, authenticate
@@ -41,31 +42,21 @@ class FoodAutocomplete(autocomplete.Select2QuerySetView):
 
 		return qs
 
-# Daily log page, login required
-class LogView(LoginRequiredMixin, TemplateView):
-    template_name = 'nutrihacker/log.html'
-
-    # override get_context_data to include form html
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['log_form'] = LogForm()
-        return context
-
-# saves submitted info to database
-class RecordLogView(FormView):
+# Daily log page, saves submitted info to database
+class LogView(LoginRequiredMixin, FormView):
     form_class = LogForm
-
-    dailylogID = 0 # id of daily log to be redirected to
-    success_url = reverse_lazy('nutrihacker:displayLog',kwargs={'pk':dailylogID})
-
+    template_name = 'nutrihacker/log.html'
+    daily_log_id = 0 # id of daily log to be redirected to
+    
     # override get_success_url to correct daily log
     def get_success_url(self):
-        return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+        return reverse_lazy('nutrihacker:displayLog', kwargs={'pk':self.daily_log_id})
 
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
-        kwargs = super(RecordLogView, self).get_form_kwargs()
-        kwargs['extra'] = kwargs['data']['extra_field_count']
+        kwargs = super(LogView, self).get_form_kwargs()
+        if 'data' in kwargs:
+            kwargs['extra'] = kwargs['data']['extra_field_count']
         
         return kwargs
 
@@ -92,7 +83,7 @@ class RecordLogView(FormView):
             daily_log.save()
 		
 		# update the daily log id to be passed to success url
-        self.dailylogID = daily_log.id
+        self.daily_log_id = daily_log.id
         
 		# creates the meal log for this time
         meal_log = MealLog.create(time, daily_log)
@@ -103,7 +94,7 @@ class RecordLogView(FormView):
             meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
             meal_food.save()
 
-        return super(RecordLogView, self).form_valid(form)
+        return super(LogView, self).form_valid(form)
 
 class DisplayLogView(LoginRequiredMixin, DetailView):
     template_name = 'nutrihacker/displayLog.html'

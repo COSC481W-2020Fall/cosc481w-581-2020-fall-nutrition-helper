@@ -69,10 +69,10 @@
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Daily Log</h1>
         <h2>Record what you ate!</h2>
-        <form method="POST" action="{% url 'nutrihacker:record_log' %}">
+        <form method="POST" action="{% url 'nutrihacker:log' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
-                {{ log_form.as_table }}
+                {{ form.as_table }}
             </table>
             <br>
             <table align="center">
@@ -86,7 +86,7 @@
             <input type="submit" value="Submit" />
         </form>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-        {{ log_form.media }}
+        {{ form.media }}
         <script type="text/javascript">
             var extra_count = Number(document.getElementById("id_extra_field_count").value);
             var food_number = 2;
