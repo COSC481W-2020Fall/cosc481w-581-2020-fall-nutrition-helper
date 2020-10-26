@@ -209,14 +209,12 @@ class ProfileView(ListView):
 
 class UpdateProfile(UpdateView, LoginRequiredMixin):
     model = Profile
-    pk_url_kwarg = 'profile_id'
-    fields = '__all__'
-    success_url= '../../profile/'
-    login_url = '../../nutrihacker/login/'
+    fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
+    success_url= reverse_lazy('nutrihacker:profile')
     template_name = 'nutrihacker/update_profile.html'
     
     def get_object(self):
-        return get_object_or_404(Profile, id=self.kwargs.get('profile_id'))
+        return get_object_or_404(Profile, user=self.request.user)
 
 
 # Page to add dietary preferences and allergies.
