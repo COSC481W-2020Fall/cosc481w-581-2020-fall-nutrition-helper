@@ -96,9 +96,12 @@ class LogForm(forms.Form):
 		
 		return cleaned_data
             
-# form for users to log their meals
+# form for users to log their recipes
 class RecipeForm(forms.Form):
-	# form fields
+    # form fields
+	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
+	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
 	food1 = forms.ModelChoiceField(
 		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
 		required=True
@@ -120,7 +123,7 @@ class RecipeForm(forms.Form):
 		# add extra fields
 		for i in range(int(extra_fields)):
 			food_field = 'food%s' % (i+2)
-			portions_field = 'portion%s' % (i+2)
+			portions_field = 'portions%s' % (i+2)
 
 			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
 				widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True

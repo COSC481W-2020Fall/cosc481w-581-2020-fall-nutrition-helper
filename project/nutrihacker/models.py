@@ -78,18 +78,18 @@ class Profile(models.Model):
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	showmetric = models.BooleanField(default=True)
-    
-    
+	
+	
 	#currently just gets the associated user
 	def __str__(self):
 		return self.user.username
-    
-    #def get_imperial_weight(self):
-     #   return self.weight * 2.2046
-    
+	
+	#def get_imperial_weight(self):
+	 #   return self.weight * 2.2046
+	
 	#def get_imperial_height(self):
 	#	return self.height * 3.28084
-    
+	
 	#def get_imperial_feet_and_inches(self):
 	#	feet = Floor(self.get_imperial_height())
 	#	inches = (self.get_imperial_height() - feet) * 12
@@ -112,25 +112,25 @@ class Profile(models.Model):
 
 # User's allergies. In the future maybe this should be related to profile instead of user.
 class Allergy(models.Model):
-    profiles = models.ManyToManyField(Profile, blank=True)
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000)
-    
-    def __str__(self):
-        return self.name
-        
-    class Meta:
-        # correct spelling of plural form of allergy
-        verbose_name_plural = "Allergies"
+	profiles = models.ManyToManyField(Profile, blank=True)
+	name = models.CharField(max_length=50)
+	description = models.CharField(max_length=1000)
+	
+	def __str__(self):
+		return self.name
+		
+	class Meta:
+		# correct spelling of plural form of allergy
+		verbose_name_plural = "Allergies"
 
 # Dietary preferences i.e vegetarian, pescatarian, keto, etc. Similar to allergies.
 class DietPreference(models.Model):
-    profiles = models.ManyToManyField(Profile, blank=True)
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000)
-    
-    def __str__(self):
-        return self.name
+	profiles = models.ManyToManyField(Profile, blank=True)
+	name = models.CharField(max_length=50)
+	description = models.CharField(max_length=1000)
+	
+	def __str__(self):
+		return self.name
 
 # daily log of meals
 class DailyLog(models.Model):
@@ -257,42 +257,96 @@ class MealFood(models.Model):
 		return total
 
 class Recipe(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, default="Custom Recipe")
-    in_progress = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=datetime.now)
-    
-    @classmethod
-    def create(cls, user):
-        recipe = cls(user=user)
-        return recipe
-    
-    def __str__(self):
-        return str(self.name)
-        
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	name = models.CharField(max_length=50, default="Custom Recipe")
+	is_public = models.BooleanField(default=False)
+	created_at = models.DateTimeField(default=datetime.now)
+	instruction = models.TextField(default="")
+	servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+	
+	@classmethod
+	def create(cls, user, name, servingsProduced, instruction):
+		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction)
+		return recipe
+	
+	def __str__(self):
+		return str(self.user.username) + "'s " + str(self.name)
+		
+	# calculates total nutrition information of the recipe
+	def get_total(self):
+		total = {
+			'calories':0,
+			'totalFat':0,
+			'cholesterol':0,
+			'sodium':0,
+			'totalCarb':0,
+			'protein':0
+		}
+
+		# gets list of recipe foods in current recipe
+		recipe_food_list = RecipeFood.objects.filter(recipe_log__id=self.id)
+		
+		# for each meal food
+		for r_food in recipe_food_list:
+			# gets total nutrients for each food
+			nutrients = r_food.get_total()
+			# total the nutrients
+			for key in nutrients:
+				total[key] += nutrients[key]
+
+		# chops all unnecessary zeros
+		for key in total:
+			total[key] = chop_zeros(total[key])
+
+		return total
+		
 
 class RecipeFood(models.Model):
-    recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE)
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
-    portions_unit = models.CharField(max_length=50, default="g")
+	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+	food = models.ForeignKey(Food, on_delete=models.CASCADE)
+	portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
 
-    @classmethod
-    def create(cls, recipe, food, portions):
-        recipe_food = cls(recipe=recipe, food=food, portions=portions)
-        return recipe_food
+	@classmethod
+	def create(cls, recipe, food, portions):
+		recipe_food = cls(recipe=recipe, food=food, portions=portions)
+		return recipe_food
 
-    def __str__(self):
-        return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions) + self.portions_unit
-        
-        
+	def __str__(self):
+		return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions)
+		
+	# calculates total nutrition of the recipe food
+	def get_total(self):
+		total = {
+			'calories':0,
+			'totalFat':0,
+			'cholesterol':0,
+			'sodium':0,
+			'totalCarb':0,
+			'protein':0
+		}
+
+		# gets the nutrients for single serving of the food
+		nutrients = self.food.get_nutrients()
+		
+		# for each nutrient
+		for key in nutrients:
+			# adds the food's nutrients times the portion size
+			total[key] += nutrients[key] * self.portions
+		
+		# chops all unnecessary zeros
+		for key in total:
+			total[key] = chop_zeros(total[key])
+
+		return total
+		
+		
 
 #fdcid model for database
 class BrandedIds(models.Model):
-    id = models.IntegerField(primary_key=True)
-    fdcIds = models.IntegerField(default=0)
+	id = models.IntegerField(primary_key=True)
+	fdcIds = models.IntegerField(default=0)
 
-    #currently just gets the name
-    def fdcId(self):
-        return self.fdcId
+	#currently just gets the name
+	def fdcId(self):
+		return self.fdcId
 

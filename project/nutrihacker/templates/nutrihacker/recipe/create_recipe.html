@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Recipe Creator</title>
+        <title>Create Recipe</title>
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <style>
             h1, h2 {
@@ -83,7 +83,7 @@
                 </tr>
             </table>
             <br>
-            <input class="sbmtbtn" type="submit" value="Submit">
+            <input type="submit" value="Submit" />
         </form>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
         {{ recipe_form.media }}
@@ -98,9 +98,9 @@
                 // get all table rows
                 var rows = table.getElementsByTagName("tr");
                 
-                // select rows 1 and 2 (original food and portions field)
-                var f_row = rows[0];
-                var p_row = rows[1];
+                // select rows 4 and 5 (original food and portions field)
+                var f_row = rows[3];
+                var p_row = rows[4];
                 
                 // clone the rows
                 var f_clone = f_row.cloneNode(true);
