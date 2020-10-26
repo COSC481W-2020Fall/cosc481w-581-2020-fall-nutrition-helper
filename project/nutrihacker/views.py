@@ -208,13 +208,32 @@ class ProfileView(ListView):
 
 
 class UpdateProfile(UpdateView, LoginRequiredMixin):
-    model = Profile
-    fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
-    success_url= reverse_lazy('nutrihacker:profile')
-    template_name = 'nutrihacker/update_profile.html'
-    
-    def get_object(self):
-        return get_object_or_404(Profile, user=self.request.user)
+	model = Profile
+	fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
+	success_url= reverse_lazy('nutrihacker:profile')
+	template_name = 'nutrihacker/update_profile.html'
+	
+	def form_valid(self, form):
+		self.object.gender = form.cleaned_data.get('gender')
+		self.object.birthdate = form.cleaned_data.get('birthdate')
+		self.object.set_height(form.cleaned_data.get('height'))
+		self.object.set_weight(form.cleaned_data.get('weight'))
+		self.object.showmetric = form.cleaned_data.get('showmetric')
+		self.object.save()
+		return HttpResponseRedirect(self.get_success_url())
+	
+	# uses get_height() and get_weight() to deal with unit conversion  
+	def get_initial(self):
+		return {
+			'gender': self.object.gender, 
+			'birthdate': self.object.birthdate, 
+			'height': self.object.get_height(), 
+			'weight': self.object.get_weight(), 
+			'showmetric': self.object.showmetric
+		}
+	
+	def get_object(self):
+		return get_object_or_404(Profile, user=self.request.user)
 
 
 # Page to add dietary preferences and allergies.
