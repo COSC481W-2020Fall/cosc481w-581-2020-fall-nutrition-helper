@@ -1,4 +1,4 @@
-import decimal
+from decimal import Decimal
 
 from dal import autocomplete
 from datetime import datetime
@@ -104,7 +104,7 @@ class DisplayLogView(LoginRequiredMixin, DetailView):
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
 	if value == value.to_integral():
-		return value.quantize(decimal.Decimal(1))
+		return value.quantize(Decimal(1))
 	else:
 		return value.normalize()
 
@@ -126,14 +126,14 @@ class FactsView(DetailView):
 			# if query empty
 			if query == None:
 				# set to 1
-				query = decimal.Decimal(1)
+				query = Decimal(1)
 			else:
 				# convert query to python decimal
-				query = decimal.Decimal(query)
+				query = Decimal(query)
 		# no GET request
 		else:
 			# set query to 1
-			query = decimal.Decimal(1)
+			query = Decimal(1)
 
 		# pass query as 'portions'
 		context['portions'] = query

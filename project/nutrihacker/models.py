@@ -1,4 +1,4 @@
-import decimal
+from decimal import Decimal
 
 from django.db import models
 from django.db.models.functions import Floor
@@ -9,7 +9,7 @@ from datetime import datetime
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
 	if value == value.to_integral():
-		return value.quantize(decimal.Decimal(1))
+		return value.quantize(Decimal(1))
 	else:
 		return value.normalize()
 
