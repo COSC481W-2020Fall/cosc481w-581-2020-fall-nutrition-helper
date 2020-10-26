@@ -90,9 +90,9 @@ class LogForm(forms.Form):
 		
 		# raises an error if date/time is in the future
 		if cleaned_data['date'] > now.date():
-			self.add_error('date', forms.ValidationError(_('Invalid date: cannot log the future'), code='future date'))
-		elif cleaned_data['time'] > now.time():
-			self.add_error('time', forms.ValidationError(_('Invalid time: cannot log the future'), code='future time'))
+			self.add_error('date', forms.ValidationError(_('Invalid date: cannot create a log for the future'), code='future date'))
+		elif datetime.combine(cleaned_data['date'], cleaned_data['time']) > now:
+			self.add_error('time', forms.ValidationError(_('Invalid time: cannot create a log for the future'), code='future time'))
 		
 		return cleaned_data
             
