@@ -31,8 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
     'nutrihacker.apps.NutrihackerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dal',
+    'dal_select2',
 ]
 
 MIDDLEWARE = [
