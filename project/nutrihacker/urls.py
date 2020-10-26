@@ -34,7 +34,7 @@ urlpatterns = [
     # /nutrihacker/profile/
     path('profile/', views.ProfileView.as_view(), name='profile'),
     # For updating user profiles
-    path('update_profile/<profile_id>/', views.UpdateProfile.as_view(), name='update_profile'),
+    path('update_profile/', views.UpdateProfile.as_view(), name='update_profile'),
     
     
     

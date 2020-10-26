@@ -79,26 +79,65 @@ class Profile(models.Model):
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	showmetric = models.BooleanField(default=True)
 	
+	LBS_IN_KG = decimal.Decimal(2.20462)
+	IN_IN_CM = decimal.Decimal(0.393701)
 	
 	#currently just gets the associated user
 	def __str__(self):
 		return self.user.username
 	
-	#def get_imperial_weight(self):
-	 #   return self.weight * 2.2046
+	def get_imperial_weight(self):
+		return round(self.weight * Profile.LBS_IN_KG, 2)
 	
-	#def get_imperial_height(self):
-	#	return self.height * 3.28084
+	# returns height in inches
+	def get_imperial_height(self):
+		return round(self.height * Profile.IN_IN_CM, 2)
+    
+	def get_imperial_feet_and_inches(self):
+		feet = self.get_imperial_height() // 12
+		inches = (self.get_imperial_height() % 12)
+		return {
+				'feet':feet,
+				'inches': inches
+		}
 	
-	#def get_imperial_feet_and_inches(self):
-	#	feet = Floor(self.get_imperial_height())
-	#	inches = (self.get_imperial_height() - feet) * 12
-	#	return {
-	#			'feet':feet,
-	#			'inches': inches
-	#	}
+	def set_height(self, value):
+		if (self.showmetric):
+			self.height = value
+		else:
+			self.height = value / Profile.IN_IN_CM
 	
-	
+	def set_weight(self, value):
+		if (self.showmetric):
+			self.weight = value
+		else:
+			self.weight = value / Profile.LBS_IN_KG
+			
+	def get_height(self):
+		if (self.showmetric):
+			return self.height
+		else:
+			return self.get_imperial_height()
+			
+	def get_weight(self):
+		if (self.showmetric):
+			return self.weight
+		else:
+			return self.get_imperial_weight()
+			
+	def get_height_str(self):
+		if (self.showmetric):
+			return str(self.height) + ' cm'
+		else:
+			imp_height = self.get_imperial_feet_and_inches()
+			return str(imp_height['feet']) + '\'' + str(imp_height['inches']) + '\"'
+			
+	def get_weight_str(self):
+		if (self.showmetric):
+			return str(self.weight) + ' kg'
+		else:
+			return str(self.get_imperial_weight()) + ' lbs'
+
 	# returns dictionary containing nutrient data fields
 	def get_metric_profile(self):
 		return {
