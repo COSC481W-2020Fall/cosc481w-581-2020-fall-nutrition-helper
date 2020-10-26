@@ -13,3 +13,5 @@ def login_user(client):
     client.login(username=name, password=pword)
     return user
     
+class FormValidTest(TestCase):
+    
