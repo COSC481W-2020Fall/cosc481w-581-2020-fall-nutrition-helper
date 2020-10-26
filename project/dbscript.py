@@ -16,16 +16,26 @@ from decimal import Decimal
 #Storing branded ids
 brandLoc = ("C:/Users/Johnny/usda data/branded_food.csv")
 brandSheet = pd.read_csv(brandLoc, low_memory=False, memory_map=True)
-#number of rows for the first 100 branded foods from food page - test number 104, actual 10002
+
 foodLoc = ("C:/Users/Johnny/usda data/food.csv")
-foodSheet = pd.read_csv(foodLoc, low_memory=False, memory_map=True, nrows=10002)
-#number of rows for the first 100 branded foods from nutrient page - test number 2877, actual 169750
+foodSheet = pd.read_csv(foodLoc, low_memory=False, memory_map=True, nrows=60002)
+
 nutrientLoc = ("C:/Users/Johnny/usda data/food_nutrient.csv")
-nutrientSheet = pd.read_csv(nutrientLoc, low_memory=False, memory_map=True, nrows=169750)
+nutrientSheet = pd.read_csv(nutrientLoc, low_memory=False, memory_map=True, nrows=841514)
 
 #adding fdc_ids into a table to use later
-for i in range(10000):      #10000
-    idToStore = BrandedIds(fdcIds = int(brandSheet['fdc_id'].values[i]))
+
+#last fcd id added 354603 -- 404604
+
+#50000 number of ids to get from excel sheet
+numberOfItemsToAdd = 50000
+#number of item already in db update this after items are added
+currentNumberOfItems = 10000
+
+for i in range(numberOfItemsToAdd):
+
+    
+    idToStore = BrandedIds(fdcIds = int(brandSheet['fdc_id'].values[i+currentNumberOfItems]))
     idToStore.save()
 
 #default values
@@ -38,12 +48,15 @@ totalCarb = Decimal(0)
 protein = Decimal(0)
 totalFat = Decimal(0)
 
-jOffset = 0
-offset = 0
+#these are used to stop the loop from going through every single row and pick up again at the place it stopped. will need to be updated after code is run
+jOffset = 10000
+offset = 169700
 
 #the range is the number of items being added
-for i in range(10000):      #10000
-    fdcId = BrandedIds.objects.get(id=i+1).fdcIds
+
+#50000 change this the change the number of items to add must also change in next for loop
+for i in range(numberOfItemsToAdd):      
+    fdcId = BrandedIds.objects.get(id=i+(currentNumberOfItems+1)).fdcIds
     
     #checking to make sure both name and serving size have been set
     ssa = False
@@ -52,7 +65,7 @@ for i in range(10000):      #10000
     j = 0 + jOffset
     
     #getting name and serving size from food.csv
-    while j <= 10002:       #10002
+    while j <= 60002:       #This is the number of rows grabbed from the sheet use the fcd ids to 
         if fdcId == int(foodSheet['fdc_id'].values[j]):
             name = str(foodSheet['description'].values[j])
             na = True
@@ -72,7 +85,7 @@ for i in range(10000):      #10000
     x = 0 + offset
     
     #getting nutrition numbers from food_nutrient.csv
-    while x <= 169750:      #169750
+    while x <= 841514:      #number of rows
         if fdcId == int(nutrientSheet['fdc_id'].values[x]):
             start = True
             if int(nutrientSheet['nutrient_id'].values[x]) == 1253:
