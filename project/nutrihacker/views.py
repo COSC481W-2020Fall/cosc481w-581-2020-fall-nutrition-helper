@@ -1,6 +1,6 @@
 import decimal
 
-from django.http import HttpResponse, HttpResponseRedirect  
+from django.http import HttpResponse, HttpResponseRedirect	
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
@@ -28,71 +28,71 @@ class DescriptionView(TemplateView):
 
 # Daily log page, login required
 class LogView(LoginRequiredMixin, TemplateView):
-    template_name = 'nutrihacker/log.html'
+	template_name = 'nutrihacker/log.html'
 
-    # override get_context_data to include form html
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['log_form'] = LogForm()
-        return context
+	# override get_context_data to include form html
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['log_form'] = LogForm()
+		return context
 
 # saves submitted info to database
 class RecordLogView(FormView):
-    form_class = LogForm
+	form_class = LogForm
 
-    dailylogID = 0 # id of daily log to be redirected to
-    success_url = reverse_lazy('nutrihacker:displayLog',kwargs={'pk':dailylogID})
+	dailylogID = 0 # id of daily log to be redirected to
+	success_url = reverse_lazy('nutrihacker:displayLog',kwargs={'pk':dailylogID})
 
-    # override get_success_url to correct daily log
-    def get_success_url(self):
-        return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+	# override get_success_url to correct daily log
+	def get_success_url(self):
+		return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
 
-    # override get_form_kwargs to get number of extra fields
-    def get_form_kwargs(self):
-        kwargs = super(RecordLogView, self).get_form_kwargs()
-        kwargs['extra'] = kwargs['data']['extra_field_count']
-        
-        return kwargs
+	# override get_form_kwargs to get number of extra fields
+	def get_form_kwargs(self):
+		kwargs = super(RecordLogView, self).get_form_kwargs()
+		kwargs['extra'] = kwargs['data']['extra_field_count']
+		
+		return kwargs
 
-    # override form_valid to create model instances from submitted info
-    def form_valid(self, form):
-        # get data from the form
-        date = form.cleaned_data.get('date')
-        time = form.cleaned_data.get('time')
-        # get number of foods in form
-        food_number = int(form.cleaned_data.get('extra_field_count')) + 1
-        
-        food = {}
-        portions = {}
+	# override form_valid to create model instances from submitted info
+	def form_valid(self, form):
+		# get data from the form
+		date = form.cleaned_data.get('date')
+		time = form.cleaned_data.get('time')
+		# get number of foods in form
+		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+		
+		food = {}
+		portions = {}
 
-        # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-        for i in range(1, food_number+1):
-            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+		for i in range(1, food_number+1):
+			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
-        try: # searches for an existing daily log for this day and user
-            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
-        except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
-            daily_log = DailyLog.create(self.request.user, date)
-            daily_log.save()
+		try: # searches for an existing daily log for this day and user
+			daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
+		except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
+			daily_log = DailyLog.create(self.request.user, date)
+			daily_log.save()
 		
 		# update the daily log id to be passed to success url
-        self.dailylogID = daily_log.id
-        
+		self.dailylogID = daily_log.id
+		
 		# creates the meal log for this time
-        meal_log = MealLog.create(time, daily_log)
-        meal_log.save()
+		meal_log = MealLog.create(time, daily_log)
+		meal_log.save()
 
-        # creates a meal food for each food for this meal log
-        for i in range(1, food_number+1):
-            meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-            meal_food.save()
+		# creates a meal food for each food for this meal log
+		for i in range(1, food_number+1):
+			meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
+			meal_food.save()
 
-        return super(RecordLogView, self).form_valid(form)
+		return super(RecordLogView, self).form_valid(form)
 
 class DisplayLogView(LoginRequiredMixin, DetailView):
-    template_name = 'nutrihacker/displayLog.html'
-    model = DailyLog
+	template_name = 'nutrihacker/displayLog.html'
+	model = DailyLog
 
 # for display purposes
 # chops off extra zeros if unnecessary
@@ -167,24 +167,24 @@ class SearchFoodView(ListView):
 
 
 class SearchRecipeView(ListView):
-    model = RecipePreset
-    template_name = 'nutrihacker/search-recipe.html'
+	model = RecipePreset
+	template_name = 'nutrihacker/search-recipe.html'
 
-    # overrides ListView get_queryset to find names containing search term and pass them to template
-    def get_queryset(self):
-        query = self.request.GET.get('term')
-        if (query == None):
-            return RecipePreset.objects.all()
-        else:
-            object_list = RecipePreset.objects.filter(
-                Q(name__icontains=query)
-            )
-            return object_list
+	# overrides ListView get_queryset to find names containing search term and pass them to template
+	def get_queryset(self):
+		query = self.request.GET.get('term')
+		if (query == None):
+			return RecipePreset.objects.all()
+		else:
+			object_list = RecipePreset.objects.filter(
+				Q(name__icontains=query)
+			)
+			return object_list
 
 
 def get_user_profile(request, username):
-    user = User.objects.get(username=username)
-    return render(request, 'nutrihacker/profile.html', {"user":user})
+	user = User.objects.get(username=username)
+	return render(request, 'nutrihacker/profile.html', {"user":user})
 
 
 class ProfileView(ListView):
@@ -193,74 +193,74 @@ class ProfileView(ListView):
 
 
 class UpdateProfile(UpdateView, LoginRequiredMixin):
-    model = Profile
-    pk_url_kwarg = 'profile_id'
-    fields = '__all__'
-    success_url= '../../profile/'
-    login_url = '../../nutrihacker/login/'
-    template_name = 'nutrihacker/update_profile.html'
-    
-    def get_object(self):
-        return get_object_or_404(Profile, id=self.kwargs.get('profile_id'))
+	model = Profile
+	pk_url_kwarg = 'profile_id'
+	fields = '__all__'
+	success_url= '../../profile/'
+	login_url = '../../nutrihacker/login/'
+	template_name = 'nutrihacker/update_profile.html'
+	
+	def get_object(self):
+		return get_object_or_404(Profile, id=self.kwargs.get('profile_id'))
 
 
 # Page to add dietary preferences and allergies.
-# Login is required to view    
+# Login is required to view	   
 class DietAndAllergiesView(LoginRequiredMixin, TemplateView):
-    model = Allergy
-    template_name = 'nutrihacker/diet_and_allergies.html'
-     
-    # passes add/delete allergy/diet preference forms to the template
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        profile = Profile.objects.get(user=self.request.user)
-        context['allergy_choice_form'] = AllergyChoiceForm(current_profile=profile)
-        context['diet_choice_form'] = DietChoiceForm(current_profile=profile)
-        context['allergy_delete_form'] = AllergyDeleteForm(current_profile=profile)
-        context['diet_delete_form'] = DietDeleteForm(current_profile=profile)
-        return context
+	model = Allergy
+	template_name = 'nutrihacker/diet_and_allergies.html'
+	 
+	# passes add/delete allergy/diet preference forms to the template
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		profile = Profile.objects.get(user=self.request.user)
+		context['allergy_choice_form'] = AllergyChoiceForm(current_profile=profile)
+		context['diet_choice_form'] = DietChoiceForm(current_profile=profile)
+		context['allergy_delete_form'] = AllergyDeleteForm(current_profile=profile)
+		context['diet_delete_form'] = DietDeleteForm(current_profile=profile)
+		return context
 
 class AddAllergyView(LoginRequiredMixin, FormView):
-    form_class = AllergyChoiceForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-        
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        allergy = form.cleaned_data.get('allergy_select')
-        allergy.profiles.add(profile)
-        return super(AddAllergyView, self).form_valid(form)
-        
+	form_class = AllergyChoiceForm
+	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+		
+	def form_valid(self, form):
+		profile = Profile.objects.get(user=self.request.user)
+		allergy = form.cleaned_data.get('allergy_select')
+		allergy.profiles.add(profile)
+		return super(AddAllergyView, self).form_valid(form)
+		
 class AddDietPreferenceView(LoginRequiredMixin, FormView):
-    form_class = DietChoiceForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-    
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        diet = form.cleaned_data.get('diet_select')
-        diet.profiles.add(profile)
-        return super(AddDietPreferenceView, self).form_valid(form)
-        
+	form_class = DietChoiceForm
+	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+	
+	def form_valid(self, form):
+		profile = Profile.objects.get(user=self.request.user)
+		diet = form.cleaned_data.get('diet_select')
+		diet.profiles.add(profile)
+		return super(AddDietPreferenceView, self).form_valid(form)
+		
 class DeleteAllergyView(LoginRequiredMixin, FormView):
-    form_class = AllergyDeleteForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-        
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        allergy_list = form.cleaned_data.get('allergy_checkbox')
-        for allergy in allergy_list:
-            allergy.profiles.remove(profile)
-        return super(DeleteAllergyView, self).form_valid(form)
-        
+	form_class = AllergyDeleteForm
+	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+		
+	def form_valid(self, form):
+		profile = Profile.objects.get(user=self.request.user)
+		allergy_list = form.cleaned_data.get('allergy_checkbox')
+		for allergy in allergy_list:
+			allergy.profiles.remove(profile)
+		return super(DeleteAllergyView, self).form_valid(form)
+		
 class DeleteDietPreferenceView(LoginRequiredMixin, FormView):
-    form_class = DietDeleteForm
-    success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-        
-    def form_valid(self, form):
-        profile = Profile.objects.get(user=self.request.user)
-        diet_list = form.cleaned_data.get('diet_checkbox')
-        for diet in diet_list:
-            diet.profiles.remove(profile)
-        return super(DeleteDietPreferenceView, self).form_valid(form)
+	form_class = DietDeleteForm
+	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+		
+	def form_valid(self, form):
+		profile = Profile.objects.get(user=self.request.user)
+		diet_list = form.cleaned_data.get('diet_checkbox')
+		for diet in diet_list:
+			diet.profiles.remove(profile)
+		return super(DeleteDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
@@ -269,152 +269,101 @@ class LogoutView(auth_views.LogoutView):
 	template_name = "nutrihacker/logout.html"
 
 class PasswordChangeView(auth_views.PasswordChangeView):
-    template_name = "nutrihacker/change_password.html"
-    success_url = reverse_lazy('nutrihacker:index')
-    
+	template_name = "nutrihacker/change_password.html"
+	success_url = reverse_lazy('nutrihacker:index')
+	
 class RegisterAccountView(FormView):
-    template_name = 'nutrihacker/register_account.html'
-    form_class = UserCreationForm
-    success_url = reverse_lazy('nutrihacker:index')
-    
-    # called when valid form data has been POSTed
-    # redirects to success_url
-    def form_valid(self, form):
-        form.save()
-        username = form.cleaned_data.get('username')
-        raw_password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=raw_password)
-        login(self.request, user)
-        return super().form_valid(form)
+	template_name = 'nutrihacker/register_account.html'
+	form_class = UserCreationForm
+	success_url = reverse_lazy('nutrihacker:index')
+	
+	# called when valid form data has been POSTed
+	# redirects to success_url
+	def form_valid(self, form):
+		form.save()
+		username = form.cleaned_data.get('username')
+		raw_password = form.cleaned_data.get('password1')
+		user = authenticate(username=username, password=raw_password)
+		login(self.request, user)
+		return super().form_valid(form)
 
 
 ##-------------- Recipe Views --------------------------------------
 class DetailRecipe(DetailView):
-    model = Recipe
-    fields = '__all__'
-    template_name='nutrihacker/recipe/detail_recipe.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super(DetailRecipe, self).get_context_data(**kwargs)
-        context['detail_list'] = Recipe.objects.all()
-        return context
+	model = Recipe
+	fields = '__all__'
+	template_name='nutrihacker/recipe/detail_recipe.html'
+	
+	def get_context_data(self, **kwargs):
+		context = super(DetailRecipe, self).get_context_data(**kwargs)
+		context['detail_list'] = Recipe.objects.all()
+		return context
 
 class ListRecipe(ListView):
-    model = Recipe
-    context_object_name = 'recipes'
-    fields = '__all__'
-    template_name='nutrihacker/recipe/list_recipe.html'
-
-class CreateRecipe(CreateView):
-    model = Recipe
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipe/create_recipe.html'
+	model = Recipe
+	context_object_name = 'recipes'
+	fields = '__all__'
+	template_name='nutrihacker/recipe/list_recipe.html'
 
 class UpdateRecipe(UpdateView):
-    model = Recipe
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipe/update_recipe.html'
+	model = Recipe
+	fields = '__all__'
+	success_url= "../"
+	template_name = 'nutrihacker/recipe/update_recipe.html'
 
 class DeleteRecipe(DeleteView):
-    model = Recipe
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipe/delete_recipe.html'
-    
-    
-    
-    # Daily log page, login required
-class RecipeView(LoginRequiredMixin, TemplateView):
-    template_name = 'nutrihacker/recipe/create_recipe.html'
+	model = Recipe
+	fields = '__all__'
+	success_url= "../"
+	template_name = 'nutrihacker/recipe/delete_recipe.html'
 
-    # override get_context_data to include form html
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['recipe_form'] = RecipeForm()
-        return context
+	# Recipe page
+class RecipeView(TemplateView):
+	template_name = 'nutrihacker/recipe/create_recipe.html'
+
+	# override get_context_data to include form html
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['recipe_form'] = RecipeForm()
+		return context
 
 # saves submitted info to database
 class RecordRecipeView(FormView):
-    form_class = RecipeForm
-    success_url = reverse_lazy('nutrihacker:profile')
-    
-    
-    #def get_success_url(self):
-     #   return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
-    
-    # override get_form_kwargs to get number of extra fields
-    def get_form_kwargs(self):
-        kwargs = super(RecordRecipeView, self).get_form_kwargs()
-        kwargs['extra'] = kwargs['data']['extra_field_count']
-        
-        return kwargs
+	form_class = RecipeForm
+	success_url = reverse_lazy('nutrihacker:profile')
+	
+	# override get_form_kwargs to get number of extra fields
+	def get_form_kwargs(self):
+		kwargs = super(RecordRecipeView, self).get_form_kwargs()
+		kwargs['extra'] = kwargs['data']['extra_field_count']
+		
+		return kwargs
 
-    # override form_valid to create model instances from submitted info
-    def form_valid(self, form):
-        # get number of foods in form
-        food_number = int(form.cleaned_data.get('extra_field_count')) + 1
-        
-        food = {}
-        portions = {}
+	# override form_valid to create model instances from submitted info
+	def form_valid(self, form):
+		name = form.cleaned_data.get('name')
+		servingsProduced = form.cleaned_data.get('servingsProduced')
+		instruction = form.cleaned_data.get('instruction')
+		name = form.cleaned_data.get('name')
+		# get number of foods in form
+		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+		
+		food = {}
+		portions = {}
 
-        # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-        for i in range(1, food_number+1):
-            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+		for i in range(1, food_number+1):
+			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
-        
-        recipe = Recipe.create(self.request.user)
-        recipe.save()
+		
+		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction)
+		recipe.save()
 
-        # creates a meal food for each food for this meal log
-        for i in range(1, food_number+1):
-            recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
-            recipe_food.save()
+		# creates a recipe food for each food for this recipe
+		for i in range(1, food_number+1):
+			recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
+			recipe_food.save()
 
-        return super(RecordRecipeView, self).form_valid(form)
+		return super(RecordRecipeView, self).form_valid(form)
 
-
-##-------------- RecipeFood Views --------------------------------------
-class DetailRecipeFood(DetailView):
-    model = RecipeFood
-    fields = '__all__'
-    template_name='nutrihacker/recipefood/detail_recipefood.html'
-
-class ListRecipeFood(ListView):
-    model = RecipeFood
-    context_object_name = 'recipefoods'
-    fields = '__all__'
-    template_name='nutrihacker/recipefood/list_recipefood.html'
-
-class CreateRecipeFood(CreateView):
-    model = RecipeFood
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipefood/create_recipefood.html'
-
-
-
-class UpdateRecipeFood(UpdateView):
-    model = RecipeFood
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipefood/update_recipefood.html'
-
-class DeleteRecipeFood(DeleteView):
-    model = RecipeFood
-    fields = '__all__'
-    success_url= "../"
-    template_name = 'nutrihacker/recipefood/delete_recipefood.html'
-
-@login_required
-def add_to_recipe(request,food_id):
-    food = get_object_or_404(Food, pk=food_id)
-    portions = 1 #hard coded for now
-    recipe,created = Recipe.objects.get_or_create(user=request.user, active=True)
-    recipefood,created = RecipeFood.objects.get_or_create(food=food,recipe=recipe, portions=portions)
-    recipe.add_to_recipe(book_id)
-    recipefood.save()
-    messages.success(request, "Recipe updated!")
-    return redirect('recipe')

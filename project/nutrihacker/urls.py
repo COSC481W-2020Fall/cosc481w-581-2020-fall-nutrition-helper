@@ -74,15 +74,5 @@ urlpatterns = [
     
     path('record_recipe/', views.RecordRecipeView.as_view(), name='record_recipe'),
     
-    
-    
-    
-    
-    path('recipefood/', views.ListRecipeFood.as_view(), name='list_recipefood'),
-    path('recipefood/create/', views.CreateRecipeFood.as_view(), name='create_recipefood'),
-    path('recipefood/<int:pk>/', views.DetailRecipeFood.as_view(), name='detail_recipefood'),
-    path('recipefood/<int:pk>/update/', views.UpdateRecipeFood.as_view(), name='update_recipefood'),
-    path('recipefood/<int:pk>/delete/', views.DeleteRecipeFood.as_view(), name='delete_recipefood'),
-    
     #---------------------------------------------------------------------
 ]
