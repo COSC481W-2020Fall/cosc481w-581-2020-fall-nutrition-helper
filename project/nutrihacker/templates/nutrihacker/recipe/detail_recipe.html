@@ -61,44 +61,45 @@
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Details</h1>
+		<!-- Buttons to update or delete recipe -->
+			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
+			<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
         <h2>Here is your recipe!</h2>
-			{{ form.as_p }} 
-                <table class="facts" style="background-color: white">
-				{% for comment in recipe.recipe_food_set.all %}
-					{% include 'detail_recipe_food.html' %}    
-				{% endfor %}
-			<tr>
-				<td>Serving Size</td>
-				<td class="right">{{ recipe.servingSize }}g</td>
-			</tr>
-			<tr>
-				<td>Calories</td>
-				<td class="right">{{ recipe.calories }}</td>
-			</tr>
-			<tr>
-				<td>Total Fat</td>
-				<td class="right">{{ recipe.totalFat }}g</td>
-			</tr>
-			<tr>
-				<td>Cholesterol</td>
-				<td class="right">{{ recipe.cholesterol }}mg</td>
-			</tr>
-			<tr>
-				<td>Sodium</td>
-				<td class="right">{{ recipe.sodium }}mg</td>
-			</tr>
-			<tr>
-				<td>Total Carbohydrates</td>
-				<td class="right">{{ recipe.totalCarb }}g</td>
-			</tr>
-			<tr>
-				<td>Protein</td>
-				<td class="right">{{ recipe.protein }}g</td>
-			</tr>
+			
+		<table class="facts" style="background-color: white">
+			<tr><td>
+				{{ recipe.name }}
+			</td></tr>
+			<tr><td>
+				Produces {{ recipe.servingsProduced }} servings
+			</td></tr>
 		</table>
-            </table>
-            <br>
-            <br>
+		<br>
+		<table  class="facts" style="background-color: white">
+			<tr><td>
+				INSTRUCTIONS:
+				<br>
+			</td></tr>
+			<tr><td>
+				<br>
+				{{ recipe.instruction|linebreaksbr }}
+				<br>
+			</td></tr>
+		</table>
+		<br>
+		<table  class="facts" style="background-color: white">
+			<tr><td>
+				INGREDIENTS:
+				<br>
+			</td></tr>
+			{% for recipe_food in ingredients %}
+				<tr><td>
+				<br>{{ recipe_food.portions }}g of {{ recipe_food.food.name }}<br>
+				</td></tr>
+			{% endfor %}
+		</table>
+		<br>
+		<br>
     </body>
     <script type="text/javascript">
         var extra_count = Number(document.getElementById("id_extra_field_count").value);

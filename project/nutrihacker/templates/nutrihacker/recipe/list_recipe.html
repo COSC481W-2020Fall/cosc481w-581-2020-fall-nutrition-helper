@@ -57,14 +57,18 @@
 			<table style="background-color:black; padding:100px">
 				{% for recipe in object_list %}
 					<tr>
-					<th>			
-					<!-- Button of the food in question -->
-					<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
+					<th>
+						<!-- Button of the recipe in question -->
+						<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
 					</th>
-					<!-- Convenient food information at a glance -->
-					<th>{{ recipe.servingsProduced }}</th>
-					
-					<th><a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a></th>
+					<th>
+						<!-- Button to update recipe -->
+						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
+					</th>
+					<th>
+						<!-- Button to delete recipe -->
+						<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
+					</th>
 					</tr>
 				{% endfor %}
 			</table>

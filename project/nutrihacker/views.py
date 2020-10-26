@@ -295,6 +295,19 @@ class DetailRecipe(DetailView):
 	context_object_name = "recipe"
 	template_name='nutrihacker/recipe/detail_recipe.html'
 	
+	def get_context_data(self, **kwargs):
+		# Call the base implementation first to get a context
+		context = super(DetailRecipe, self).get_context_data(**kwargs)
+		context['ingredients'] = RecipeFood.objects.filter(recipe=self.kwargs['pk'])
+		return context
+		
+#	def get_queryset(self, *args, **kwargs):
+#		return RecipeFood.objects.filter(recipe=self.kwargs['pk'])
+	
+#	def get_queryset(self):
+#		object_list = RecipeFood.objects.filter(recipe=self)
+#		return object_list
+	
 #	def get_context_data(self, **kwargs):
 #		context = super(DetailRecipe, self).get_context_data(**kwargs)
 #		context['detail_list'] = Recipe.objects.all()
@@ -305,6 +318,9 @@ class DetailRecipeFood(DetailView):
 	fields = '__all__'
 	context_object_name = "recipe_food"
 	template_name='nutrihacker/recipe/detail_recipe_food.html'
+	
+	def get_queryset(self, *args, **kwargs):
+		return RecipeFood.objects.filter(recipe=self.kwargs['pk'])
 	
 #	def get_context_data(self, **kwargs):
 #		context = super(DetailRecipe, self).get_context_data(**kwargs)
