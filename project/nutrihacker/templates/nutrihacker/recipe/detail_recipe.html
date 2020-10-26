@@ -1,16 +1,156 @@
-<html>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>UpdateView</title>
-        
+        <meta charset="UTF-8">
+        <title>Create Recipe</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+        <style>
+            h1, h2 {
+                color: white;
+                text-align: center;
+            }
+            label {
+                color: white;
+                text-align: right;
+                margin-right: 10px;
+            }
+            input, select {
+                width: revert;
+                padding: revert;
+                margin: revert;
+            }
+            th {
+                text-align: right;
+            }
+            td {
+                color: black;
+                text-align: left;
+            }
+            .addbtn{
+                border-radius:90%;
+                cursor: pointer;
+            }
+            .addbtn:hover{
+                 background-color: green;
+            }
+            .row1{
+                font-size: 40px;
+            }
+            .row2{
+                text-decoration-line: underline;
+                text-decoration-style: double;
+            }
+            .portionbtn{
+                cursor: pointer;
+                padding: 0px 5px;
+            }
+            .sbmtbtn{
+                font-size: 22px;
+                cursor: pointer;
+            }
+            .sbmtbtn:hover{
+                background-color: green;
+            }
+        </style>
+        <script type="text/javascript">
+            
+        </script>
     </head>
-
     <body>
-{% for detail_list in object_list %}
-{{ detail.product}}
-{{ detail.type }}
-{{ detail.brand }}
-{{ detail.measurement }}
-{% endfor %}
+        {% include "nutrihacker/navigation_bar.html" %}
+        <h1>Recipe Details</h1>
+        <h2>Here is your recipe!</h2>
+			{{ form.as_p }} 
+                <table class="facts" style="background-color: white">
+				{% for comment in recipe.recipe_food_set.all %}
+					{% include 'detail_recipe_food.html' %}    
+				{% endfor %}
+			<tr>
+				<td>Serving Size</td>
+				<td class="right">{{ recipe.servingSize }}g</td>
+			</tr>
+			<tr>
+				<td>Calories</td>
+				<td class="right">{{ recipe.calories }}</td>
+			</tr>
+			<tr>
+				<td>Total Fat</td>
+				<td class="right">{{ recipe.totalFat }}g</td>
+			</tr>
+			<tr>
+				<td>Cholesterol</td>
+				<td class="right">{{ recipe.cholesterol }}mg</td>
+			</tr>
+			<tr>
+				<td>Sodium</td>
+				<td class="right">{{ recipe.sodium }}mg</td>
+			</tr>
+			<tr>
+				<td>Total Carbohydrates</td>
+				<td class="right">{{ recipe.totalCarb }}g</td>
+			</tr>
+			<tr>
+				<td>Protein</td>
+				<td class="right">{{ recipe.protein }}g</td>
+			</tr>
+		</table>
+            </table>
+            <br>
+            <br>
     </body>
+    <script type="text/javascript">
+        var extra_count = Number(document.getElementById("id_extra_field_count").value);
+        var food_number = 2;
+        
+        // adds another food and portions field to the form
+        function addAnotherFood() {
+            // get the table
+            var table = document.getElementById("formtable");
+            // get all table rows
+            var rows = table.getElementsByTagName("tr");
+            
+            // select rows 3 and 4 (original food and portions field)
+            var f_row = rows[2];
+            var p_row = rows[3];
+            
+            // clone the rows
+            var f_clone = f_row.cloneNode(true);
+            var p_clone = p_row.cloneNode(true);
+            
+            // remove the hidden element
+            p_clone.getElementsByTagName("input")[1].remove();
 
+            // get the label and select elements from the food row
+            var f_label = f_clone.getElementsByTagName("label")[0];
+            var f_select = f_clone.getElementsByTagName("select")[0];
+            
+            // get the label and input elements from the portions row
+            var p_label = p_clone.getElementsByTagName("label")[0];
+            var p_input = p_clone.getElementsByTagName("input")[0];
+
+            // set the for, name, and id
+            f_label.setAttribute("for", "id_food" + food_number);
+            f_select.setAttribute("name", "food" + food_number);
+            f_select.id = "id_food" + food_number;
+
+            // repeat for portions, initialize value to 1
+            p_label.setAttribute("for", "id_portions" + food_number);
+            p_input.setAttribute("name", "portions" + food_number);
+            p_input.id = "id_portions" + food_number;
+            p_input.value = 1;
+
+            // append rows to the table
+            table.appendChild(f_clone);
+            table.appendChild(p_clone);
+
+            // increment counters
+            food_number++;
+            extra_count++;
+
+            // update hidden value
+            document.getElementById("id_extra_field_count").value = extra_count;
+        }
+    </script>
 </html>

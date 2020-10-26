@@ -1,8 +1,72 @@
-<html>
-<head></head>
+{% load static %}
 
+{% load static %}
 
-<p>Hello there!</p>
-
-
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrition Facts</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 100px;
+			}
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+			body {
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			a:hover {
+				color: blue;
+			}
+			.button {
+				padding: 15px 30px;
+				border: none;
+				display: inline-block;
+				margin: 4px 2px;
+			}
+			input {
+				width: 48px;
+			}
+			label {
+				color: white;
+			}
+		</style>
+	</head>
+	<body style="background-size: cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+		<br>
+		<br>
+			<table style="background-color:black; padding:100px">
+				{% for recipe in object_list %}
+					<tr>
+					<th>			
+					<!-- Button of the food in question -->
+					<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
+					</th>
+					<!-- Convenient food information at a glance -->
+					<th>{{ recipe.servingsProduced }}</th>
+					
+					<th><a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a></th>
+					</tr>
+				{% endfor %}
+			</table>
+	</body>
 </html>

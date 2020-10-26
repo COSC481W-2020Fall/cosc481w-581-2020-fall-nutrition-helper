@@ -164,7 +164,7 @@ class SearchFoodView(ListView):
 				Q(name__icontains = query)
 			)
 			return object_list
-
+		
 
 class SearchRecipeView(ListView):
 	model = RecipePreset
@@ -205,7 +205,7 @@ class UpdateProfile(UpdateView, LoginRequiredMixin):
 
 
 # Page to add dietary preferences and allergies.
-# Login is required to view	   
+# Login is required to view
 class DietAndAllergiesView(LoginRequiredMixin, TemplateView):
 	model = Allergy
 	template_name = 'nutrihacker/diet_and_allergies.html'
@@ -292,29 +292,46 @@ class RegisterAccountView(FormView):
 class DetailRecipe(DetailView):
 	model = Recipe
 	fields = '__all__'
+	context_object_name = "recipe"
 	template_name='nutrihacker/recipe/detail_recipe.html'
 	
-	def get_context_data(self, **kwargs):
-		context = super(DetailRecipe, self).get_context_data(**kwargs)
-		context['detail_list'] = Recipe.objects.all()
-		return context
+#	def get_context_data(self, **kwargs):
+#		context = super(DetailRecipe, self).get_context_data(**kwargs)
+#		context['detail_list'] = Recipe.objects.all()
+#		return context
+
+class DetailRecipeFood(DetailView):
+	model = RecipeFood
+	fields = '__all__'
+	context_object_name = "recipe_food"
+	template_name='nutrihacker/recipe/detail_recipe_food.html'
+	
+#	def get_context_data(self, **kwargs):
+#		context = super(DetailRecipe, self).get_context_data(**kwargs)
+#		context['detail_list'] = Recipe.objects.all()
+#		return context
 
 class ListRecipe(ListView):
 	model = Recipe
-	context_object_name = 'recipes'
+	#context_object_name = 'recipes'
 	fields = '__all__'
 	template_name='nutrihacker/recipe/list_recipe.html'
+	
+	def get_queryset(self):
+		object_list = Recipe.objects.filter(user=self.request.user)
+		return object_list
 
 class UpdateRecipe(UpdateView):
 	model = Recipe
-	fields = '__all__'
+	#fields = '__all__'
+	fields = ['name', 'instruction', 'servingsProduced']
 	success_url= "../"
 	template_name = 'nutrihacker/recipe/update_recipe.html'
 
 class DeleteRecipe(DeleteView):
 	model = Recipe
 	fields = '__all__'
-	success_url= "../"
+	success_url= "../../"
 	template_name = 'nutrihacker/recipe/delete_recipe.html'
 
 	# Recipe page
