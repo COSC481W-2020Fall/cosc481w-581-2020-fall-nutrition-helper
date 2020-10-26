@@ -79,8 +79,8 @@ class Profile(models.Model):
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	showmetric = models.BooleanField(default=True)
 	
-	LBS_IN_KG = decimal.Decimal(2.20462)
-	IN_IN_CM = decimal.Decimal(0.393701)
+	LBS_IN_KG = Decimal(2.20462)
+	IN_IN_CM = Decimal(0.393701)
 	
 	#currently just gets the associated user
 	def __str__(self):
