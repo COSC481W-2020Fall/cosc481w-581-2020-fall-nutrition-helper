@@ -1,11 +1,14 @@
-import decimal
+from decimal import Decimal
+
+from dal import autocomplete
+from datetime import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect	
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView
+from django.views.generic.edit import FormView, UpdateView, CreateView, DeleteView, FormMixin
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, login, authenticate
@@ -26,59 +29,63 @@ class IndexView(TemplateView):
 class DescriptionView(TemplateView):
 	template_name = 'nutrihacker/description.html'
 
-# Daily log page, login required
-class LogView(LoginRequiredMixin, TemplateView):
-	template_name = 'nutrihacker/log.html'
 
-	# override get_context_data to include form html
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['log_form'] = LogForm()
-		return context
+# autocomplete search for foods
+class FoodAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		if not self.request.user.is_authenticated:
+			return Food.objects.none()
 
-# saves submitted info to database
-class RecordLogView(FormView):
-	form_class = LogForm
+		qs = Food.objects.all()
 
-	dailylogID = 0 # id of daily log to be redirected to
-	success_url = reverse_lazy('nutrihacker:displayLog',kwargs={'pk':dailylogID})
+		if self.q:
+			qs = qs.filter(name__icontains=self.q)
 
-	# override get_success_url to correct daily log
-	def get_success_url(self):
-		return reverse_lazy('nutrihacker:displayLog',kwargs={'pk':self.dailylogID})
+		return qs
 
-	# override get_form_kwargs to get number of extra fields
-	def get_form_kwargs(self):
-		kwargs = super(RecordLogView, self).get_form_kwargs()
-		kwargs['extra'] = kwargs['data']['extra_field_count']
-		
-		return kwargs
+# Daily log page, saves submitted info to database
+class LogView(LoginRequiredMixin, FormView):
+    form_class = LogForm
+    template_name = 'nutrihacker/log.html'
+    daily_log_id = 0 # id of daily log to be redirected to
+    
+    # override get_success_url to correct daily log
+    def get_success_url(self):
+        return reverse_lazy('nutrihacker:displayLog', kwargs={'pk':self.daily_log_id})
 
-	# override form_valid to create model instances from submitted info
-	def form_valid(self, form):
-		# get data from the form
-		date = form.cleaned_data.get('date')
-		time = form.cleaned_data.get('time')
-		# get number of foods in form
-		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
-		
-		food = {}
-		portions = {}
+    # override get_form_kwargs to get number of extra fields
+    def get_form_kwargs(self):
+        kwargs = super(LogView, self).get_form_kwargs()
+        if 'data' in kwargs:
+            kwargs['extra'] = kwargs['data']['extra_field_count']
+        
+        return kwargs
 
-		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-		for i in range(1, food_number+1):
-			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+    # override form_valid to create model instances from submitted info
+    def form_valid(self, form):
+        # get data from the form
+        date = form.cleaned_data.get('date')
+        time = form.cleaned_data.get('time')
+        # get number of foods in form
+        food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+        
+        food = {}
+        portions = {}
 
-		try: # searches for an existing daily log for this day and user
-			daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
-		except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
-			daily_log = DailyLog.create(self.request.user, date)
-			daily_log.save()
+        # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+        for i in range(1, food_number+1):
+            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+
+        try: # searches for an existing daily log for this day and user
+            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
+        except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
+            daily_log = DailyLog.create(self.request.user, date)
+            daily_log.save()
 		
 		# update the daily log id to be passed to success url
-		self.dailylogID = daily_log.id
-		
+        self.daily_log_id = daily_log.id
+        
 		# creates the meal log for this time
 		meal_log = MealLog.create(time, daily_log)
 		meal_log.save()
@@ -88,7 +95,8 @@ class RecordLogView(FormView):
 			meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
 			meal_food.save()
 
-		return super(RecordLogView, self).form_valid(form)
+
+        return super(LogView, self).form_valid(form)
 
 class DisplayLogView(LoginRequiredMixin, DetailView):
 	template_name = 'nutrihacker/displayLog.html'
@@ -98,7 +106,7 @@ class DisplayLogView(LoginRequiredMixin, DetailView):
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
 	if value == value.to_integral():
-		return value.quantize(decimal.Decimal(1))
+		return value.quantize(Decimal(1))
 	else:
 		return value.normalize()
 
@@ -120,14 +128,14 @@ class FactsView(DetailView):
 			# if query empty
 			if query == None:
 				# set to 1
-				query = decimal.Decimal(1)
+				query = Decimal(1)
 			else:
 				# convert query to python decimal
-				query = decimal.Decimal(query)
+				query = Decimal(query)
 		# no GET request
 		else:
 			# set query to 1
-			query = decimal.Decimal(1)
+			query = Decimal(1)
 
 		# pass query as 'portions'
 		context['portions'] = query
@@ -220,47 +228,56 @@ class DietAndAllergiesView(LoginRequiredMixin, TemplateView):
 		context['diet_delete_form'] = DietDeleteForm(current_profile=profile)
 		return context
 
-class AddAllergyView(LoginRequiredMixin, FormView):
-	form_class = AllergyChoiceForm
-	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-		
-	def form_valid(self, form):
-		profile = Profile.objects.get(user=self.request.user)
-		allergy = form.cleaned_data.get('allergy_select')
-		allergy.profiles.add(profile)
-		return super(AddAllergyView, self).form_valid(form)
-		
-class AddDietPreferenceView(LoginRequiredMixin, FormView):
-	form_class = DietChoiceForm
-	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
+# adds allergy to user from the AllergyChoiceForm form, always redirects back to DietAndAllergiesView        
+def add_allergy(request):
+    if request.method == 'POST':
+        form = AllergyChoiceForm(request.POST)
+        
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            allergy = form.cleaned_data.get('allergy_select')
+            allergy.profiles.add(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# adds diet preference to user from the DietChoiceForm form, always redirects back to DietAndAllergiesView
+def add_diet_preference(request):
+    if request.method == 'POST':
+        form = DietChoiceForm(request.POST)
+        
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            diet = form.cleaned_data.get('diet_select')
+            diet.profiles.add(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# deletes allergies from user from the AllergyDeleteForm form, always redirects back to DietAndAllergiesView  
+def delete_allergy(request):
+    if request.method == 'POST':
+        form = AllergyDeleteForm(request.POST)
+        
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            allergy_list = form.cleaned_data.get('allergy_checkbox')
+            for allergy in allergy_list:
+                allergy.profiles.remove(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
+
+# deletes diet preferences from user from the DietDeleteForm form, always redirects back to DietAndAllergiesView  
+def delete_diet_preference(request):
+    if request.method == 'POST':
+        form = DietDeleteForm(request.POST)
+        
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            diet_list = form.cleaned_data.get('diet_checkbox')
+            for diet in diet_list:
+                diet.profiles.remove(profile)
+    
+    return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
 	
-	def form_valid(self, form):
-		profile = Profile.objects.get(user=self.request.user)
-		diet = form.cleaned_data.get('diet_select')
-		diet.profiles.add(profile)
-		return super(AddDietPreferenceView, self).form_valid(form)
-		
-class DeleteAllergyView(LoginRequiredMixin, FormView):
-	form_class = AllergyDeleteForm
-	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-		
-	def form_valid(self, form):
-		profile = Profile.objects.get(user=self.request.user)
-		allergy_list = form.cleaned_data.get('allergy_checkbox')
-		for allergy in allergy_list:
-			allergy.profiles.remove(profile)
-		return super(DeleteAllergyView, self).form_valid(form)
-		
-class DeleteDietPreferenceView(LoginRequiredMixin, FormView):
-	form_class = DietDeleteForm
-	success_url = reverse_lazy('nutrihacker:diet_and_allergies')
-		
-	def form_valid(self, form):
-		profile = Profile.objects.get(user=self.request.user)
-		diet_list = form.cleaned_data.get('diet_checkbox')
-		for diet in diet_list:
-			diet.profiles.remove(profile)
-		return super(DeleteDietPreferenceView, self).form_valid(form)
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
