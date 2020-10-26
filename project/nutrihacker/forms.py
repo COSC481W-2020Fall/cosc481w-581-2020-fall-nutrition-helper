@@ -99,35 +99,38 @@ class LogForm(forms.Form):
 # form for users to log their recipes
 class RecipeForm(forms.Form):
     # form fields
-	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
-	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
-	food1 = forms.ModelChoiceField(
-		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
-		required=True
-	)
-	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	# hidden field that keeps track of how many extra fields have been added
-	extra_field_count = forms.CharField(widget=forms.HiddenInput())
+    name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
+    servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all())
+    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all())
+    instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
+    food1 = forms.ModelChoiceField(
+        label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
+        required=True
+    )
+    portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+    # hidden field that keeps track of how many extra fields have been added
+    extra_field_count = forms.CharField(widget=forms.HiddenInput())
 
-	portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+    portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
-	# override __init__ to create dynamic number of food and portions fields
-	def __init__(self, *args, **kwargs):
-		# get number of extra fields from kwargs
-		extra_fields = kwargs.pop('extra', 0)
+    # override __init__ to create dynamic number of food and portions fields
+    def __init__(self, *args, **kwargs):
+        # get number of extra fields from kwargs
+        extra_fields = kwargs.pop('extra', 0)
 		
-		super(RecipeForm, self).__init__(*args, **kwargs)
-		self.fields['extra_field_count'].initial = extra_fields
+        super(RecipeForm, self).__init__(*args, **kwargs)
+        self.fields['extra_field_count'].initial = extra_fields
 
-		# add extra fields
-		for i in range(int(extra_fields)):
-			food_field = 'food%s' % (i+2)
-			portions_field = 'portions%s' % (i+2)
+        # add extra fields
+        for i in range(int(extra_fields)):
+            food_field = 'food%s' % (i+2)
+            portions_field = 'portions%s' % (i+2)
 
-			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
-				widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
-			)
-			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
-				max_value=99, initial=1, required=True
-			)
+            self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
+                widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
+            )
+            self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
+                max_value=99, initial=1, required=True
+            )
+
