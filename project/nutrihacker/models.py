@@ -299,87 +299,92 @@ class MealFood(models.Model):
 		return total
 
 class Recipe(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	name = models.CharField(max_length=50, default="Custom Recipe")
-	is_public = models.BooleanField(default=False)
-	created_at = models.DateTimeField(default=datetime.now)
-	instruction = models.TextField(default="")
-	servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, default="Custom Recipe")
+    is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=datetime.now)
+    instruction = models.TextField(default="")
+    servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    allergy = models.ForeignKey(Allergy, on_delete=models.CASCADE, null=True)
+    diet = models.ForeignKey(DietPreference, on_delete=models.CASCADE, null=True)
 	
-	@classmethod
-	def create(cls, user, name, servingsProduced, instruction):
-		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction)
-		return recipe
+    @classmethod
+    def create(cls, user, name, servingsProduced, instruction):
+        recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction)
+        return recipe
 	
-	def __str__(self):
-		return str(self.user.username) + "'s " + str(self.name)
+    def __str__(self):
+        return str(self.user.username) + "'s " + str(self.name)
 		
-	# calculates total nutrition information of the recipe
-	def get_total(self):
-		total = {
-			'calories':0,
-			'totalFat':0,
-			'cholesterol':0,
-			'sodium':0,
-			'totalCarb':0,
-			'protein':0
-		}
+    # calculates total nutrition information of the recipe
+    def get_total(self):
+        total = {
+            'calories':0,
+            'totalFat':0,
+            'cholesterol':0,
+            'sodium':0,
+            'totalCarb':0,
+            'protein':0
+        }
 
-		# gets list of recipe foods in current recipe
-		recipe_food_list = RecipeFood.objects.filter(recipe_log__id=self.id)
+        # gets list of recipe foods in current recipe
+        recipe_food_list = RecipeFood.objects.filter(recipe_log__id=self.id)
 		
-		# for each meal food
-		for r_food in recipe_food_list:
-			# gets total nutrients for each food
-			nutrients = r_food.get_total()
-			# total the nutrients
-			for key in nutrients:
-				total[key] += nutrients[key]
+        # for each meal food
+        for r_food in recipe_food_list:
+            # gets total nutrients for each food
+            nutrients = r_food.get_total()
+            # total the nutrients
+            for key in nutrients:
+                total[key] += nutrients[key]
 
-		# chops all unnecessary zeros
-		for key in total:
-			total[key] = chop_zeros(total[key])
+        # chops all unnecessary zeros
+        for key in total:
+            total[key] = chop_zeros(total[key])
 
-		return total
-		
+        return total
+    def set_allergy(self, value):
+        self.allergy = value
+    def set_diet(self, value):
+        self.diet = value
 
 class RecipeFood(models.Model):
-	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-	food = models.ForeignKey(Food, on_delete=models.CASCADE)
-	portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    portions = models.DecimalField(max_digits=5, decimal_places=2, default=1)
 
-	@classmethod
-	def create(cls, recipe, food, portions):
-		recipe_food = cls(recipe=recipe, food=food, portions=portions)
-		return recipe_food
+    @classmethod
+    def create(cls, recipe, food, portions):
+        recipe_food = cls(recipe=recipe, food=food, portions=portions)
+        return recipe_food
 
-	def __str__(self):
-		return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions)
+    def __str__(self):
+        return  self.recipe.user.username + "'s " + self.recipe.name + " - " + self.food.name + ", " + str(self.portions)
 		
-	# calculates total nutrition of the recipe food
-	def get_total(self):
-		total = {
-			'calories':0,
-			'totalFat':0,
-			'cholesterol':0,
-			'sodium':0,
-			'totalCarb':0,
-			'protein':0
-		}
+    # calculates total nutrition of the recipe food
+    def get_total(self):
+        total = {
+            'calories':0,
+            'totalFat':0,
+            'cholesterol':0,
+            'sodium':0,
+            'totalCarb':0,
+            'protein':0
+        }
 
-		# gets the nutrients for single serving of the food
-		nutrients = self.food.get_nutrients()
+        # gets the nutrients for single serving of the food
+        nutrients = self.food.get_nutrients()
 		
-		# for each nutrient
-		for key in nutrients:
-			# adds the food's nutrients times the portion size
-			total[key] += nutrients[key] * self.portions
+        # for each nutrient
+        for key in nutrients:
+            # adds the food's nutrients times the portion size
+            total[key] += nutrients[key] * self.portions
 		
-		# chops all unnecessary zeros
-		for key in total:
-			total[key] = chop_zeros(total[key])
+        # chops all unnecessary zeros
+        for key in total:
+            total[key] = chop_zeros(total[key])
 
-		return total
+        return total
 		
 		
 
