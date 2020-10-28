@@ -78,9 +78,9 @@ class LogView(LoginRequiredMixin, FormView):
             portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
         try: # searches for an existing daily log for this day and user
-            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date)
+            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date, time=time)
         except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
-            daily_log = DailyLog.create(self.request.user, date)
+            daily_log = DailyLog.create(self.request.user, date, time)
             daily_log.save()
         
         # update the daily log id to be passed to success url
