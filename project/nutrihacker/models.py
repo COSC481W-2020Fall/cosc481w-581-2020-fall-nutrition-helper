@@ -176,16 +176,15 @@ class DailyLog(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateField()
 	time = models.TimeField()
-	food1 = models.ModelChoiceField()
-	portions1 = models.DecimalField()
+
 
 	@classmethod
 	def create(cls, user, date, time, food1, portions1):
-		daily_log = cls(user=user, date=date, time=time, food1=food1, portions1=portions1 )
+		daily_log = cls(user=user, date=date, time=time)
 		return daily_log
 
 	def __str__(self):
-		return str(self.DailyLog.date) + str(self.DailyLog.time) + str(self.DailyLog.food1) + str(self.DailyLog.portions1)
+		return str(self.DailyLog.date) + str(self.DailyLog.time)
 
 	# function that calculates total nutrition information of the daily log
 	def get_total(self):
