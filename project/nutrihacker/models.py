@@ -105,13 +105,13 @@ class Profile(models.Model):
 		if (self.showmetric):
 			self.height = value
 		else:
-			self.height = value / Profile.IN_IN_CM
+			self.height = Decimal(value) / Profile.IN_IN_CM
 	
 	def set_weight(self, value):
 		if (self.showmetric):
 			self.weight = value
 		else:
-			self.weight = value / Profile.LBS_IN_KG
+			self.weight = Decimal(value) / Profile.LBS_IN_KG
 			
 	def get_height(self):
 		if (self.showmetric):
@@ -175,16 +175,14 @@ class DietPreference(models.Model):
 class DailyLog(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateField()
-	time = models.TimeField()
-
 
 	@classmethod
-	def create(cls, user, date, time, food1, portions1):
-		daily_log = cls(user=user, date=date, time=time)
+	def create(cls, user, date):
+		daily_log = cls(user=user, date=date)
 		return daily_log
 
 	def __str__(self):
-		return str(self.DailyLog.date) + str(self.DailyLog.time)
+		return str(self.date)
 
 	# function that calculates total nutrition information of the daily log
 	def get_total(self):
@@ -395,4 +393,3 @@ class BrandedIds(models.Model):
 	#currently just gets the name
 	def fdcId(self):
 		return self.fdcId
-
