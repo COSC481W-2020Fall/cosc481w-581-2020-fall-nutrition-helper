@@ -179,7 +179,7 @@ class DailyLog(models.Model):
 
 
 	@classmethod
-	def create(cls, user, date, time, food1, portions1):
+	def create(cls, user, date, time):
 		daily_log = cls(user=user, date=date, time=time)
 		return daily_log
 

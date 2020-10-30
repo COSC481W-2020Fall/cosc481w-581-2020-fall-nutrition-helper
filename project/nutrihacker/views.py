@@ -43,22 +43,50 @@ class FoodAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
+
+class DisplayLogView(DetailView):
+    template_name = 'nutrihacker/displayLog.html'
+    model = DailyLog
+    fields = '_all_'
+    context_object_name = 'daily_log'
+
+# for display purposes
+# chops off extra zeros if unnecessary
+    def chop_zeros(value):
+        if value == value.to_integral():
+            return value.quantize(Decimal(1))
+        else:
+            return value.normalize()
+
+    def get_context_data(self, **kwargs):
+        context = super(DisplayLogView, self).get_context_data(**kwargs)
+        context['dailyLog'] = DailyLog.objects.filter(daily_log=self.kwargs['pk'])
+        return context
+class DisplayLogViewDetail(DetailView):
+    model = MealFood
+    template_name = 'nutrihacker/displayLog.html'
+    fields = '_all_'
+    context_object_name = 'meal_log'
+
+    def get_context_data(self, **kwargs):
+        return MealFood.objects.filter(meal_log=self.kwargs['pk'])
+
+
 # Daily log page, saves submitted info to database
-class LogView(LoginRequiredMixin, FormView):
+class LogView(FormView):
     form_class = LogForm
     template_name = 'nutrihacker/log.html'
-    daily_log_id = 0 # id of daily log to be redirected to
-    
+    daily_log_id = 0  # id of daily log to be redirected to
+
     # override get_success_url to correct daily log
     def get_success_url(self):
-        return reverse_lazy('nutrihacker:displayLog', kwargs={'pk':self.daily_log_id})
+        return reverse_lazy('nutrihacker:displayLog', kwargs={'pk': self.daily_log_id})
 
     # override get_form_kwargs to get number of extra fields
     def get_form_kwargs(self):
         kwargs = super(LogView, self).get_form_kwargs()
         if 'data' in kwargs:
             kwargs['extra'] = kwargs['data']['extra_field_count']
-        
         return kwargs
 
     # override form_valid to create model instances from submitted info
@@ -68,47 +96,35 @@ class LogView(LoginRequiredMixin, FormView):
         time = form.cleaned_data.get('time')
         # get number of foods in form
         food_number = int(form.cleaned_data.get('extra_field_count')) + 1
-        
+
         food = {}
         portions = {}
 
         # stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-        for i in range(1, food_number+1):
-            food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-            portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+        for i in range(1, food_number + 1):
+            food['food' + str(i)] = form.cleaned_data.get('food' + str(i))
+            portions['portions' + str(i)] = form.cleaned_data.get('portions' + str(i))
 
-        try: # searches for an existing daily log for this day and user
-            daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date, time=time)
-        except DailyLog.DoesNotExist: # if there is no matching daily log, a new one is created
+        # try:  # searches for an existing daily log for this day and user
+        #     daily_log = DailyLog.objects.get(user__id=self.request.user.id, date=date, time=time)
+        # except DailyLog.DoesNotExist:  # if there is no matching daily log, a new one is created
             daily_log = DailyLog.create(self.request.user, date, time)
             daily_log.save()
-        
+
         # update the daily log id to be passed to success url
-        self.daily_log_id = daily_log.id
-        
+        #self.daily_log_id = daily_log.id
+
         # creates the meal log for this time
-        meal_log = MealLog.create(time, daily_log)
-        meal_log.save()
+        # meal_log = MealLog.create(time, daily_log)
+        # meal_log.save()
 
         # creates a meal food for each food for this meal log
-        for i in range(1, food_number+1):
-            meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-            meal_food.save()
-
+        for i in range(1, food_number + 1):
+            meal_log = MealFood.create(meal_log, food['food' + str(i)], portions['portions' + str(i)])
+            meal_log.save()
 
         return super(LogView, self).form_valid(form)
 
-class DisplayLogView(LoginRequiredMixin, DetailView):
-    template_name = 'nutrihacker/displayLog.html'
-    model = DailyLog
-
-# for display purposes
-# chops off extra zeros if unnecessary
-def chop_zeros(value):
-    if value == value.to_integral():
-        return value.quantize(Decimal(1))
-    else:
-        return value.normalize()
 
 # displays the nutrition information of a food
 class FactsView(DetailView):
