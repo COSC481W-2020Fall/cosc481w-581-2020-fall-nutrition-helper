@@ -6,40 +6,54 @@
     <meta charset="UTF-8">
     <title>Display Log</title>
     <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    <style>
+        .dlTable{
 
+            color: white;
+	        text-align: center;
+	        font-size: 20px;
+	        height: 80%;
+         }
+    </style>
 </head>
 <body>
 {% include "nutrihacker/navigation_bar.html" %}
-
-<table align="center">
+<br>
+<h1 style="color: white;"><center>Your log!</center></h1>
+<table align="center" width="50%" style="color: white; border: 1px solid green; background: #17A589 ;" >
     <tr>
-        <td>Logged Date: </td>
+        <th id="01">Logged Date: </th>
         <td>
              {{daily_log.date}}
         </td>
     </tr>
     <tr>
-        <td>Logged Time: </td>
+        <th>Logged Time: </th>
           <td>
         {{daily_log.time}}
         </td>
     </tr>
     <tr>
         {% for meal_food in food %}
-                <td>{{ meal_food.food }}</td>
-                <td>{{ meal_food.portions }}</td>
+                <tr>
+                    <th> Logged Food:</th>
+                    <td>{{ meal_food.food }}</td>
+                </tr>
+                <tr>
+                    <th>Portion: </th>
+                    <td>{{ meal_food.portions }}</td>
+                </tr>
+
         {% endfor %}
 
     </tr>
     <tr>
 
     </tr>
+    <tr>
+        <td></td>
+    </tr>
 </table>
-
-
-
-
-
 
 </body>
 </html>
