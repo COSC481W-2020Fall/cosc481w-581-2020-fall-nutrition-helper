@@ -1,0 +1,155 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Daily Log List</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<style>
+			table, td {
+				border: 3px solid black;
+				border-collapse: collapse;
+				border-right: 0px;
+				padding: 100px;
+			}
+			.facts {
+				width: 35%;
+				margin: auto;
+				font-size: 24px;
+			}
+			.right {
+				text-align: right;
+				border-left: 0px;
+				border-right: 3px solid black;
+			}
+			body {
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
+			a {
+				text-decoration: none;
+				align: center;
+			}
+			a:hover {
+				color: blue;
+			}
+			.button {
+				padding: 15px 30px;
+				border: none;
+				display: inline-block;
+				margin: 4px 2px;
+			}
+			input {
+				width: 48px;
+			}
+			label {
+				color: white;
+			}
+			form {
+				display: inline;
+			}
+			span {
+				font-size: 18px;
+			}
+			.delbtn {
+				font-size: 20px;
+				text-align: right;
+			}
+			/* Popup container */
+			.popup {
+				position: relative;
+				display: inline-block;
+				cursor: pointer;
+			}
+
+			/* The actual popup (appears on top) */
+			.popup .popuptext {
+				visibility: hidden;
+				width: 160px;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 8px 0;
+				position: absolute;
+				z-index: 1;
+				bottom: 125%;
+				left: 50%;
+				margin-left: -80px;
+			}
+
+			/* Popup arrow *
+			.popup .popuptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}*/
+
+			/* Toggle this class when clicking on the popup container (hide and show the popup) */
+			.popup .show {
+				visibility: visible;
+				-webkit-animation: fadeIn 0.5s;
+				animation: fadeIn 0.5s
+			}
+
+			/* Add animation (fade in the popup) */
+			@-webkit-keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity: 1;}
+			}
+
+			@keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity:1 ;}
+			}
+		</style>
+	</head>
+	<body style="background-size: cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+		
+		<br>
+		<p>Your Daily Logs</p>
+		<p><a href="{% url 'nutrihacker:log_create' %}"><button class="B">&#10010; Add a new log</button></a></p>
+		<table style="background-color:black; padding:100px" align="center">
+		{% if object_list %}
+			{% for dailylog in object_list %}
+				<tr>
+					<th>
+						<!-- button to daily log detail page -->
+						<a href="{% url 'nutrihacker:log_detail' dailylog.id %}"><button class="B">{{ dailylog.date }}</button></a>
+					</th>
+					<th class="delbtn">
+						<!-- button to prompt deletion of daily log -->
+						<div class="popup" id={{ dailylog.id }} onclick="confirm(this.id)">
+							<span class="popuptext" id="popup{{ dailylog.id }}">Are you sure you want to delete?<br>
+								<form action="{% url 'nutrihacker:dailylog_delete' %}" method="POST">
+									{% csrf_token %}
+									<input type="hidden" name="id" value={{ dailylog.id }}>
+									<button type="submit">Yes</button>
+								</form><button>No</button>
+							</span>
+							<button class="delbtn">🗑️</button>
+						</div>
+					</th>
+				</tr>
+			{% endfor %}
+		{% else %}
+			<tr>
+				<th>You have no daily logs</th>
+			</tr>
+		{% endif %}
+		</table>
+		<script>
+		// When the user clicks on <div>, open the popup
+		function confirm(clicked_id) {
+		  	var popup = document.getElementById("popup"+clicked_id);
+		  	popup.classList.toggle("show");
+		}
+		</script>
+	</body>
+</html>

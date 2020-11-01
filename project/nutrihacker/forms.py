@@ -94,6 +94,7 @@ class LogForm(forms.Form):
 			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
 			)
+			self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
 	# override clean to add other errors
 	def clean(self):

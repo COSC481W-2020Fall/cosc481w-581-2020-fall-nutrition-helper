@@ -67,7 +67,7 @@ class DailyLogTests(TestCase):
 		food1 = Food.objects.get(id=1)
 		portions1 = Decimal('1.5')
 		response = self.client.post(
-			reverse('nutrihacker:log'),
+			reverse('nutrihacker:log_create'),
 			{'date':now.date(), 'time':now.time(), 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
 			follow=True
 		)
@@ -75,7 +75,7 @@ class DailyLogTests(TestCase):
 		self.assertQuerysetEqual(DailyLog.objects.all(), ['<DailyLog: ' + str(now.date()) + '>'])
 		self.assertQuerysetEqual(MealLog.objects.all(), ['<MealLog: ' + str(now) + '>'])
 		self.assertQuerysetEqual(MealFood.objects.all(), ['<MealFood: ' + str(now) + ' ' + food1.name + '>'])
-		self.assertRedirects(response, (reverse('nutrihacker:displayLog', kwargs={'pk':1})))
+		self.assertRedirects(response, (reverse('nutrihacker:log_detail', kwargs={'pk':1})))
 		
 		# test creating another meal log of multiple foods for the same day
 		food2 = Food.objects.get(id=2)
@@ -85,7 +85,7 @@ class DailyLogTests(TestCase):
 		food4 = Food.objects.get(id=4)
 		portions4 = Decimal('2.5')
 		response = self.client.post(
-			reverse('nutrihacker:log'),
+			reverse('nutrihacker:log_create'),
 			{'date':now.date(), 'time':now.time(), 'food1':food2.id, 'portions1':portions2, 'food2':food3.id, 'portions2':portions3,
 			'food3':food4.id, 'portions3':portions4, 'extra_field_count':2},
 			follow=True
@@ -99,7 +99,7 @@ class DailyLogTests(TestCase):
 		self.assertQuerysetEqual(DailyLog.objects.all(), ['<DailyLog: ' + str(now.date()) + '>'])
 		self.assertQuerysetEqual(MealLog.objects.all(), ['<MealLog: ' + str(now) + '>', '<MealLog: ' + str(now) + '>'], ordered=False)
 		self.assertQuerysetEqual(MealFood.objects.all(), mealfood_qs, ordered=False)
-		self.assertRedirects(response, (reverse('nutrihacker:displayLog', kwargs={'pk':1})))
+		self.assertRedirects(response, (reverse('nutrihacker:log_detail', kwargs={'pk':1})))
 		
 	# tests invalid future dates and times
 	def test_future_log_not_allowed(self):
@@ -113,7 +113,7 @@ class DailyLogTests(TestCase):
 		# test creating a daily log and meal log 30 minutes in the future
 		now1 = now + timedelta(minutes=30)
 		response = self.client.post(
-			reverse('nutrihacker:log'),
+			reverse('nutrihacker:log_create'),
 			{'date':now1.date(), 'time':now1.time(), 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
 			follow=True
 		)
@@ -126,7 +126,7 @@ class DailyLogTests(TestCase):
 		# test creating a daily log and meal log 1 day in the future
 		now2 = now + timedelta(days=1)
 		response = self.client.post(
-			reverse('nutrihacker:log'),
+			reverse('nutrihacker:log_create'),
 			{'date':now2.date(), 'time':now2.time(), 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
 			follow=True
 		)
