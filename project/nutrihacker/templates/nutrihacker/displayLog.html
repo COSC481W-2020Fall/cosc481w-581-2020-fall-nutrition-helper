@@ -11,8 +11,30 @@
 <body>
 {% include "nutrihacker/navigation_bar.html" %}
 
-    {{daily_log.date}}
-    {{daily_log.time}}
+<table align="center">
+    <tr>
+        <td>Logged Date: </td>
+        <td>
+             {{daily_log.date}}
+        </td>
+    </tr>
+    <tr>
+        <td>Logged Time: </td>
+          <td>
+        {{daily_log.time}}
+        </td>
+    </tr>
+    <tr>
+        {% for meal_food in food %}
+                <td>{{ meal_food.food }}</td>
+                <td>{{ meal_food.portions }}</td>
+        {% endfor %}
+
+    </tr>
+    <tr>
+
+    </tr>
+</table>
 
 
 
