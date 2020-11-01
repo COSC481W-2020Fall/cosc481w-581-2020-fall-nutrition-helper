@@ -20,7 +20,7 @@ from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
 from .forms import AllergyChoiceForm, DietChoiceForm, AllergyDeleteForm, DietDeleteForm
-from .forms import LogForm, RecipeForm
+from .forms import LogForm, RecipeForm, UserForm, ProfileForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -206,34 +206,32 @@ class ProfileView(ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
 
-
-class UpdateProfile(UpdateView, LoginRequiredMixin):
-	model = Profile
-	fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
-	success_url= reverse_lazy('nutrihacker:profile')
+class UpdateProfile(LoginRequiredMixin, TemplateView):
 	template_name = 'nutrihacker/update_profile.html'
 	
-	def form_valid(self, form):
-		self.object.gender = form.cleaned_data.get('gender')
-		self.object.birthdate = form.cleaned_data.get('birthdate')
-		self.object.set_height(form.cleaned_data.get('height'))
-		self.object.set_weight(form.cleaned_data.get('weight'))
-		self.object.showmetric = form.cleaned_data.get('showmetric')
-		self.object.save()
-		return HttpResponseRedirect(self.get_success_url())
-	
-	# uses get_height() and get_weight() to deal with unit conversion  
-	def get_initial(self):
-		return {
-			'gender': self.object.gender, 
-			'birthdate': self.object.birthdate, 
-			'height': self.object.get_height(), 
-			'weight': self.object.get_weight(), 
-			'showmetric': self.object.showmetric
-		}
-	
-	def get_object(self):
-		return get_object_or_404(Profile, user=self.request.user)
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		#profile = Profile.objects.get(user=self.request.user)
+		profile = get_object_or_404(Profile, user=self.request.user)
+		context['user_form'] = UserForm(instance=self.request.user)
+		context['profile_form'] = ProfileForm(instance=profile)
+		return context
+		
+	def post(self, request):
+		profile = get_object_or_404(Profile, user=self.request.user)
+		user_form = UserForm(request.POST, instance=self.request.user)
+		profile_form = ProfileForm(request.POST, instance=profile)
+				
+		if user_form.is_valid() and profile_form.is_valid():
+			user = user_form.save()
+			profile = profile_form.save(commit=False)
+			profile.set_height(profile_form.cleaned_data.get('height'))
+			profile.set_weight(profile_form.cleaned_data.get('weight'))
+			profile.save()
+			return HttpResponseRedirect(reverse('nutrihacker:profile'))
+		
+		context = {'user_form':user_form, 'profile_form':profile_form}
+		return self.render_to_response(context)
 
 
 # Page to add dietary preferences and allergies.

@@ -48,29 +48,42 @@
         {% include "nutrihacker/navigation_bar.html" %}
         <br>
         <br>
-        <p>{{ form.errors }}</p>
+        <p>{{ user_form.errors }}</p>
+		<p>{{ profile_form.errors }}</p>
         <form method="POST" action="{% url 'nutrihacker:update_profile' %}">
             {% csrf_token %}
             <table class="facts" style="background-color: white" style="width:50%">
-                <tr>
-                    <td>{{ form.gender.label_tag }}</td>
-                    <td>{{ form.gender }}<br></td>
+				<tr>
+                    <td>{{ user_form.email.label_tag }}</td>
+                    <td>{{ user_form.email }}<br></td>
+                </tr>
+				<tr>
+                    <td>{{ user_form.first_name.label_tag }}</td>
+                    <td>{{ user_form.first_name }}<br></td>
+                </tr>
+				<tr>
+                    <td>{{ user_form.last_name.label_tag }}</td>
+                    <td>{{ user_form.last_name }}<br></td>
+                </tr>
+				<tr>
+                    <td>{{ profile_form.gender.label_tag }}</td>
+                    <td>{{ profile_form.gender }}<br></td>
                 </tr>
                 <tr>
-                    <td>{{ form.birthdate.label_tag }}</td>
-                    <td>{{ form.birthdate }}</td>
+                    <td>{{ profile_form.birthdate.label_tag }}</td>
+                    <td>{{ profile_form.birthdate }}</td>
                 </tr>
                 <tr>
-                    <td>{{ form.height.label_tag }}</td>
-                    <td>{{ form.height }}</td>
+                    <td>{{ profile_form.height.label_tag }}</td>
+                    <td>{{ profile_form.height }}</td>
                 </tr>
                 <tr>
-                    <td>{{ form.weight.label_tag }}</td>
-                    <td>{{ form.weight }}</td>
+                    <td>{{ profile_form.weight.label_tag }}</td>
+                    <td>{{ profile_form.weight }}</td>
                 </tr>
                 <tr width="80%">
                     <td>Are metric units preferred?</td>
-                    <td>{{ form.showmetric }}<br></td>
+                    <td>{{ profile_form.showmetric }}<br></td>
                 </tr>
             </table>
             <br><br>
