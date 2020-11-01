@@ -43,6 +43,75 @@
 				color: green;
 			}
 		</style>
+		<script>
+			lbs_in_kg = 2.20462;
+			in_in_cm = 0.393701;
+		
+			window.onload = function()
+			{
+				metric_checkbox = document.getElementById("id_showmetric");
+				metric_checkbox.onclick = function(){ toggleUnits(metric_checkbox) };
+				if (metric_checkbox.checked)
+					metric_labels();
+				else
+					imperial_labels();
+			}
+			
+			function in_to_cm(num)
+			{
+				num /= in_in_cm;
+				return Math.round(num * 100) / 100;
+			}
+			
+			function cm_to_in(num)
+			{
+				num *= in_in_cm;
+				return Math.round(num * 100) / 100;
+			}
+			
+			function lbs_to_kg(num)
+			{
+				num /= lbs_in_kg;
+				return Math.round(num * 100) / 100;
+			}
+			
+			function kg_to_lbs(num)
+			{
+				num *= lbs_in_kg;
+				return Math.round(num * 100) / 100;
+			}
+			
+			function metric_labels()
+			{
+				document.getElementById("height_label").innerHTML = "Height (cm)";
+				document.getElementById("weight_label").innerHTML = "Weight (kg)";
+			}
+			
+			function imperial_labels()
+			{
+				document.getElementById("height_label").innerHTML = "Height (in)";
+				document.getElementById("weight_label").innerHTML = "Weight (lbs)";
+			}
+			
+			function toggleUnits(metric_checkbox)
+			{
+				height = document.getElementById("id_height");
+				weight = document.getElementById("id_weight");
+				
+				if (metric_checkbox.checked)
+				{
+					metric_labels();
+					height.value = in_to_cm(height.value);
+					weight.value = lbs_to_kg(weight.value);
+				}
+				else
+				{
+					imperial_labels();
+					height.value = cm_to_in(height.value);
+					weight.value = kg_to_lbs(weight.value);
+				}
+			}
+		</script>
 	</head>
 	<body style="background-size: cover">
         {% include "nutrihacker/navigation_bar.html" %}
@@ -74,15 +143,15 @@
                     <td>{{ profile_form.birthdate }}</td>
                 </tr>
                 <tr>
-                    <td>{{ profile_form.height.label_tag }}</td>
+                    <td id="height_label">{{ profile_form.height.label_tag }}</td>
                     <td>{{ profile_form.height }}</td>
                 </tr>
                 <tr>
-                    <td>{{ profile_form.weight.label_tag }}</td>
+                    <td id="weight_label">{{ profile_form.weight.label_tag }}</td>
                     <td>{{ profile_form.weight }}</td>
                 </tr>
                 <tr width="80%">
-                    <td>Are metric units preferred?</td>
+                    <td>Use metric:</td>
                     <td>{{ profile_form.showmetric }}<br></td>
                 </tr>
             </table>

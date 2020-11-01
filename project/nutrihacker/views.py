@@ -211,10 +211,9 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 	
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		#profile = Profile.objects.get(user=self.request.user)
 		profile = get_object_or_404(Profile, user=self.request.user)
 		context['user_form'] = UserForm(instance=self.request.user)
-		context['profile_form'] = ProfileForm(instance=profile)
+		context['profile_form'] = ProfileForm(instance=profile, initial={'height':profile.get_height(), 'weight':profile.get_weight()})
 		return context
 		
 	def post(self, request):
