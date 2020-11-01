@@ -177,6 +177,7 @@ class DietPreference(models.Model):
 class DailyLog(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateField()
+ master
 
 	@classmethod
 	def create(cls, user, date):
@@ -185,6 +186,18 @@ class DailyLog(models.Model):
 
 	def __str__(self):
 		return str(self.date)
+
+	time = models.TimeField()
+
+
+	@classmethod
+	def create(cls, user, date, time):
+		daily_log = cls(user=user, date=date, time=time)
+		return daily_log
+
+	def __str__(self):
+		return str(self.DailyLog.date) + str(self.DailyLog.time)
+ TsionBranchN
 
 	# function that calculates total nutrition information of the daily log
 	def get_total(self):

@@ -6,10 +6,19 @@
     <meta charset="UTF-8">
     <title>Display Log</title>
     <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    <style>
+        .dlTable{
 
+            color: white;
+	        text-align: center;
+	        font-size: 20px;
+	        height: 80%;
+         }
+    </style>
 </head>
 <body>
 {% include "nutrihacker/navigation_bar.html" %}
+master
 
     {{dailylog.date}}
 
@@ -17,5 +26,42 @@
 
 
 
+
+<br>
+<h1 style="color: white;"><center>Your log!</center></h1>
+<table align="center" width="50%" style="color: white; border: 1px solid green; background: green;" >
+    <tr>
+        <th id="01">Logged Date: </th>
+        <td>
+             {{daily_log.date}}
+        </td>
+    </tr>
+    <tr>
+        <th>Logged Time: </th>
+          <td>
+        {{daily_log.time}}
+        </td>
+    </tr>
+    <tr>
+        {% for meal_food in food %}
+                <tr>
+                    <th> Logged Food:</th>
+                    <td>{{ meal_food.food }}</td>
+                </tr>
+                <tr>
+                    <th>Portion: </th>
+                    <td>{{ meal_food.portions }}</td>
+                </tr>
+        {% endfor %}
+
+    </tr>
+</table>
+<br><br><br>
+
+<div style="text-align:center;">
+            <button style="text-align:center; font-size:17px; padding: 15px 30px;"><a href="{% url 'nutrihacker:log' %}" alt="Daily Log">Daily Log</a></button>
+            <button style="text-align:center;font-size:17px; padding: 15px 30px;"><a href="{% url 'nutrihacker:profile' %}" alt="Daily Log">Profile</a></button>
+</div>
+TsionBranchN
 </body>
 </html>
