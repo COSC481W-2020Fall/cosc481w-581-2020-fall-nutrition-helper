@@ -69,7 +69,7 @@
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Daily Log</h1>
         <h2>Record what you ate!</h2>
-        <form method="POST" action="{% url 'nutrihacker:log' %}">
+        <form method="POST" action="{% url 'nutrihacker:log_create' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
                 {{ form.as_table }}
@@ -125,6 +125,7 @@
                 f_select.setAttribute("name", "food" + food_number);
                 f_select.setAttribute("data-select2-id", "id_food" + food_number);
                 f_select.id = "id_food" + food_number;
+                f_select.value = "";
 
                 // repeat for portions, initialize value to 1
                 p_label.setAttribute("for", "id_portions" + food_number);
