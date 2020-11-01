@@ -20,7 +20,7 @@
 {% include "nutrihacker/navigation_bar.html" %}
 <br>
 <h1 style="color: white;"><center>Your log!</center></h1>
-<table align="center" width="50%" style="color: white; border: 1px solid green; background: #17A589 ;" >
+<table align="center" width="50%" style="color: white; border: 1px solid green; background: green;" >
     <tr>
         <th id="01">Logged Date: </th>
         <td>
@@ -43,17 +43,15 @@
                     <th>Portion: </th>
                     <td>{{ meal_food.portions }}</td>
                 </tr>
-
         {% endfor %}
 
     </tr>
-    <tr>
-
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
 </table>
+<br><br><br>
 
+<div style="text-align:center;">
+            <button style="text-align:center; font-size:17px; padding: 15px 30px;"><a href="{% url 'nutrihacker:log' %}" alt="Daily Log">Daily Log</a></button>
+            <button style="text-align:center;font-size:17px; padding: 15px 30px;"><a href="{% url 'nutrihacker:profile' %}" alt="Daily Log">Profile</a></button>
+</div>
 </body>
 </html>
