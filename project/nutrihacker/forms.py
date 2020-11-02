@@ -4,7 +4,20 @@ from dal import autocomplete
 from django import forms
 from django.utils.translation import ugettext as _
 
-from .models import Food, Allergy, DietPreference
+from django.forms import ModelForm
+from django.contrib.auth.models import User
+
+from .models import Food, Allergy, DietPreference, Profile
+
+class UserForm(ModelForm):
+	class Meta:
+		model = User
+		fields = ['first_name', 'last_name', 'email']
+		
+class ProfileForm(ModelForm):
+	class Meta:
+		model = Profile
+		fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
 
 # creates a model choice select field to add allergies
 class AllergyChoiceForm(forms.Form):
@@ -81,6 +94,7 @@ class LogForm(forms.Form):
 			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
 				max_value=99, initial=1, required=True
 			)
+			self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
 	# override clean to add other errors
 	def clean(self):
@@ -90,9 +104,9 @@ class LogForm(forms.Form):
 		
 		# raises an error if date/time is in the future
 		if cleaned_data['date'] > now.date():
-			self.add_error('date', forms.ValidationError(_('Invalid date: cannot log the future'), code='future date'))
-		elif cleaned_data['time'] > now.time():
-			self.add_error('time', forms.ValidationError(_('Invalid time: cannot log the future'), code='future time'))
+			self.add_error('date', forms.ValidationError(_('Invalid date: cannot create a log for the future'), code='future date'))
+		elif datetime.combine(cleaned_data['date'], cleaned_data['time']) > now:
+			self.add_error('time', forms.ValidationError(_('Invalid time: cannot create a log for the future'), code='future time'))
 		
 		return cleaned_data
             
@@ -101,8 +115,8 @@ class RecipeForm(forms.Form):
     # form fields
     name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
     servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all())
-    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all())
+    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
+    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
     instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
     food1 = forms.ModelChoiceField(
         label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),

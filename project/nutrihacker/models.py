@@ -8,6 +8,8 @@ from datetime import datetime
 # for display purposes
 # chops off extra zeros if unnecessary
 def chop_zeros(value):
+	if value == 0:
+		return Decimal('0')
 	if value == value.to_integral():
 		return value.quantize(Decimal(1))
 	else:
@@ -105,13 +107,13 @@ class Profile(models.Model):
 		if (self.showmetric):
 			self.height = value
 		else:
-			self.height = value / Profile.IN_IN_CM
+			self.height = Decimal(value) / Profile.IN_IN_CM
 	
 	def set_weight(self, value):
 		if (self.showmetric):
 			self.weight = value
 		else:
-			self.weight = value / Profile.LBS_IN_KG
+			self.weight = Decimal(value) / Profile.LBS_IN_KG
 			
 	def get_height(self):
 		if (self.showmetric):
@@ -196,7 +198,7 @@ class DailyLog(models.Model):
 		}
 
 		# gets list of meal logs for this daily log
-		meal_log_list = MealLog.objects.filter(daily_log__id=self.id)
+		meal_log_list = MealLog.objects.filter(daily_log=self)
 		
 		# for each meal log
 		for m_log in meal_log_list:
@@ -240,7 +242,7 @@ class MealLog(models.Model):
 		}
 
 		# gets list of meal foods in current meal log
-		meal_food_list = MealFood.objects.filter(meal_log__id=self.id)
+		meal_food_list = MealFood.objects.filter(meal_log=self)
 		
 		# for each meal food
 		for m_food in meal_food_list:
@@ -325,7 +327,7 @@ class Recipe(models.Model):
         }
 
         # gets list of recipe foods in current recipe
-        recipe_food_list = RecipeFood.objects.filter(recipe_log__id=self.id)
+        recipe_food_list = RecipeFood.objects.filter(recipe_log=self)
 		
         # for each meal food
         for r_food in recipe_food_list:
@@ -393,4 +395,3 @@ class BrandedIds(models.Model):
 	#currently just gets the name
 	def fdcId(self):
 		return self.fdcId
-
