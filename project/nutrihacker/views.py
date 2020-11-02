@@ -95,8 +95,15 @@ class FactsView(DetailView):
 
 # displays the food that match a search, passed to the template as a list
 class SearchFoodView(ListView):
+    paginate_by = 50
     model = Food
     template_name = 'nutrihacker/search.html'
+	
+    def get_context_data(self, **kwargs):
+        context = super(SearchFoodView, self).get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['search'] = self.request.GET.get('search')
+        return context
     
     # overrides ListView get_queryset to find names containing search term and pass them to template
     def get_queryset(self):
@@ -117,8 +124,15 @@ class SearchFoodView(ListView):
         
 
 class SearchRecipeView(ListView):
+    paginate_by = 50
     model = RecipePreset
     template_name = 'nutrihacker/search-recipe.html'
+	
+    def get_context_data(self, **kwargs):
+        context = super(SearchRecipeView, self).get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['search'] = self.request.GET.get('term')
+        return context
 
     # overrides ListView get_queryset to find names containing search term and pass them to template
     def get_queryset(self):
