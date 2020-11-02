@@ -1,8 +1,7 @@
 {% load static %}
 
 <table class="01" width="100%" style="background-color: black;">
-    <style>
-
+<style>
     .sub-menu{
   position: relative;
   display: inline-block;
@@ -12,12 +11,36 @@
     display: block;
     }
 
+    .layer1{
+    position: absolute;
+    top: 110px;
+    left: 250px;
+    }
+
+    .layer3{
+    position: absolute;
+    top: 200px;
+    }
 
 
-    </style>
-        <tr>
-            <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}"><img src="{% static 'nutrihacker/images/weblogo.png' %}" alt="Website logo" width="210px" height="210px"></a></th>
 
+</style>
+   <tr>
+   <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}">
+   <img src="{% static 'nutrihacker/images/weblogo.png' %}"
+   alt="Website logo" width="210px" height="210px"></a></th>
+   <th>
+    <div class="layer1">
+        <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
+        <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="100%" />
+        <button id="oneButton" type="submit">&#128269;</button>
+        </form>
+    </div>
+<input id="food" type="radio" name="FoodRec" value="food"checked>
+<label>Food</label><br>
+<input id="recipe" type="radio" name="FoodRec" value="recipe">
+<label>Recipe</label><br>
+    </th>
             <th><a href="{% url 'nutrihacker:description' %}">How it works</a> </th>
             <div class="sub-menu"><th><a href="{% url 'nutrihacker:search' %}">Search</a>
             <div class="sub-menu-1">
@@ -27,14 +50,42 @@
             </th>
             </div>
             {% if user.is_authenticated %}
-            <th><a href="{% url 'nutrihacker:log_list' %}">My Logs</a></th>
-            <th><a href="{% url 'nutrihacker:list_recipe' %}">My Recipes</a></th>
-            <th><a href="{% url 'nutrihacker:profile' %}">My Profile</a></th>
-            <th><a href="{% url 'nutrihacker:logout' %}">Logout</a></th>
+			<th><div>
+				<a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
+				<br>
+				<a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Your Personal Recipes</a>
+			</div>
+            <th><a href="{% url 'nutrihacker:logout' %}">Logout</a>
             {% else %}
             <th><a href ="{% url 'nutrihacker:login' %}">Login/Register</a></th>
             {% endif %}
         </tr>
+
+
+    <script>
+document.getElementById("food").addEventListener('click', function(){
+document.getElementById('oneSearch').name;
+document.getElementById('oneSearch').name = "search";
+document.getElementById('oneSearch').placeholder = "Search Food...";
+document.getElementById('searchfood').action;
+document.getElementById('searchfood').action = "{% url 'nutrihacker:search' %}";
+
+
+
+});
+
+document.getElementById("recipe").addEventListener('click', function(){
+document.getElementById('oneSearch').name;
+document.getElementById('oneSearch').name = "term";
+document.getElementById('oneSearch').placeholder = "Search Recipe...";
+document.getElementById('searchfood').action;
+document.getElementById('searchfood').action = "{% url 'nutrihacker:search-recipe' %}";
+
+
+
+});
+</script>
 </table>
+
 
 

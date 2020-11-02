@@ -94,7 +94,8 @@
 			</td></tr>
 			{% for recipe_food in ingredients %}
 				<tr><td>
-				<br>{{ recipe_food.portions }}g of {{ recipe_food.food.name }}<br>
+				<!--{{ recipe_food.food.name }} -->
+				<br>{{ recipe_food.portions }}g of <a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a><br>
 				</td></tr>
 			{% endfor %}
 		</table>
