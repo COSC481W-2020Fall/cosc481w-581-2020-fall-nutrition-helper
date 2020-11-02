@@ -343,8 +343,10 @@ class Recipe(models.Model):
 			total[key] = chop_zeros(total[key])
 
 		return total
+	
 	def set_allergy(self, value):
 		self.allergy = value
+	
 	def set_diet(self, value):
 		self.diet = value
 
@@ -361,8 +363,6 @@ class RecipeFood(models.Model):
 	def __str__(self):
 		return	self.recipe.user.username + ", " + self.recipe.name + ", " + self.food.name + ", " + str(self.portions)
 	
-	def get_serving(self):
-	
 	# calculates total nutrition of the recipe food
 	def get_total(self):
 		total = {
@@ -373,7 +373,7 @@ class RecipeFood(models.Model):
 			'totalCarb':0,
 			'protein':0
 		}
-
+		
 		# gets the nutrients for single serving of the food
 		nutrients = self.food.get_nutrients()
 		

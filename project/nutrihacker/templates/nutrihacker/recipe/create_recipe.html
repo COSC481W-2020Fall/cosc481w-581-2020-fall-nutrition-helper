@@ -69,7 +69,7 @@
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Creator</h1>
         <h2>Record what ingredients are in your recipe!</h2>
-        <form method="POST" action="{% url 'nutrihacker:record_recipe' %}">
+        <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
                 {{ recipe_form.as_table }}
@@ -98,9 +98,9 @@
                 // get all table rows
                 var rows = table.getElementsByTagName("tr");
                 
-                // select rows 4 and 5 (original food and portions field)
-                var f_row = rows[3];
-                var p_row = rows[4];
+                // select rows 6 and 7 (original food and portions field)
+                var f_row = rows[5];
+                var p_row = rows[6];
                 
                 // clone the rows
                 var f_clone = f_row.cloneNode(true);
