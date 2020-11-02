@@ -25,11 +25,11 @@
 
 
 </style>
-   <tr>
-   <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}">
-   <img src="{% static 'nutrihacker/images/weblogo.png' %}"
-   alt="Website logo" width="210px" height="210px"></a></th>
-   <th>
+    <tr>
+       <th style="text-align: left;"><a href="{% url 'nutrihacker:index' %}">
+       <img src="{% static 'nutrihacker/images/weblogo.png' %}"
+       alt="Website logo" width="210px" height="210px"></a></th>
+       <th>
     <div class="layer1">
         <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
         <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="100%" />
@@ -51,9 +51,11 @@
             </div>
             {% if user.is_authenticated %}
 			<th><div>
-				<a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
+				<a href="{% url 'nutrihacker:profile' %}">My Profile</a>
 				<br>
-				<a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Your Personal Recipes</a>
+				<a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">My Personal Recipes</a>
+                <br>
+                <a href="{% url 'nutrihacker:log_list' %}">My Logs</a>
 			</div>
             <th><a href="{% url 'nutrihacker:logout' %}">Logout</a>
             {% else %}
