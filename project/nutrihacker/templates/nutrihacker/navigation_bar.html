@@ -50,7 +50,11 @@
             </th>
             </div>
             {% if user.is_authenticated %}
-            <th><a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
+			<th><div>
+				<a href="{% url 'nutrihacker:profile' %}">{{ user.username }}'s Profile</a>
+				<br>
+				<a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Your Personal Recipes</a>
+			</div>
             <th><a href="{% url 'nutrihacker:logout' %}">Logout</a>
             {% else %}
             <th><a href ="{% url 'nutrihacker:login' %}">Login/Register</a></th>
