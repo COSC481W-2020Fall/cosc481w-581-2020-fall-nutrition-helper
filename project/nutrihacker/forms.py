@@ -115,8 +115,8 @@ class RecipeForm(forms.Form):
     # form fields
     name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
     servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all())
-    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all())
+    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
+    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
     instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
     food1 = forms.ModelChoiceField(
         label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
