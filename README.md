@@ -29,7 +29,7 @@ We are getting all of our nutrition information from the USDA database found her
 3. Navigate to the project directory: `cd 481/project`
 4. Run `python manage.py runserver 0.0.0.0:8000`
     * Add `nohup` at the beginning to keep the server running after disconnecting from the session
-5. To stop the server, run `ps aux | awk '/runserver/ {print $2}'` and get the PID (first result), then run `kill [PID]`
+5. To stop the server, run `ps aux | awk '/runserver/ {print $2}'` and get the PID (either of the two consecutive results), then run `kill [PID]`
 6. Site address: http://3.88.6.165:8000/nutrihacker/
 
 ### Running the Web Server on Your Own AWS Server
@@ -45,7 +45,7 @@ We are getting all of our nutrition information from the USDA database found her
 5. Run `python manage.py runserver 0.0.0.0:8000`
     * You may get the message `Error: That port is already in use.` In this case, run `sudo fuser -k 8000/tcp` to kill any processses on that port.
 6. Address will be the public ip followed by :8000/nutrihacker: `http://[PUBLIC_IP]:8000/nutrihacker`
-7. If the website doesn't load, it's probably due to the security group for your EC2 instance. Add a rule for Custom TCP on port 8000.
+7. If the website doesn't load, it's probably due to the security group for your EC2 instance. Add a rule on Inbound for Custom TCP on port 8000.
 
 ## Members
 * Bryce VanAsselt
