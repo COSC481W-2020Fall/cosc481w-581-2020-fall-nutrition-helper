@@ -121,6 +121,42 @@
 		</table>
 		<br>
 		<br>
+		<h1 style="color: white"><center>Nutrition Facts: {{ recipe.name }}</center></h1>
+		<br>
+		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
+			<center>
+				<label style="color: white">Number of portions: </label>
+				<input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}">
+				<button type="submit" value="Submit">Calculate</button>
+			</center>
+		</form>
+		<br>
+		<table class="facts" style="background-color: white">
+			<tr>
+				<td>Calories</td>
+				<td class="right">{{ nutrition.calories|floatformat }}</td>
+			</tr>
+			<tr>
+				<td>Total Fat</td>
+				<td class="right">{{ nutrition.totalFat|floatformat }}g</td>
+			</tr>
+			<tr>
+				<td>Cholesterol</td>
+				<td class="right">{{ nutrition.cholesterol|floatformat }}mg</td>
+			</tr>
+			<tr>
+				<td>Sodium</td>
+				<td class="right">{{ nutrition.sodium|floatformat }}mg</td>
+			</tr>
+			<tr>
+				<td>Total Carbohydrates</td>
+				<td class="right">{{ nutrition.totalCarb|floatformat }}g</td>
+			</tr>
+			<tr>
+				<td>Protein</td>
+				<td class="right">{{ nutrition.protein|floatformat }}g</td>
+			</tr>
+		</table>
     </body>
     <script type="text/javascript">
         var extra_count = Number(document.getElementById("id_extra_field_count").value);

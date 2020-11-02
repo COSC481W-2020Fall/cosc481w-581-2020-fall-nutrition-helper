@@ -328,7 +328,7 @@ class Recipe(models.Model):
 		}
 
 		# gets list of recipe foods in current recipe
-		recipe_food_list = RecipeFood.objects.filter(recipe_log=self)
+		recipe_food_list = RecipeFood.objects.filter(recipe=self)
 		
 		# for each meal food
 		for r_food in recipe_food_list:
