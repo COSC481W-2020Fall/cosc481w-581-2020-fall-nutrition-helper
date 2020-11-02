@@ -42,13 +42,6 @@
 <label>Recipe</label><br>
     </th>
             <th><a href="{% url 'nutrihacker:description' %}">How it works</a> </th>
-            <div class="sub-menu"><th><a href="{% url 'nutrihacker:search' %}">Search</a>
-            <div class="sub-menu-1">
-                <a href="{% url 'nutrihacker:search' %}">Food</a>
-                <a href="{% url 'nutrihacker:search-recipe' %}">Recipe</a>
-            </div>
-            </th>
-            </div>
             {% if user.is_authenticated %}
 			<th><div>
 				<a href="{% url 'nutrihacker:profile' %}">My Profile</a>
