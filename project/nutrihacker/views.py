@@ -599,45 +599,6 @@ class DetailRecipe(DetailView):
 		context['nutrition']['protein'] = chop_zeros(query * context['nutrition']['protein'])
 		
 		return context
-		
-		# # make sure user has permission by matching the user to the daily log
-		# try:
-			# r = Recipe.objects.get(id=self.kwargs['pk'])
-		# except Recipe.DoesNotExist:
-			# raise PermissionDenied
-
-		# # get list of meal logs for this daily log
-		
-		# nutrition_list = []
-
-		# # build a dictionary for each meal log
-		# for ml in ml_list:
-			# info = {}
-			# info['id'] = ml.id
-			# info['time'] = ml.log_time.strftime('%I:%M %p')
-			# info['food_list'] = []
-			# info['total'] = ml.get_total()
-			
-			# # get list of meal foods for each meal log
-			# mf_list = MealFood.objects.filter(meal_log=ml)
-
-			# # build a dictionary for each food in each meal log
-			# for mf in mf_list:
-				# food = {}
-				# food['name'] = mf.food.name
-				# food['portions'] = chop_zeros(mf.portions)
-				# food['amount'] = chop_zeros(mf.portions * mf.food.servingSize)
-				# food = {**food, **mf.get_total()}
-
-				# info['food_list'].append(food)
-
-			# info_list.append(info)
-		
-		# # add to context
-		# context['info_list'] = info_list
-		# context['daytotal'] = dl.get_total()
-		
-		# return context
 
 class DetailRecipeFood(DetailView):
 	model = RecipeFood
@@ -647,42 +608,7 @@ class DetailRecipeFood(DetailView):
 	
 	def get_queryset(self, *args, **kwargs):
 		return RecipeFood.objects.filter(recipe=self.kwargs['pk'])
-	
-	# # overrides DetailView get_context_data
-	# def get_context_data(self, **kwargs):
-		# # get context
-		# context = super(DetailRecipeView, self).get_context_data(**kwargs)
-	
-		# # if there is a GET request
-		# if self.request.method == 'GET':
-			# # get the query value
-			# query = self.request.GET.get('portions')
-			
-			# # if query empty
-			# if query == None:
-				# # set to 1
-				# query = Decimal(1)
-			# else:
-				# # convert query to python decimal
-				# query = Decimal(query)
-		# # no GET request
-		# else:
-			# # set query to 1
-			# query = Decimal(1)
 
-		# # pass query as 'portions'
-		# context['portions'] = query
-		
-		# # multiply nutrition data fields by query and chop trailing zeros
-		# context['food'].servingSize = chop_zeros(query * context['food'].servingSize)
-		# context['food'].calories = chop_zeros(query * context['food'].calories)
-		# context['food'].totalFat = chop_zeros(query * context['food'].totalFat)
-		# context['food'].cholesterol = chop_zeros(query * context['food'].cholesterol)
-		# context['food'].sodium = chop_zeros(query * context['food'].sodium)
-		# context['food'].totalCarb = chop_zeros(query * context['food'].totalCarb)
-		# context['food'].protein = chop_zeros(query * context['food'].protein)
-
-		# return context
 
 class ListRecipe(ListView):
 	model = Recipe
@@ -760,8 +686,4 @@ class RecordRecipeView(FormView):
 			recipe_food.save()
 
 		return super(RecordRecipeView, self).form_valid(form)
-
-	#def form_invalid(self, form):
-	#	print("Hello my name is BRYCE!!!!!!!!!!!!!!!!!!!!!!!!")
-	#	print(form.errors)
 
