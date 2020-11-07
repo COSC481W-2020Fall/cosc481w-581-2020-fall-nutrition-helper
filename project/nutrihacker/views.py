@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from .models import Food, Recipe, RecipeFood, RecipePreset
+from .models import Food, Recipe, RecipeFood
 from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
@@ -128,7 +128,7 @@ class SearchFoodView(ListView):
 
 class SearchRecipeView(ListView):
 	paginate_by = 50
-	model = RecipePreset
+	model = Recipe
 	template_name = 'nutrihacker/search-recipe.html'
 	
 	def get_context_data(self, **kwargs):
@@ -142,9 +142,9 @@ class SearchRecipeView(ListView):
 	def get_queryset(self):
 		query = self.request.GET.get('term')
 		if (query == None):
-			return RecipePreset.objects.all()
+			return Recipe.objects.all()
 		else:
-			object_list = RecipePreset.objects.filter(
+			object_list = Recipe.objects.filter(
 				Q(name__icontains=query)
 			)
 			return object_list
