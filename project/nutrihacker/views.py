@@ -12,7 +12,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -565,11 +565,16 @@ class MealFoodDeleteView(LoginRequiredMixin, DeleteView):
 
 
 ##-------------- Recipe Views --------------------------------------
-class DetailRecipe(DetailView):
+class DetailRecipe(UserPassesTestMixin, DetailView):
 	model = Recipe
 	fields = '__all__'
 	context_object_name = "recipe"
 	template_name='nutrihacker/recipe/detail_recipe.html'
+	
+	# Limit viewing recipe to creator if recipe is not public
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.is_public or recipe.user == self.request.user
 	
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
@@ -630,19 +635,28 @@ class ListRecipe(ListView):
 		object_list = Recipe.objects.filter(user=self.request.user)
 		return object_list
 
-class UpdateRecipe(UpdateView):
+class UpdateRecipe(UserPassesTestMixin, UpdateView):
 	model = Recipe
 	#fields = '__all__'
 	fields = ['name', 'instruction', 'servingsProduced']
 	success_url= "../"
 	template_name = 'nutrihacker/recipe/update_recipe.html'
+	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
 
-class DeleteRecipe(DeleteView):
+class DeleteRecipe(UserPassesTestMixin, DeleteView):
 	model = Recipe
 	fields = '__all__'
 	success_url= "../../"
 	template_name = 'nutrihacker/recipe/delete_recipe.html'
-
+	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
 
 # saves submitted info to database
 class RecordRecipeView(FormView):
