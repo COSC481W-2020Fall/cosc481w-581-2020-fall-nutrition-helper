@@ -83,18 +83,30 @@ class LogForm(forms.Form):
 		super(LogForm, self).__init__(*args, **kwargs)
 		self.fields['extra_field_count'].initial = extra_fields
 
+		form_data = {}
+		
+		submitted = 'data' in kwargs
+		if submitted:
+			form_data = kwargs['data']
+
+		if submitted and 'food1' not in form_data:
+			del self.fields['food1']
+			del self.fields['portions1']
+
 		# add extra fields
 		for i in range(int(extra_fields)):
 			food_field = 'food%s' % (i+2)
 			portions_field = 'portions%s' % (i+2)
 
-			self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
-				widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
-			)
-			self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
-				max_value=99, initial=1, required=True
-			)
-			self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+			# checks if current food and portions field exists
+			if not submitted or food_field in form_data:
+				self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
+					widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
+				)
+				self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
+					max_value=99, initial=1, required=True
+				)
+				self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
 	# override clean to add other errors
 	def clean(self):
@@ -104,9 +116,13 @@ class LogForm(forms.Form):
 		
 		# raises an error if date/time is in the future
 		if cleaned_data['date'] > now.date():
-			self.add_error('date', forms.ValidationError(_('Invalid date: cannot create a log for the future'), code='future date'))
+			self.add_error('date', forms.ValidationError(_('Invalid future date'), code='future date'))
 		elif datetime.combine(cleaned_data['date'], cleaned_data['time']) > now:
-			self.add_error('time', forms.ValidationError(_('Invalid time: cannot create a log for the future'), code='future time'))
+			self.add_error('time', forms.ValidationError(_('Invalid future time'), code='future time'))
+
+		for i in range(int(cleaned_data['extra_field_count'])+1):
+			if ('portions'+str(i+1)) in cleaned_data and cleaned_data['portions'+str(i+1)] == 0:
+				self.add_error('portions'+str(i+1), forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
 		
 		return cleaned_data
             
