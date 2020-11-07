@@ -118,6 +118,7 @@ class RecipeForm(forms.Form):
     allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
     diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
     instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
+    is_public = forms.BooleanField(initial=True, required=False)
     food1 = forms.ModelChoiceField(
         label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
         required=True

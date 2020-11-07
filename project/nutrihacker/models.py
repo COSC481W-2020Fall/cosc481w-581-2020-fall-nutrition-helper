@@ -292,8 +292,8 @@ class Recipe(models.Model):
 	diet = models.ForeignKey(DietPreference, on_delete=models.CASCADE, null=True)
 	
 	@classmethod
-	def create(cls, user, name, servingsProduced, instruction):
-		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction)
+	def create(cls, user, name, servingsProduced, instruction, is_public):
+		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction, is_public=is_public)
 		return recipe
 	
 	def __str__(self):

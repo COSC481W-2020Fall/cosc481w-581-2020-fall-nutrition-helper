@@ -686,6 +686,7 @@ class RecordRecipeView(FormView):
 		name = form.cleaned_data.get('name')
 		diet = form.cleaned_data.get('diet')
 		allergy = form.cleaned_data.get('allergy')
+		is_public = form.cleaned_data.get('is_public')
 		# get number of foods in form
 		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
 		
@@ -698,7 +699,7 @@ class RecordRecipeView(FormView):
 			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
 		
-		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction)
+		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
 		recipe.save()
 		recipe.allergy = allergy
 		recipe.diet = diet
