@@ -127,27 +127,37 @@ class SearchFoodView(ListView):
 		
 
 class SearchRecipeView(ListView):
-	paginate_by = 50
-	model = Recipe
-	template_name = 'nutrihacker/search-recipe.html'
-	
-	def get_context_data(self, **kwargs):
-		context = super(SearchRecipeView, self).get_context_data(**kwargs)
-		if self.request.method == 'GET':
-			context['search'] = self.request.GET.get('term')
-		return context
+    paginate_by = 50
+    model = Recipe
+    template_name = 'nutrihacker/search-recipe.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(SearchRecipeView, self).get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['search'] = self.request.GET.get('term')
+        return context
 
 
-	# overrides ListView get_queryset to find names containing search term and pass them to template
-	def get_queryset(self):
-		query = self.request.GET.get('term')
-		if (query == None):
-			return Recipe.objects.all()
-		else:
-			object_list = Recipe.objects.filter(
-				Q(name__icontains=query)
-			)
-			return object_list
+    # overrides ListView get_queryset to find names containing search term and pass them to template
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+            
+        if self.request.method == 'GET':
+            query = self.request.GET.get('term')
+        else:
+            query = None
+            
+        if (query == None):
+            return Recipe.objects.all()
+        else:
+            object_list = Recipe.objects.filter(
+                Q(name__icontains=query),
+                Q(user=user) | Q(is_public=True)
+            )
+            return object_list
 
 
 def get_user_profile(request, username):
