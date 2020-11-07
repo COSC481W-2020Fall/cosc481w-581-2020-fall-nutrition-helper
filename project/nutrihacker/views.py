@@ -151,7 +151,7 @@ class SearchRecipeView(ListView):
             query = None
             
         if (query == None):
-            return Recipe.objects.all()
+            return Recipe.objects.filter(is_public=True)
         else:
             object_list = Recipe.objects.filter(
                 Q(name__icontains=query),
