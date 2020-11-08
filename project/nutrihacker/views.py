@@ -12,11 +12,11 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import views as auth_views, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from .models import Food, Recipe, RecipeFood, RecipePreset
+from .models import Food, Recipe, RecipeFood
 from .models import DailyLog, MealLog, MealFood
 from .models import Profile, Allergy, DietPreference
 
@@ -127,27 +127,37 @@ class SearchFoodView(ListView):
 		
 
 class SearchRecipeView(ListView):
-	paginate_by = 50
-	model = RecipePreset
-	template_name = 'nutrihacker/search-recipe.html'
-	
-	def get_context_data(self, **kwargs):
-		context = super(SearchRecipeView, self).get_context_data(**kwargs)
-		if self.request.method == 'GET':
-			context['search'] = self.request.GET.get('term')
-		return context
+    paginate_by = 50
+    model = Recipe
+    template_name = 'nutrihacker/search-recipe.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(SearchRecipeView, self).get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['search'] = self.request.GET.get('term')
+        return context
 
 
-	# overrides ListView get_queryset to find names containing search term and pass them to template
-	def get_queryset(self):
-		query = self.request.GET.get('term')
-		if (query == None):
-			return RecipePreset.objects.all()
-		else:
-			object_list = RecipePreset.objects.filter(
-				Q(name__icontains=query)
-			)
-			return object_list
+    # overrides ListView get_queryset to find names containing search term and pass them to template
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+        else:
+            user = None
+            
+        if self.request.method == 'GET':
+            query = self.request.GET.get('term')
+        else:
+            query = None
+            
+        if (query == None):
+            return Recipe.objects.filter(is_public=True)
+        else:
+            object_list = Recipe.objects.filter(
+                Q(name__icontains=query),
+                Q(user=user) | Q(is_public=True)
+            )
+            return object_list
 
 
 def get_user_profile(request, username):
@@ -278,18 +288,20 @@ class RegisterAccountView(FormView):
 		login(self.request, user)
 		return super().form_valid(form)
 
-
+# -----------------------------------------------------------
 # ------------------------ Log Views ------------------------
 
+# page that lists user's DailyLogs
 class LogListView(LoginRequiredMixin, ListView):
 	template_name = 'nutrihacker/log/log_list.html'
 	model = DailyLog
 
+	# override get_queryset to get only logged in user's DailyLogs
 	def get_queryset(self):
 		object_list = DailyLog.objects.filter(user=self.request.user).order_by('-date')
 		return object_list
 
-# Daily log page, saves submitted info to database
+# page for creating a log, saves submitted data to database
 class LogCreateView(LoginRequiredMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_create.html'
@@ -307,7 +319,7 @@ class LogCreateView(LoginRequiredMixin, FormView):
 		
 		return kwargs
 
-	# override form_valid to create model instances from submitted info
+	# override form_valid to create model instances from submitted data
 	def form_valid(self, form):
 		# get data from the form
 		date = form.cleaned_data.get('date')
@@ -320,8 +332,13 @@ class LogCreateView(LoginRequiredMixin, FormView):
 
 		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
 		for i in range(1, food_number+1):
-			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+			food_field = 'food'+str(i)
+			portions_field = 'portions'+str(i)
+
+			# checks if fields exist
+			if form.cleaned_data.get(food_field):
+				food[food_field] = form.cleaned_data.get(food_field)
+				portions[portions_field] = form.cleaned_data.get(portions_field)
 
 		try: # searches for an existing daily log for this day and user
 			daily_log = DailyLog.objects.get(user=self.request.user, date=date)
@@ -338,11 +355,14 @@ class LogCreateView(LoginRequiredMixin, FormView):
 
 		# creates a meal food for each food for this meal log
 		for i in range(1, food_number+1):
-			meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-			meal_food.save()
+			# checks if fields exist
+			if 'food'+str(i) in food:
+				meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
+				meal_food.save()
 
 		return super(LogCreateView, self).form_valid(form)
 
+# page that displays the details of one day's log
 class LogDetailView(LoginRequiredMixin, DetailView):
 	template_name = 'nutrihacker/log/log_detail.html'
 	model = DailyLog
@@ -350,13 +370,13 @@ class LogDetailView(LoginRequiredMixin, DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(LogDetailView, self).get_context_data(**kwargs)
 		
-		# make sure user has permission by matching the user to the daily log
+		# make sure user has permission by matching the user to the DailyLog
 		try:
 			dl = DailyLog.objects.get(user=self.request.user, id=self.kwargs['pk'])
 		except DailyLog.DoesNotExist:
 			raise PermissionDenied
 
-		# get list of meal logs for this daily log
+		# get list of MealLogs for this DailyLog
 		ml_list = MealLog.objects.filter(daily_log=dl).order_by('log_time')
 		
 		info_list = []
@@ -390,12 +410,14 @@ class LogDetailView(LoginRequiredMixin, DetailView):
 		
 		return context
 
+# delete DailyLog
 class DailyLogDeleteView(LoginRequiredMixin, DeleteView):
 	model = DailyLog
 	success_url = reverse_lazy('nutrihacker:log_list')
 	
 	# override get_object to get id from form
 	def get_object(self, queryset=None):
+		# make sure user has permission by matching the user to the DailyLog
 		try:
 			dl = DailyLog.objects.get(user=self.request.user, id=self.request.POST.get('id'))
 		except DailyLog.DoesNotExist:
@@ -403,6 +425,7 @@ class DailyLogDeleteView(LoginRequiredMixin, DeleteView):
 
 		return dl
 
+# delete MealLog
 class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 	model = MealLog
 	daily_log_id = 0 # id of daily log to be redirected to
@@ -412,6 +435,7 @@ class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 
 	# override get_object to get id from form
 	def get_object(self, queryset=None):
+		# make sure user has permission by matching the user to the MealLog
 		try:
 			ml = MealLog.objects.get(daily_log__user=self.request.user, id=self.request.POST.get('id'))
 		except MealLog.DoesNotExist:
@@ -421,11 +445,12 @@ class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 
 		return ml
 
+# page for user to edit log information, modifies database according to submitted data
 class LogUpdateView(LoginRequiredMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_update.html'
-	daily_log_id = 0 # id of daily log to be redirected to
-	meal_log_id = 0
+	daily_log_id = 0 # id of DailyLog to be redirected to
+	meal_log_id = 0 # id of MealLog
 	
 	# override get_success_url to correct daily log
 	def get_success_url(self):
@@ -435,23 +460,26 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 	def get_form_kwargs(self):
 		kwargs = super(LogUpdateView, self).get_form_kwargs()
 
-		if 'data' in kwargs:
+		# checks whether form data was submitted
+		if 'data' in kwargs: # if submitted, set 'extra' to 'extra_field_count' from form
 			kwargs['extra'] = kwargs['data']['extra_field_count']
-		else:
+		else: # if not submitted, 'extra' is the number of MealFoods minus 1
 			kwargs['extra'] = MealFood.objects.filter(meal_log__id=self.kwargs['pk']).count() - 1
 		
 		return kwargs
 
+	# override get_context_data to provide ids of DailyLog and MealLog
 	def get_context_data(self, **kwargs):
 		context = super(LogUpdateView, self).get_context_data(**kwargs)
-		ml = MealLog.objects.get(id=self.kwargs['pk'])
-		dl = ml.daily_log
 		
-		context['dailylog'] = dl
-		context['meallog'] = ml
+		ml = MealLog.objects.get(id=self.kwargs['pk'])
+		
+		context['dailylog_id'] = ml.daily_log.id
+		context['meallog_id'] = ml.id
 		
 		return context
 
+	# override get_initial to provide initial form values
 	def get_initial(self):
 		initial = super(LogUpdateView, self).get_initial()
 		ml = MealLog.objects.get(id=self.kwargs['pk'])
@@ -470,7 +498,7 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 		
 		return initial
 
-	# override form_valid to create model instances from submitted info
+	# override form_valid to modify model instances from submitted data
 	def form_valid(self, form):
 		# get data from the form
 		date = form.cleaned_data.get('date')
@@ -483,8 +511,13 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 
 		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
 		for i in range(1, food_number+1):
-			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
-			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+			food_field = 'food'+str(i)
+			portions_field = 'portions'+str(i)
+			
+			# checks if fields exist
+			if form.cleaned_data.get(food_field):
+				food[food_field] = form.cleaned_data.get(food_field)
+				portions[portions_field] = form.cleaned_data.get(portions_field)
 
 		try: # searches for an existing daily log for this day and user
 			daily_log = DailyLog.objects.get(user=self.request.user, date=date)
@@ -495,13 +528,15 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 		# update the daily log id to be passed to success url
 		self.daily_log_id = daily_log.id
 		
-		# creates the meal log for this time
+		# gets the meal log for this time
 		meal_log = MealLog.objects.get(id=self.meal_log_id)
 
+		# change the daily_log field if different date
 		if meal_log.daily_log is not daily_log:
 			meal_log.daily_log = daily_log
 			meal_log.save()
 
+		# change the log_time field if different time
 		if meal_log.log_time is not time:
 			meal_log.log_time = time
 			meal_log.save()
@@ -511,10 +546,12 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 
 		# creates new meal foods for each food for this meal log
 		for i in range(1, food_number+1):
-			meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-			meal_food.save()
+			# checks if fields exist
+			if 'food'+str(i) in food:
+				meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
+				meal_food.save()
 
-		# checks each food
+		# checks if each food already exists
 		# for i in range(1, food_number+1):
 		#	  print('food', i)
 		#	  if mf_list:
@@ -540,26 +577,18 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 
 		return super(LogUpdateView, self).form_valid(form)
 
-class MealFoodDeleteView(LoginRequiredMixin, DeleteView):
-	model = MealFood
-	success_url = reverse_lazy('nutrihacker:log_list')
-
-	# override get_object to get id from form
-	def get_object(self, queryset=None):
-		try:
-			mf = MealFood.objects.get(meal_log__daily_log__user=self.request.user, id=self.request.POST.get('id'))
-		except MealFood.DoesNotExist:
-			raise PermissionDenied
-
-		return mf
-
 
 ##-------------- Recipe Views --------------------------------------
-class DetailRecipe(DetailView):
+class DetailRecipe(UserPassesTestMixin, DetailView):
 	model = Recipe
 	fields = '__all__'
 	context_object_name = "recipe"
 	template_name='nutrihacker/recipe/detail_recipe.html'
+	
+	# Limit viewing recipe to creator if recipe is not public
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.is_public or recipe.user == self.request.user
 	
 	def get_context_data(self, **kwargs):
 		# Call the base implementation first to get a context
@@ -620,19 +649,28 @@ class ListRecipe(ListView):
 		object_list = Recipe.objects.filter(user=self.request.user)
 		return object_list
 
-class UpdateRecipe(UpdateView):
+class UpdateRecipe(UserPassesTestMixin, UpdateView):
 	model = Recipe
 	#fields = '__all__'
 	fields = ['name', 'instruction', 'servingsProduced']
 	success_url= "../"
 	template_name = 'nutrihacker/recipe/update_recipe.html'
+	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
 
-class DeleteRecipe(DeleteView):
+class DeleteRecipe(UserPassesTestMixin, DeleteView):
 	model = Recipe
 	fields = '__all__'
 	success_url= "../../"
 	template_name = 'nutrihacker/recipe/delete_recipe.html'
-
+	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
 
 # saves submitted info to database
 class RecordRecipeView(FormView):
@@ -662,6 +700,7 @@ class RecordRecipeView(FormView):
 		name = form.cleaned_data.get('name')
 		diet = form.cleaned_data.get('diet')
 		allergy = form.cleaned_data.get('allergy')
+		is_public = form.cleaned_data.get('is_public')
 		# get number of foods in form
 		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
 		
@@ -674,7 +713,7 @@ class RecordRecipeView(FormView):
 			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
 
 		
-		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction)
+		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
 		recipe.save()
 		recipe.allergy = allergy
 		recipe.diet = diet

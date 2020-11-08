@@ -54,31 +54,25 @@
 			<tr><th>
 				<h1>Recipe Results</h1>
 			</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
-				<th>Ingredient</th>
+                <th>Calories</th>
+				<th>Allergy</th>
+				<th>Diet</th>
+				<th>Created by</th>
+				<th>Date created</th>
 			</tr>
 			<!-- For loop that loops for each food that the query returned -->
 				{% for recipe in object_list %}
 				<tr>
 				<th>
 				<!-- Button of the food in question -->
-				<a href="#"><button class="B">{{ recipe.name }}</button></a>
+				<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
 				</th>
 				<!-- Convenient food information at a glance -->
-				<th>{{ recipe.ingredientOne }}</th>
-				<th>{{ recipe.ingredientTwo }}</th>
-				<th>{{ recipe.ingredientThree }}</th>
-				<th>{{ recipe.ingredientFour }}</th>
-				<th>{{ recipe.ingredientFive }}</th>
-				<th>{{ recipe.ingredientSix }}</th>
-				<th>{{ recipe.ingredientSeven }}</th>
-				<th>{{ recipe.ingredientEight }}</th>
+				<th>{{ recipe.get_total.calories|floatformat }}</th>
+				<th>{{ recipe.allergy }}</th>
+				<th>{{ recipe.diet }}</th>
+				<th>{{ recipe.user }}</th>
+				<th>{{ recipe.created_at|date:"m/d/y" }}</th>
 				</tr>
 				{% endfor %}
 		</table>

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from .models import Food, Profile, Allergy, DietPreference, DailyLog, MealLog, MealFood, Recipe, RecipeFood, RecipePreset
+from .models import Food, Profile, Allergy, DietPreference, DailyLog, MealLog, MealFood, Recipe, RecipeFood
 
 
 # registers models in the admin site
@@ -20,5 +20,4 @@ admin.site.register(MealFood)
 
 admin.site.register(Recipe)
 admin.site.register(RecipeFood)
-admin.site.register(RecipePreset)
 

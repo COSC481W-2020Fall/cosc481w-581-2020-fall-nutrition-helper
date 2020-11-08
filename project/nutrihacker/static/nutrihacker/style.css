@@ -4,8 +4,8 @@ p {
 	font-size: 30px;
 }
 .p1{
-text-align: center;
-font-style: italic;
+	text-align: center;
+	font-style: italic;
 }
 table {
 	color: green;
@@ -15,7 +15,7 @@ table {
 	border-collapse:separate;
 }
 .t02{
-      background: transparent;
+    background: transparent;
 }
 th {
 	height: 30px;
@@ -45,55 +45,56 @@ a:hover {
 	margin: 4px 2px;
 }
 body{
-				background-image: url("images/background.jpg");
-				height: 100%;
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: cover;
-			}
+	background-image: url("images/background.jpg");
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
 input[type=search]{
-                width: 250px;
-                box-sizing: border-box;
-                border: 1px green;
-                border-radius: 15px;
-                font-size: 15px;
-                background-color: white;
-                padding: 10px 10px 10px 10px;
+    width: 250px;
+    box-sizing: border-box;
+    border: 1px green;
+    border-radius: 15px;
+    font-size: 15px;
+    background-color: white;
+    padding: 10px 10px 10px 10px;
 }
 .button2{
-				padding: 15px 30px;
-				border: none;
-				display: inline-block;
-				margin: 5px 2px;
-			}
+	padding: 15px 30px;
+	border: none;
+	display: inline-block;
+	margin: 5px 2px;
+}
 .B{
-                border-radius:16px;
-                color: black;
-                font-size: 20px;
-                font-style: italic;
-                background-color:#d3dae8;
+    border-radius:16px;
+    color: black;
+    font-size: 20px;
+    font-style: italic;
+    background-color:#d3dae8;
 }
 ul{
-				 color: white;
-				 font-size: 30px;
-				 list-style-type: default;
-				 padding-right: 20px;
-				 text-align: center;
-				 list-style-position: inside;
-			 }
+	color: white;
+	font-size: 30px;
+	list-style-type: default;
+	padding-right: 20px;
+	text-align: center;
+	list-style-position: inside;
+ }
 h2{
-                text-align:center;
-                color:green;
-            }
+    text-align:center;
+    color:green;
+}
 form{
-                text-align:center;
-            }
+    text-align:center;
+    }
 input{
-            width: 50%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
 }
 a:link{
-            text-decoration:none;
+    text-decoration:none;
 }

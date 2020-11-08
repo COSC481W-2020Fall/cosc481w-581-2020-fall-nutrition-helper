@@ -15,22 +15,6 @@ def chop_zeros(value):
 	else:
 		return value.normalize()
 
-class RecipePreset(models.Model):
-	#id auto generated
-	name = models.CharField(max_length=30)
-	ingredientOne = models.CharField(max_length=30)
-	ingredientTwo = models.CharField(max_length=30)
-	ingredientThree = models.CharField(max_length=30)
-	ingredientFour = models.CharField(max_length=30)
-	ingredientFive = models.CharField(max_length=30)
-	ingredientSix = models.CharField(max_length=30)
-	ingredientSeven = models.CharField(max_length=30)
-	ingredientEight = models.CharField(max_length=30)
-
-	def __str__(self):
-		return self.name
-
-
 #food model for database
 class Food(models.Model):
 	#id auto generated (egg is 1 broccoli is 2)
@@ -308,8 +292,8 @@ class Recipe(models.Model):
 	diet = models.ForeignKey(DietPreference, on_delete=models.CASCADE, null=True)
 	
 	@classmethod
-	def create(cls, user, name, servingsProduced, instruction):
-		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction)
+	def create(cls, user, name, servingsProduced, instruction, is_public):
+		recipe = cls(user=user, name=name, servingsProduced=servingsProduced, instruction=instruction, is_public=is_public)
 		return recipe
 	
 	def __str__(self):
