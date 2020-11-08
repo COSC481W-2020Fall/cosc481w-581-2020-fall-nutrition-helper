@@ -61,9 +61,11 @@
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Details</h1>
+		{% if user == recipe.user %}
 		<!-- Buttons to update or delete recipe -->
 			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
 			<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
+		{% endif %}
         <h2>Here is your recipe!</h2>
 			
 		<table class="facts" style="background-color: white">
