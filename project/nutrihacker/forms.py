@@ -125,43 +125,66 @@ class LogForm(forms.Form):
 				self.add_error('portions'+str(i+1), forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
 		
 		return cleaned_data
-            
+			
 # form for users to log their recipes
 class RecipeForm(forms.Form):
-    # form fields
-    name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
-    servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-    allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
-    diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
-    instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
-    is_public = forms.BooleanField(initial=True, required=False)
-    food1 = forms.ModelChoiceField(
-        label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
-        required=True
-    )
-    portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-    # hidden field that keeps track of how many extra fields have been added
-    extra_field_count = forms.CharField(widget=forms.HiddenInput())
+	# form fields
+	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
+	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
+	diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
+	instruction = forms.CharField(label="How it's made", widget=forms.Textarea)
+	is_public = forms.BooleanField(initial=True, required=False)
+	food1 = forms.ModelChoiceField(
+		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
+		required=True
+	)
+	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	# hidden field that keeps track of how many extra fields have been added
+	extra_field_count = forms.CharField(widget=forms.HiddenInput())
 
-    portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+	portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
-    # override __init__ to create dynamic number of food and portions fields
-    def __init__(self, *args, **kwargs):
-        # get number of extra fields from kwargs
-        extra_fields = kwargs.pop('extra', 0)
+	# override __init__ to create dynamic number of food and portions fields
+	def __init__(self, *args, **kwargs):
+		# get number of extra fields from kwargs
+		extra_fields = kwargs.pop('extra', 0)
 		
-        super(RecipeForm, self).__init__(*args, **kwargs)
-        self.fields['extra_field_count'].initial = extra_fields
+		super(RecipeForm, self).__init__(*args, **kwargs)
+		self.fields['extra_field_count'].initial = extra_fields
+		
+		form_data = {}
+		
+		submitted = 'data' in kwargs
+		if submitted:
+			form_data = kwargs['data']
 
-        # add extra fields
-        for i in range(int(extra_fields)):
-            food_field = 'food%s' % (i+2)
-            portions_field = 'portions%s' % (i+2)
+		if submitted and 'food1' not in form_data:
+			del self.fields['food1']
+			del self.fields['portions1']
 
-            self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
-                widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
-            )
-            self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
-                max_value=99, initial=1, required=True
-            )
+		# add extra fields
+		for i in range(int(extra_fields)):
+			food_field = 'food%s' % (i+2)
+			portions_field = 'portions%s' % (i+2)
+			
+			# checks if current food and portions field exists
+			if not submitted or food_field in form_data:
+				self.fields[food_field] = forms.ModelChoiceField(label="Choose a food", queryset=Food.objects.all(),
+					widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'), required=True
+				)
+				self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
+					max_value=99, initial=1, required=True
+				)
+	
+	# override clean to add other errors
+	def clean(self):
+		cleaned_data = super(RecipeForm, self).clean()
+		
+
+		for i in range(int(cleaned_data['extra_field_count'])+1):
+			if ('portions'+str(i+1)) in cleaned_data and cleaned_data['portions'+str(i+1)] == 0:
+				self.add_error('portions'+str(i+1), forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
+		
+		return cleaned_data
 

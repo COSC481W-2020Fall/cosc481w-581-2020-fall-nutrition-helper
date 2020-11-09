@@ -1,7 +1,5 @@
 {% load static %}
 
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -47,13 +45,75 @@
 			label {
 				color: white;
 			}
+
+			form {
+				display: inline;
+			}
+			span {
+				font-size: 18px;
+			}
+			.delbtn {
+				font-size: 20px;
+				text-align: right;
+			}
+			/* Popup container */
+			.popup {
+				position: relative;
+				display: inline-block;
+				cursor: pointer;
+			}
+
+			/* The actual popup (appears on top) */
+			.popup .popuptext {
+				visibility: hidden;
+				width: 160px;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 8px 0;
+				position: absolute;
+				z-index: 1;
+				bottom: 125%;
+				left: 50%;
+				margin-left: -80px;
+			}
+
+			/* Popup arrow *
+			.popup .popuptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}*/
+
+			/* Toggle this class when clicking on the popup container (hide and show the popup) */
+			.popup .show {
+				visibility: visible;
+				-webkit-animation: fadeIn 0.5s;
+				animation: fadeIn 0.5s
+			}
+
+			/* Add animation (fade in the popup) */
+			@-webkit-keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity: 1;}
+			}
+
+			@keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity:1 ;}
+			}
 			.B{
 				background-color:white;
 				padding: 11px 28px;
 				font-size: 18px;
 				border-radius:12px;
 				font-family:"Times New Roman", Times, serif;
-
 			}
 			.B:hover{
 				background-color: green;
@@ -63,31 +123,63 @@
 	</head>
 	<body style="background-size: cover text-align:center;">
 		{% include "nutrihacker/navigation_bar.html" %}
-        
 		<br>
 		<br>
-			<table style="background-color:none; padding:100px; text-align:center;">
-				{% for recipe in object_list %}
-					<tr>
-					<th>
-						<!-- Button of the recipe in question -->
-						<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
-					</th>
-					<th>
-						<!-- Button to update recipe -->
-						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
-					</th>
-					<th>
-						<!-- Button to delete recipe -->
-						<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
-					</th>
-					</tr>
-				{% endfor %}
-			</table>
+
+		<div style="display: flex; margin-left: 150px;">
 		<br>
 		<div style="display: flex; margin-left: 150px; text-align:center;">
+
 			<button class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
 		<br>
+		<div style="text-align:center">
+			<table style="background-color:black; padding:100px; text-align:center">
+			{% if object_list %}
+					{% for recipe in object_list %}
+						<tr>
+						<th>
+							<!-- Button of the recipe in question -->
+							<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
+						</th>
+						<th>
+							Serves {{ recipe.servingsProduced }}
+						</th>
+						<th> - </th>
+						<th>
+							<!-- Button to update recipe -->
+							<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
+						</th>
+						<th class="delbtn">
+							<!-- button to prompt deletion of recipe -->
+							<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
+								<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
+									<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
+										{% csrf_token %}
+										<input type="hidden" name="id" value={{ recipe.id }}>
+										<button type="submit">Yes</button>
+									</form><button>No</button>
+								</span>
+								<button class="delbtn">🗑️</button>
+							</div>
+						</th>
+						</tr>
+					{% endfor %}	
+				{% else %}
+					<tr>
+						<th>You have no recipes</th>
+					</tr>
+			{% endif %}
+			</table>
+			</div>
+		<br>
+	</div>
+		<script>
+		// When the user clicks on <div>, open the popup
+		function confirm(clicked_id) {
+		  	var popup = document.getElementById("popup"+clicked_id);
+		  	popup.classList.toggle("show");
+		}
+		</script>
 	</body>
 </html>

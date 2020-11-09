@@ -69,23 +69,27 @@ class RecipeTests(TestCase):
 		
 		# test creating a daily log and meal log of one food
 		food1 = Food.objects.get(id=1)
-		portions1 = Decimal('1.5')
+		portions1 = Decimal('1.50')
 		response = self.client.post(
-			reverse('nutrihacker:record_recipe'),
+			reverse('nutrihacker:create_recipe'),
 			{'name':name, 'servingsProduced':servingsProduced, 'instruction':instruction, 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
 			follow=False
 		)
 		
 		
 		self.assertQuerysetEqual(User.objects.all(), ['<User: test>'])
-		self.assertQuerysetEqual(Recipe.objects.all(), ['<Recipe: ' + 'test\'s ' + name + '>'])
-		self.assertQuerysetEqual(RecipeFood.objects.all(), ['<RecipeFood: ' + 'test\'s ' + name + ' - ' + food1.name + ', ' + str(portions1) + '>'])
+		self.assertQuerysetEqual(Recipe.objects.all(), ['<Recipe: ' + 'test, ' + name + '>'])
+		firstRecipeFoodString = '<RecipeFood: ' + 'test, ' + name + ', ' + food1.name + ', 1.50>'
+		self.assertQuerysetEqual(RecipeFood.objects.all(), [firstRecipeFoodString])
+	
+	
+	def test_create_recipe_multi_ingredients(self):
+		create_foods()
+		user = login_user(self.client)
+		name = "Yodel Syrup"
+		instruction = "Gargle syrup and spit into a crystal goblet"
+		servingsProduced = Decimal('1.5')
 		
-		
-		
-		name2 = "Yodel Syrup"
-		instruction2 = "Gargle syrup and spit into a crystal goblet"
-		servingsProduced2 = Decimal('1.5')
 		
 		# test creating another meal log of multiple foods for the same day
 		food2 = Food.objects.get(id=2)
@@ -94,97 +98,19 @@ class RecipeTests(TestCase):
 		portions3 = Decimal('0.75')
 		food4 = Food.objects.get(id=4)
 		portions4 = Decimal('2.5')
+		
 		response = self.client.post(
-			reverse('nutrihacker:record_recipe'),
-			{'name':name2, 'servingsProduced':servingsProduced2, 'instruction':instruction2, 'food1':food2.id, 'portions1':portions2, 'food2':food3.id, 'portions2':portions3,
+			reverse('nutrihacker:create_recipe'),
+			{'name':name, 'servingsProduced':servingsProduced, 'instruction':instruction, 'food1':food2.id, 'portions1':portions2, 'food2':food3.id, 'portions2':portions3,
 			'food3':food4.id, 'portions3':portions4, 'extra_field_count':2},
-			follow=True
+			follow=False
 		)
 
 		# builds a list that mimics a QuerySet
 		recipefood_qs = []
-		for i in range(4):
-			recipefood_qs.append(['<RecipeFood: ' + 'test\'s ' + name + ' - ' + Food.objects.get(id=i+1).name + ', ' + Food.objects.get(id=i+1).portions + '>'])
+		for i in range(3):
+			recipefood_qs.append('<RecipeFood: ' + 'test, ' + name + ', ' + RecipeFood.objects.get(id=i+1).food.name + ', ' + str(RecipeFood.objects.get(id=i+1).portions) + '>')
 
-		self.assertQuerysetEqual(Recipe.objects.all(), ['<Recipe: ' + 'test\'s ' + name + '>', '<Recipe: ' + 'test\'s ' + name + '>'], ordered=False)
+
+		self.assertQuerysetEqual(Recipe.objects.all(), ['<Recipe: ' + 'test, ' + name + '>'], ordered=False)
 		self.assertQuerysetEqual(RecipeFood.objects.all(), recipefood_qs, ordered=False)
-		
-	# # tests invalid future dates and times
-	# def test_future_log_not_allowed(self):
-		# create_foods()
-		# user = login_user(self.client)
-		# now = datetime.now().replace(second=0, microsecond=0)
-
-		# food1 = Food.objects.get(id=1)
-		# portions1 = Decimal('1.5')
-		
-		# # test creating a daily log and meal log 30 minutes in the future
-		# now1 = now + timedelta(minutes=30)
-		# response = self.client.post(
-			# reverse('nutrihacker:log'),
-			# {'date':now1.date(), 'time':now1.time(), 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
-			# follow=True
-		# )
-
-		# self.assertQuerysetEqual(DailyLog.objects.all(), [])
-		# self.assertQuerysetEqual(MealLog.objects.all(), [])
-		# self.assertQuerysetEqual(MealFood.objects.all(), [])
-		# self.assertEqual(response.status_code, 200)
-
-		# # test creating a daily log and meal log 1 day in the future
-		# now2 = now + timedelta(days=1)
-		# response = self.client.post(
-			# reverse('nutrihacker:log'),
-			# {'date':now2.date(), 'time':now2.time(), 'food1':food1.id, 'portions1':portions1, 'extra_field_count':0},
-			# follow=True
-		# )
-
-		# self.assertQuerysetEqual(DailyLog.objects.all(), [])
-		# self.assertQuerysetEqual(MealLog.objects.all(), [])
-		# self.assertQuerysetEqual(MealFood.objects.all(), [])
-		# self.assertEqual(response.status_code, 200)
-
-	# # tests the get_total function for DailyLog, MealLog, MealFood
-	# # DL's get_total is dependent on ML's which is dependent on MF's, so testing DL's means testing all of them
-	# def test_get_total(self):
-		# create_foods()
-		# user = login_user(self.client)
-		# now = datetime.now().replace(second=0, microsecond=0)
-
-		# # create a daily log with meal logs and meal foods
-		# dl = DailyLog.objects.create(user=user, date=now.date())
-		# ml1 = MealLog.objects.create(log_time=now.time(), daily_log=dl)
-		# MealFood.objects.create(meal_log=ml1, food=Food.objects.get(id=1), portions=Decimal('1.1'))
-		# MealFood.objects.create(meal_log=ml1, food=Food.objects.get(id=2), portions=Decimal('1.2'))
-		# ml2 = MealLog.objects.create(log_time=now.time(), daily_log=dl)
-		# MealFood.objects.create(meal_log=ml2, food=Food.objects.get(id=3), portions=Decimal('1.3'))
-		# MealFood.objects.create(meal_log=ml2, food=Food.objects.get(id=4), portions=Decimal('1.4'))
-		# MealFood.objects.create(meal_log=ml2, food=Food.objects.get(id=5), portions=Decimal('1.5'))
-		# ml3 = MealLog.objects.create(log_time=now.time(), daily_log=dl)
-		# MealFood.objects.create(meal_log=ml3, food=Food.objects.get(id=6), portions=Decimal('1.6'))
-		# MealFood.objects.create(meal_log=ml3, food=Food.objects.get(id=7), portions=Decimal('1.7'))
-		# MealFood.objects.create(meal_log=ml3, food=Food.objects.get(id=8), portions=Decimal('1.8'))
-
-		# total = {
-			# 'calories':0,
-			# 'totalFat':0,
-			# 'cholesterol':0,
-			# 'sodium':0,
-			# 'totalCarb':0,
-			# 'protein':0
-		# }
-
-		# # calculate the total nutrients for the daily log
-		# portions = Decimal('1.1')
-		# for mf in MealFood.objects.all():
-			# # get the nutrients of each food
-			# nutrients = mf.food.get_nutrients()
-			# # add the nutrients multiplied by portions
-			# for key in total:
-				# total[key] += nutrients[key] * portions
-			# # increment portions as they were hardcoded
-			# portions += Decimal('0.1')
-
-		# # test the get_total calculation against hardcoded calculation
-		# self.assertEqual(dl.get_total(), total)
-		
