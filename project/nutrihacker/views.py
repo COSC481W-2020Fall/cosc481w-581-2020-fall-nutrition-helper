@@ -630,6 +630,8 @@ class DetailRecipe(UserPassesTestMixin, DetailView):
 		return context
 
 
+
+
 class ListRecipe(ListView):
 	model = Recipe
 	#context_object_name = 'recipes'
@@ -640,12 +642,20 @@ class ListRecipe(ListView):
 		object_list = Recipe.objects.filter(user=self.request.user)
 		return object_list
 
+
+
 # page for user to edit recipe information, modifies database according to submitted data
-class UpdateRecipe(LoginRequiredMixin, FormView):
+class UpdateRecipe(UserPassesTestMixin, FormView):
 	form_class = RecipeForm
+
 	template_name = 'nutrihacker/recipe/update_recipe.html'
 	recipe_id = 0 # id of recipe to be redirected to
 	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
+
 	# override get_success_url to correct recipe
 	def get_success_url(self):
 		return reverse_lazy('nutrihacker:detail_recipe', kwargs={'pk':self.recipe_id})
@@ -767,10 +777,16 @@ class UpdateRecipe(LoginRequiredMixin, FormView):
 		return super(UpdateRecipe, self).form_valid(form)
 
 
-
-class DeleteRecipe(LoginRequiredMixin, DeleteView):
+class DeleteRecipe(UserPassesTestMixin, DeleteView):
 	model = Recipe
+	fields = '__all__'
 	success_url = reverse_lazy('nutrihacker:list_recipe')
+	template_name = 'nutrihacker/recipe/delete_recipe.html'
+	
+	# Limit updating recipe to creator
+	def test_func(self):
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		return recipe.user == self.request.user
 	
 	# override get_object to get id from form
 	def get_object(self, queryset=None):
