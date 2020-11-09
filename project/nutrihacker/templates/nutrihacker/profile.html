@@ -7,21 +7,28 @@
 		<title>Nutrition Facts</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
-			table, td {
-				border: 3px solid black;
-				border-collapse: collapse;
-				border-right: 0px;
-				padding: 10px;
+			.facts th, td {
+				padding: 12px 15px;
 			}
 			.facts {
+				border-collapse: collapse;
 				width: 35%;
-				margin: auto;
+				margin: 25px 0;
 				font-size: 24px;
+				font-family:"Times New Roman", Times, serif;
+				min-width: 400px;
+				box-shadow: 0 0 20px rgba(0,0, 0, 0.15);
+				margin-left: auto;
+				margin-right: auto;
 			}
-			.right {
-				text-align: right;
-				border-left: 0px;
-				border-right: 3px solid black;
+			.facts thead tr{
+				background-color: #009879;
+				color: #ffffff;
+    			text-align: left;
+			}
+			.facts tbody tr{
+				background-color: #f3f3f3;
+				text-align: left;
 			}
 			body {
 				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
@@ -33,11 +40,19 @@
 			a:hover {
 				color: blue;
 			}
-			.button {
+			.buttonn {
 				padding: 15px 30px;
 				border: none;
 				display: inline-block;
 				margin: 4px 2px;
+				color: white;
+				font-size: 18px;
+				border-radius:12px;
+				font-family:"Times New Roman", Times, serif;
+			}
+			.buttonn:hover {
+				background-color: blue;
+				cursor: pointer;
 			}
 			input {
 				width: 48px;
@@ -52,51 +67,68 @@
         
 		<br>
 		<br>
-		<table class="facts" style="background-color: white">
+		<table class="facts" style="background-color: white; text-align:center;">
+			<thead>
 			<tr>
 				<td>Username</td>
 				<td class="right">{{ user.username }}</td>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
 				<td>Email Address</td>
 				<td class="right">{{ user.email }}</td>
 			</tr>
+			</tbody>
+			<thead>
 			<tr>
 				<td>First Name</td>
 				<td class="right">{{ user.first_name }}</td>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
 				<td>Last Name</td>
 				<td class="right">{{ user.last_name }}</td>
 			</tr>
+			</tbody>
+			<thead>
 			<tr>
 				<td>Gender</td>
 				<td class="right">{{ user.profile.gender }}</td>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
 				<td>Birthdate</td>
 				<td class="right">{{ user.profile.birthdate }}</td>
 			</tr>
+			</tbody>
+			<thead>
 			<tr>
 				<td>Height</td>
 				<td class="right">{{ user.profile.get_height_str }}</td>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
 				<td>Weight</td>
 				<td class="right">{{ user.profile.get_weight_str }}</td>
 			</tr>
+			</tbody>
+			<thead>
 			<tr>
 				<td>Are metric units preferred?</td>
 				<td class="right">{{ user.profile.showmetric }}</td>
 			</tr>
-			
+			</thead>
 		</table>
 		<br><br>
 		<div style="text-align: center">
-			<button class="button"><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="Diet Preferences and Allergies">Diet Preferences and Allergies</a></button>
+			<button class="buttonn"><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="Diet Preferences and Allergies">Diet Preferences and Allergies</a></button>
 			<br><br>
-			<button class="button"><a href="{% url 'nutrihacker:update_profile' %}" alt="Update Profile">Update Profile</a></button>
-			<button class="button"><a href="{% url 'nutrihacker:change_password' %}" alt="Change Password">Change Password</a></button>
+			<button class="buttonn"><a href="{% url 'nutrihacker:update_profile' %}" alt="Update Profile">Update Profile</a></button>
+			<button class="buttonn"><a href="{% url 'nutrihacker:change_password' %}" alt="Change Password">Change Password</a></button>
             <br><br>
 		</div>
 

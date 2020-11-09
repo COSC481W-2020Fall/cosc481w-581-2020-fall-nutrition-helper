@@ -1,4 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Recipe</title>
+
+    <style>
+    .A{
+        font-size: 29px;
+        border-radius: 12%;
+        background-color:blue;
+    }
+    .A:hover{
+        background-color: green;
+        cursor: pointer;
+    }
+    p{
+        color: white;
+        font-size: 22px;
+        text-align: center;
+    }
+    body {
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+	}
+</style>
+</head>
+
+<body style="background-size: cover; text-align:center;">
+{% include "nutrihacker/navigation_bar.html" %}
+<br><br>
 <form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
+    <p >Are you sure you want to delete "{{ object }}"?</p>
+
 </form>
+<div style="display: flex; margin-left: 620px; text-align:center;">
+    <button style="text-align: center;" class="A">Confirm</button>
+</div>
+</body>
+
+
+
