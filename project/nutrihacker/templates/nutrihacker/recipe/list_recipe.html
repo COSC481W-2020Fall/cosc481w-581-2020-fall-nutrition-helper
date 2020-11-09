@@ -1,7 +1,5 @@
 {% load static %}
 
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -10,10 +8,10 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
 			table, td {
-				border: 3px solid black;
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 100px;
+				width: 55%;
 			}
 			.facts {
 				width: 35%;
@@ -47,6 +45,7 @@
 			label {
 				color: white;
 			}
+
 			form {
 				display: inline;
 			}
@@ -109,13 +108,28 @@
 				from {opacity: 0;}
 				to {opacity:1 ;}
 			}
+			.B{
+				background-color:white;
+				padding: 11px 28px;
+				font-size: 18px;
+				border-radius:12px;
+				font-family:"Times New Roman", Times, serif;
+			}
+			.B:hover{
+				background-color: green;
+			}
+
 		</style>
 	</head>
-	<body style="background-size: cover">
+	<body style="background-size: cover text-align:center;">
 		{% include "nutrihacker/navigation_bar.html" %}
 		<br>
 		<br>
+
 		<div style="display: flex; margin-left: 150px;">
+		<br>
+		<div style="display: flex; margin-left: 150px; text-align:center;">
+
 			<button class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
 		<br>
@@ -159,6 +173,7 @@
 			</table>
 			</div>
 		<br>
+	</div>
 		<script>
 		// When the user clicks on <div>, open the popup
 		function confirm(clicked_id) {
