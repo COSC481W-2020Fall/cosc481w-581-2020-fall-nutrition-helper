@@ -113,40 +113,51 @@
 	</head>
 	<body style="background-size: cover">
 		{% include "nutrihacker/navigation_bar.html" %}
-        
 		<br>
-		<br>
-			<table style="background-color:black; padding:100px">
-				{% for recipe in object_list %}
-					<tr>
-					<th>
-						<!-- Button of the recipe in question -->
-						<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
-					</th>
-					<th>
-						<!-- Button to update recipe -->
-						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
-					</th>
-					<th class="delbtn">
-						<!-- button to prompt deletion of recipe -->
-						<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
-							<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
-								<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
-									{% csrf_token %}
-									<input type="hidden" name="id" value={{ recipe.id }}>
-									<button type="submit">Yes</button>
-								</form><button>No</button>
-							</span>
-							<button class="delbtn">🗑️</button>
-						</div>
-					</th>
-					</tr>
-				{% endfor %}
-			</table>
 		<br>
 		<div style="display: flex; margin-left: 150px;">
 			<button class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
+		<br>
+		<div style="text-align:center">
+			<table style="background-color:black; padding:100px; text-align:center">
+			{% if object_list %}
+					{% for recipe in object_list %}
+						<tr>
+						<th>
+							<!-- Button of the recipe in question -->
+							<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
+						</th>
+						<th>
+							Serves {{ recipe.servingsProduced }}
+						</th>
+						<th> - </th>
+						<th>
+							<!-- Button to update recipe -->
+							<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
+						</th>
+						<th class="delbtn">
+							<!-- button to prompt deletion of recipe -->
+							<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
+								<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
+									<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
+										{% csrf_token %}
+										<input type="hidden" name="id" value={{ recipe.id }}>
+										<button type="submit">Yes</button>
+									</form><button>No</button>
+								</span>
+								<button class="delbtn">🗑️</button>
+							</div>
+						</th>
+						</tr>
+					{% endfor %}	
+				{% else %}
+					<tr>
+						<th>You have no recipes</th>
+					</tr>
+			{% endif %}
+			</table>
+			</div>
 		<br>
 		<script>
 		// When the user clicks on <div>, open the popup
