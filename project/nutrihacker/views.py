@@ -660,17 +660,44 @@ class UpdateRecipe(UserPassesTestMixin, UpdateView):
 	def test_func(self):
 		recipe = Recipe.objects.get(id=self.kwargs['pk'])
 		return recipe.user == self.request.user
-
-class DeleteRecipe(UserPassesTestMixin, DeleteView):
-	model = Recipe
-	fields = '__all__'
-	success_url= "../../"
-	template_name = 'nutrihacker/recipe/delete_recipe.html'
 	
-	# Limit updating recipe to creator
-	def test_func(self):
-		recipe = Recipe.objects.get(id=self.kwargs['pk'])
-		return recipe.user == self.request.user
+	# override get_form_kwargs to get number of extra fields
+	def get_form_kwargs(self):
+		kwargs = super(UpdateRecipe, self).get_form_kwargs()
+
+		# checks whether form data was submitted
+		if 'data' in kwargs: # if submitted, set 'extra' to 'extra_field_count' from form
+			kwargs['extra'] = kwargs['data']['extra_field_count']
+		else: # if not submitted, 'extra' is the number of RecipeFoods minus 1
+			kwargs['extra'] = RecipeFood.objects.filter(recipe__id=self.kwargs['pk']).count() - 1
+		
+		return kwargs
+
+# class DeleteRecipe(UserPassesTestMixin, DeleteView):
+	# model = Recipe
+	# fields = '__all__'
+	# success_url= "../../"
+	# template_name = 'nutrihacker/recipe/delete_recipe.html'
+	
+	# # Limit updating recipe to creator
+	# def test_func(self):
+		# recipe = Recipe.objects.get(id=self.kwargs['pk'])
+		# return recipe.user == self.request.user
+		
+# delete DailyLog
+class DeleteRecipe(LoginRequiredMixin, DeleteView):
+	model = Recipe
+	success_url = reverse_lazy('nutrihacker:list_recipe')
+	
+	# override get_object to get id from form
+	def get_object(self, queryset=None):
+		# make sure user has permission by matching the user to the Recipe
+		try:
+			dl = Recipe.objects.get(user=self.request.user, id=self.request.POST.get('id'))
+		except Recipe.DoesNotExist:
+			raise PermissionDenied
+
+		return dl
 
 # saves submitted info to database
 class RecordRecipeView(FormView):

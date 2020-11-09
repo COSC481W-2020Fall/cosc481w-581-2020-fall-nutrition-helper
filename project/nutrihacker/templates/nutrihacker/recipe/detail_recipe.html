@@ -3,10 +3,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <title>Create Recipe</title>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+        <title>Detail Recipe</title>
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <style>
+			* {
+				box-sizing: border-box;
+			}
             h1, h2 {
                 color: white;
                 text-align: center;
@@ -53,6 +56,17 @@
             .sbmtbtn:hover{
                 background-color: green;
             }
+			.boxcolumn {
+				float: left;
+				width: 50%;
+				padding: 10px;
+				height: 300px;
+			}
+			.boxrow:after {
+				  content: "";
+				  display: table;
+				  clear: both;
+			}
         </style>
         <script type="text/javascript">
             
@@ -63,11 +77,17 @@
         <h1>Recipe Details</h1>
 		{% if user == recipe.user %}
 		<!-- Buttons to update or delete recipe -->
-			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
-			<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
+		<div style="text-align:center">
+		<br>
+			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}" style="text-align:center" ><button class="B" style="text-align:center">Update Recipe</button></a>
+			<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}" style="text-align:center"><button class="B" style="text-align:center">Delete Recipe</button></a>
+		
+		</div>
 		{% endif %}
+		<br>
         <h2>Here is your recipe!</h2>
-			
+		<br>
+	<div class="boxcolumn">
 		<table class="facts" style="background-color: white">
 			<tr><td>
 				{{ recipe.name }}
@@ -102,28 +122,12 @@
 			{% endfor %}
 		</table>
 		<br>
-		<table  class="facts" style="background-color: white">
-			<tr><td>
-				Allergy Information:
-				<br>
-			</td></tr>
-				<tr><td>
-				<br>{{ recipe.allergy }}<br>
-				</td></tr>
-		</table>
-		<br>
-		<table  class="facts" style="background-color: white">
-			<tr><td>
-				Diet Information:
-				<br>
-			</td></tr>
-				<tr><td>
-				<br>{{ recipe.diet }}<br>
-				</td></tr>
-		</table>
+		
+	</div>
+	<div class="boxcolumn"
 		<br>
 		<br>
-		<h1 style="color: white"><center>Nutrition Facts: {{ recipe.name }}</center></h1>
+		<h1 style="color: white"><center>Nutrition Facts:</center></h1>
 		<br>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
 			<center>
@@ -159,6 +163,20 @@
 				<td class="right">{{ nutrition.protein|floatformat }}g</td>
 			</tr>
 		</table>
+		
+		<br>
+		<br>
+		<table style="background-color: white">
+			<tr><td>
+				Allergy Information: {{ recipe.allergy }}
+			</td></tr>
+			<tr><td>
+				Diet Information: {{ recipe.diet }}
+			</td></tr>
+		</table>
+		<br>
+	</div>
+	</table>
     </body>
     <script type="text/javascript">
         var extra_count = Number(document.getElementById("id_extra_field_count").value);
