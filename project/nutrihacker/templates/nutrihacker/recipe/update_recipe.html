@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Edit Log</title>
+		<title>Edit Recipe</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
 			h1, h2 {
@@ -86,7 +86,7 @@
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
-		<h1>Edit Log</h1>
+		<h1>Edit Recipe</h1>
 		<form method="POST" action="{% url 'nutrihacker:update_recipe' recipe_id %}">
 			{% csrf_token %}
 			<table id="formtable" align="center">
