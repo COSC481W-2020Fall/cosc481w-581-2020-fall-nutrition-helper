@@ -1,7 +1,5 @@
 {% load static %}
 
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -10,10 +8,10 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<style>
 			table, td {
-				border: 3px solid black;
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 100px;
+				width: 55%;
 			}
 			.facts {
 				width: 35%;
@@ -40,6 +38,14 @@
 				border: none;
 				display: inline-block;
 				margin: 4px 2px;
+				font-size: 18px;
+				font-family:"Times New Roman", Times, serif;
+				background-color:white;
+
+			}
+			.button:hover{
+				background-color: blue;
+				cursor:pointer;
 			}
 			input {
 				width: 48px;
@@ -47,14 +53,27 @@
 			label {
 				color: white;
 			}
+			.B{
+				background-color:white;
+				padding: 11px 28px;
+				font-size: 18px;
+				border-radius:12px;
+				font-family:"Times New Roman", Times, serif;
+
+			}
+			.B:hover{
+				background-color: green;
+				cursor: pointer;
+			}
+
 		</style>
 	</head>
-	<body style="background-size: cover">
+	<body style="background-size: cover text-align:center;">
 		{% include "nutrihacker/navigation_bar.html" %}
         
 		<br>
 		<br>
-			<table style="background-color:black; padding:100px">
+			<table style="background-color:none; padding:100px; text-align:center;">
 				{% for recipe in object_list %}
 					<tr>
 					<th>
@@ -73,8 +92,8 @@
 				{% endfor %}
 			</table>
 		<br>
-		<div style="display: flex; margin-left: 150px;">
-			<button class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
+		<div style="display: flex; margin-left: 300px; text-align:center;">
+			<button style="color: black;" class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
 		<br>
 	</body>

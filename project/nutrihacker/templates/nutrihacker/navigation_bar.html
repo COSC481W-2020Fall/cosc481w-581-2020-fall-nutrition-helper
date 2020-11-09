@@ -1,61 +1,62 @@
 {% load static %}
-<body>
-    <div class="nav-bar">
-<ul>
-    <div class="logo">
-        <a href="{% url 'nutrihacker:index' %}">
-        <img src="{% static 'nutrihacker/images/w2.png' %}">
-        </a>
-    </div>
-    <div class="search-bar">
-<li>
-    <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
-    <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="100%"/>
-    <button id="oneButoon" type="submit">&#128269;</button>
-    </form>
-    <div class="search-bar-radio">
-        <input id="food" type="radio" name="FoodRec" value="food" checked>
-        <label for="food">Food</label>
-        <input id="recipe" type="radio" name="FoodRec" value="recipe">
-        <label for="recipe">Recipe</label>
-    </div>
-</li>
-</div>
-<div class="menu-items">
-<li><a href="{% url 'nutrihacker:description' %}">How it works</a></li>
-    {% if user.is_authenticated %}
-<li>
 
-    <a href="{% url 'nutrihacker:profile' %}">My Profile</a>
-    <div class="sub-menu-1">
+<div class="nav-bar">
     <ul>
-        <li><a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Personal Recipes</a></li>
-        <li><a href="{% url 'nutrihacker:log_list' %}">My Logs</a></li>
+        <div class="logo">
+            <a href="{% url 'nutrihacker:index' %}">
+            <img src="{% static 'nutrihacker/images/w2.png' %}">
+            </a>
+        </div>
+        <div class="search-bar">
+            <li>
+                <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
+                    <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="65%"/>
+                    <button id="oneButoon" type="submit">&#128269;</button>
+                </form>
+                <div class="search-bar-radio">
+                    <input id="food" type="radio" name="FoodRec" value="food" checked>
+                    <label for="food">Food</label>
+                    <input id="recipe" type="radio" name="FoodRec" value="recipe">
+                    <label for="recipe">Recipe</label>
+                </div>
+            </li>
+        </div>
+        <div class="menu-items">
+            <li><a href="{% url 'nutrihacker:description' %}">How it works</a></li>
+            {% if user.is_authenticated %}
+            <li>
+                <a href="{% url 'nutrihacker:profile' %}">My Profile</a>
+                <div class="sub-menu-1">
+                    <ul>
+                        <li><a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Personal Recipes</a></li>
+                        <li><a href="{% url 'nutrihacker:log_list' %}">My Logs</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="{% url 'nutrihacker:logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'nutrihacker:login' %}">Login/Register</a></li>
+            {% endif %}
+        </div>
     </ul>
 </div>
-
-</li>
-<li><a href="{% url 'nutrihacker:logout' %}">Logout</a></li>
-    {% else %}
-<li><a href="{% url 'nutrihacker:login' %}">Login/Register</a></li>
-    {% endif %}
-</div>
-</ul>
-</div>
 <style>
-    *{
+    body {
         padding: 0;
         margin: 0;
     }
-    .nav-bar{
+    .nav-bar * {
+        padding: 0;
+        margin: 0;
+    }
+    .nav-bar {
         background: black;
         text-align: center;
     }
 
     .logo{
-    margin-top: 10px;
-    text-align: left;
-
+        margin-top: 10px;
+        text-align: left;
     }
 
     .search-bar{
@@ -63,27 +64,29 @@
         display: inline-flex;
         align-items: center;
     }
-
-
+    .search-bar input {
+        margin: 8px;
+    }
     .search-bar-radio{
-    position: static;
-    font-size: 16px;
+        position: static;
+        font-size: 16px;
     }
 
     #food{
-    width: 40px;
+        width: 40px;
     }
 
     #recipe{
-    width: 40px;
+        width: 40px;
     }
 
     label[for="food"]{
         margin-right: 30px;
-
     }
 
-
+    .nav-bar label {
+        color: white;
+    }
     .nav-bar ul{
         display: inline-flex;
         list-style: none;
@@ -92,14 +95,13 @@
         display: inline-flex;
         list-style: none;
         text-align: center;
-
     }
 
     .menu-items a{
         color: green;
         text-decoration: none;
-        letter-spacing: 3px;
-        font-size: 12px;
+        letter-spacing: 2px;
+        font-size: 16px;
     }
     .menu-items li{
         width: 120px;
@@ -116,41 +118,34 @@
         position: absolute;
         background: black;
         margin-top: 15px;
-        margin-left: -15px;
+        margin-left: -15;
     }
     .nav-bar ul li:hover .sub-menu-1 ul{
         display: block;
         margin: 10px;
     }
-
-    input{
-    width: 30%;
-    }
-
 </style>
-    <script>
-document.getElementById("food").addEventListener('click', function(){
-document.getElementById('oneSearch').name;
-document.getElementById('oneSearch').name = "search";
-document.getElementById('oneSearch').placeholder = "Search Food...";
-document.getElementById('searchfood').action;
-document.getElementById('searchfood').action = "{% url 'nutrihacker:search' %}";
+<script>
+    document.getElementById("food").addEventListener('click', function(){
+    document.getElementById('oneSearch').name;
+    document.getElementById('oneSearch').name = "search";
+    document.getElementById('oneSearch').placeholder = "Search Food...";
+    document.getElementById('searchfood').action;
+    document.getElementById('searchfood').action = "{% url 'nutrihacker:search' %}";
 
 
 
-});
+    });
 
-document.getElementById("recipe").addEventListener('click', function(){
-document.getElementById('oneSearch').name;
-document.getElementById('oneSearch').name = "term";
-document.getElementById('oneSearch').placeholder = "Search Recipe...";
-document.getElementById('searchfood').action;
-document.getElementById('searchfood').action = "{% url 'nutrihacker:search-recipe' %}";
+    document.getElementById("recipe").addEventListener('click', function(){
+    document.getElementById('oneSearch').name;
+    document.getElementById('oneSearch').name = "term";
+    document.getElementById('oneSearch').placeholder = "Search Recipe...";
+    document.getElementById('searchfood').action;
+    document.getElementById('searchfood').action = "{% url 'nutrihacker:search-recipe' %}";
 
 
 
-});
-    </script>
-</div>
-</body>
+    });
+</script>
 

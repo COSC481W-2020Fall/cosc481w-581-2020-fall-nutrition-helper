@@ -39,22 +39,22 @@
         {% else %}
         <form method="post" action="{% url 'nutrihacker:login' %}">
         {% csrf_token %}
-        <table align="center" width="45%">
+        <table align="center" width="90%">
             <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
+                <td style="text-align:right; color:white; font-size:30px; ">{{ form.username.label_tag }}</td>
+                <td style="text-align:left;">{{ form.username }}</td>
             </tr>
             <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
+                <td style="text-align:right; color:white; font-size:30px;">{{ form.password.label_tag }}</td>
+                <td style="text-align:left;">{{ form.password }}</td>
             </tr>
             <tr>
                 <td></td>
-            <td><input type="submit" value="Login"></td>
+            <td style="text-align:left;"><input type="submit" value="Login"></td>
         </tr>
         <tr>
             <td></td>
-            <td> 
+            <td style="text-align:left;" >
                 </br> 
                 <input type="button" value="Create Account" onclick="registerRedirect();">
             </td>
