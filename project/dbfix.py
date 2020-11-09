@@ -12,24 +12,25 @@ django.setup()
 from nutrihacker.models import Food, BrandedIds
 from decimal import Decimal
 
-foods = Food.objects.all()
+#foods = Food.objects.all()
 
-i = 56
+#i = 56
 
-for i in range(60055):
-    food = foods[i]
-    factor = food.servingSize / 100
-    totalFat = food.totalFat*factor
-    cholesterol = food.cholesterol*factor
-    sodium = food.sodium*factor
-    totalCarb = food.totalCarb*factor
-    protein = food.protein*factor
-    calories = int(protein*Decimal(4.27) + totalFat*Decimal(8.79) + totalCarb*Decimal(3.87))
-    food.totalFat = totalFat
-    food.cholesterol = cholesterol
-    food.sodium = sodium
-    food.totalCarb = totalCarb
-    food.protein = protein
-    food.calories = calories
-    food.save()
+#while i < 60055:
+#    food = foods[i]
+#    factor = food.servingSize / 100
+#    totalFat = food.totalFat*factor
+#    cholesterol = food.cholesterol*factor
+#    sodium = food.sodium*factor
+#    totalCarb = food.totalCarb*factor
+#    protein = food.protein*factor
+#    calories = int(protein*Decimal(4.27) + totalFat*Decimal(8.79) + totalCarb*Decimal(3.87))
+#    food.totalFat = totalFat
+#    food.cholesterol = cholesterol
+#    food.sodium = sodium
+#    food.totalCarb = totalCarb
+#    food.protein = protein
+#    food.calories = calories
+#    food.save()
+#    i+=1
     
