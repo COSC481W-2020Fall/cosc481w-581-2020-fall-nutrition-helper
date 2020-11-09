@@ -8,7 +8,6 @@
 	    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 	    <style>
 			table, td {
-				border: 3px solid black;
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 100px;
@@ -115,7 +114,7 @@
 	<a href="{% url 'nutrihacker:log_list' %}"><button style="margin-left: 5%; padding: 5px;">&#9204; Back to My Logs</button></a>
 	<br>
 	<br>
-	<table style="background-color:black; padding:100px; width: 90%" align="center">
+	<table style="padding:100px; width: 90%" align="center">
 		{% if info_list %}
 			<tr>
 				<th></th>
