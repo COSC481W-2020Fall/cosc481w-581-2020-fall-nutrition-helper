@@ -364,11 +364,11 @@ class RecipeFood(models.Model):
 		# for each nutrient
 		for key in nutrients:
 			# adds the food's nutrients times the portion size
-			total[key] += nutrients[key] * self.portions
+			total[key] += nutrients[key]
 		
 		# chops all unnecessary zeros
 		for key in total:
-			total[key] = chop_zeros(total[key])
+			total[key] = total[key]
 
 		return total
 		
