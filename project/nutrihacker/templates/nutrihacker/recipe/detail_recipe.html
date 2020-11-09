@@ -80,8 +80,11 @@
 		<div style="text-align:center">
 		<br>
 			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}" style="text-align:center" ><button class="B" style="text-align:center">Update Recipe</button></a>
-			<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}" style="text-align:center"><button class="B" style="text-align:center">Delete Recipe</button></a>
-		
+			<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="id" value={{ recipe.id }}>
+				<button class="B" type="submit" style="text-align:center">Delete Recipe</button></a>
+			</form>
 		</div>
 		{% endif %}
 		<br>
