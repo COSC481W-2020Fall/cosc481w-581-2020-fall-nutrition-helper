@@ -42,7 +42,18 @@ class FoodAutocomplete(autocomplete.Select2QuerySetView):
 
 		return qs
 
+# autocomplete search for recipes
+class RecipeAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		if not self.request.user.is_authenticated:
+			return Recipe.objects.none()
 
+		qs = Recipe.objects.all()
+
+		if self.q:
+			qs = qs.filter(name__icontains=self.q)
+
+		return qs
 
 
 # for display purposes
