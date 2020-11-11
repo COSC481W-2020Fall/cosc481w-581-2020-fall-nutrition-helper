@@ -5,15 +5,7 @@ from django.db.models.functions import Floor
 from django.contrib.auth.models import User
 from datetime import datetime
 
-# for display purposes
-# chops off extra zeros if unnecessary
-def chop_zeros(value):
-	if value == 0:
-		return Decimal('0')
-	if value == value.to_integral():
-		return value.quantize(Decimal(1))
-	else:
-		return value.normalize()
+from nutrihacker.functions import chop_zeros
 
 #food model for database
 class Food(models.Model):
