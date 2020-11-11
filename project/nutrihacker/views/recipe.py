@@ -12,6 +12,8 @@ from nutrihacker.models import Allergy, DietPreference
 
 from nutrihacker.forms import RecipeForm
 
+from nutrihacker.functions import chop_zeros
+
 ##-------------- Recipe Views --------------------------------------
 class DetailRecipe(UserPassesTestMixin, DetailView):
 	model = Recipe
