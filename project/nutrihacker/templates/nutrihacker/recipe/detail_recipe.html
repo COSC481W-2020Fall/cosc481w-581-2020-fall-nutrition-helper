@@ -24,6 +24,12 @@
                 padding: revert;
                 margin: revert;
             }
+            table, td, th{
+            	border: 1px solid black;
+            }
+            table{
+            	border-collapse: collapse;
+            }
             th {
                 text-align: right;
             }
@@ -67,6 +73,10 @@
 				  display: table;
 				  clear: both;
 			}
+			hr{
+        		background-color: none;
+        		border: none;
+    		}
         </style>
         <script type="text/javascript">
             
@@ -89,58 +99,42 @@
 		{% endif %}
 		<br>
         <h2>Here is your recipe!</h2>
-		<br>
 	<div class="boxcolumn">
-		<table class="facts" style="background-color: white">
-			<tr><td>
-				{{ recipe.name }}
-			</td></tr>
-			<tr><td>
-				Produces {{ recipe.servingsProduced }} servings
-			</td></tr>
-		</table>
-		<br>
-		<table  class="facts" style="background-color: white">
-			<tr><td>
-				INSTRUCTIONS:
-				<br>
-			</td></tr>
-			<tr><td>
-				<br>
-				{{ recipe.instruction|linebreaksbr }}
-				<br>
-			</td></tr>
-		</table>
-		<br>
-		<table  class="facts" style="background-color: white">
-			<tr><td>
-				INGREDIENTS:
-				<br>
-			</td></tr>
+		<table class="facts" style="background-color: white; border: 1px solid black;">
+			<tr>
+				<th style="text-align: center;"colspan="5">{{ recipe.name }}</th>
+			</tr>
+			<tr>
+				<td>PRODUCES:</td>
+				<td colspan="4" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
+			</tr>
+			<tr>
+				<td>INSTRUCTIONS:</td>
+				<td colspan="4"style="text-align:center;">{{ recipe.instruction|linebreaksbr }}</td>
+			</tr>
+			<tr>
+				<td>INGREDIENTS</td>
+
 			{% for recipe_food in ingredients %}
-				<tr><td>
+				<td>
 				<!--{{ recipe_food.food.name }} -->
 				<br>{{ recipe_food.portions }}g of <a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a><br>
-				</td></tr>
-			{% endfor %}
+				</td><br>
+				{% endfor %}
+			</tr>
 		</table>
-		<br>
-		
 	</div>
-	<div class="boxcolumn"
-		<br>
-		<br>
+	<div class="boxcolumn">
 		<h1 style="color: white"><center>Nutrition Facts:</center></h1>
-		<br>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
 			<center>
 				<label style="color: white">Number of portions: </label>
 				<input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}">
 				<button type="submit" value="Submit">Calculate</button>
 			</center>
+			<br>
 		</form>
-		<br>
-		<table class="facts" style="background-color: white">
+		<table class="facts" style="background-color: white; margin-left: 200px; width:50%">
 			<tr>
 				<td>Calories</td>
 				<td class="right">{{ nutrition.calories|floatformat }}</td>
@@ -165,19 +159,22 @@
 				<td>Protein</td>
 				<td class="right">{{ nutrition.protein|floatformat }}g</td>
 			</tr>
+
 		</table>
-		
-		<br>
-		<br>
-		<table style="background-color: white">
-			<tr><td>
-				Allergy Information: {{ recipe.allergy }}
-			</td></tr>
-			<tr><td>
-				Diet Information: {{ recipe.diet }}
-			</td></tr>
+		<table style="background-color: white; margin-left: 200px;">
+				<hr>
+			<tr>
+				<td colspan="3" style="text-align:center; font-weight: bold;">Additional Diet Information</td>
+			</tr>
+			<tr>
+				<td>Allergy Information  </td>
+				<td>{{ recipe.allergy }}</td>
+			</tr>
+			<tr>
+				<td>Diet Information  </td>
+				<td>{{ recipe.diet }}</td>
+			</tr>
 		</table>
-		<br>
 	</div>
 	</table>
     </body>

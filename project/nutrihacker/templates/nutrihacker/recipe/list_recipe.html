@@ -33,7 +33,7 @@
 			a:hover {
 				color: blue;
 			}
-			.button {
+			.btn {
 				padding: 15px 30px;
 				border: none;
 				display: inline-block;
@@ -41,10 +41,11 @@
 				font-size: 18px;
 				font-family:"Times New Roman", Times, serif;
 				background-color:white;
+				border-radius:12px;
 
 			}
-			.button:hover{
-				background-color: blue;
+			.btn:hover{
+				background-color: #008CBA;
 				cursor:pointer;
 			}
 			input {
@@ -93,7 +94,7 @@
 			</table>
 		<br>
 		<div style="display: flex; margin-left: 300px; text-align:center;">
-			<button style="color: black;" class="button"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
+			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
 		<br>
 	</body>
