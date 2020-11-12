@@ -64,10 +64,11 @@
 			</center>
 		</form>
 		<br>
-		<table class="facts" style="background-color: white">
+		<table class="facts" style = "width : 100% ; height:100%; background-color:white;" >
 			<tr>
-				<td>Serving Size</td>
-				<td class="right">{{ food.servingSize|floatformat }}g</td>
+				<td style = "width : 24% ;" >Serving Size</td>
+				<td class="right" style = "width : 24% ;">{{ food.servingSize|floatformat }}g</td>
+				<td rowspan="7" style = "width : 50% ;"> Unit(Gram){% include "nutrihacker/pi_chart.html" %}</td>
 			</tr>
 			<tr>
 				<td>Calories</td>
@@ -94,7 +95,9 @@
 				<td class="right">{{ food.protein|floatformat }}g</td>
 			</tr>
 		</table>
+
 		<br><br>
 		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">Return to Search</a></button></div>
+
 	</body>
 </html>
