@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+{% block content %}
+<canvas id="pie-chart"></canvas>
+<!-- the style is impoted from the website in the script tag below -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+ //piechart configuration detail
+ //Note: the value of cholesterol and sodium divided by 1000 to get the similar unit with other vars, which is gram
+    var config = {
+      type: 'pie', //type of chart
+      data: {
+        datasets: [{ // the dataset contains the nutrifact data that are going to be used, labels and colors of piechart
+          data: [{{food.totalFat}},(parseInt({{food.cholesterol}})/1000) ,(parseInt({{food.sodium}})/1000),{{food.totalCarb}},{{food.protein}}],
+          backgroundColor: [
+            '#E74C3C', '#F1C40F', '#45B39D', '#7D3C98', '#3498DB' // colors of the piechart
+          ],
+          label: 'foodData'
+        }],
+        //
+        labels: ["totalFat","cholesterol","sodium","totalCarb","protein"] //labels that are going to be displayed
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var pi_chart_data = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(pi_chart_data, config);
+    };
+
+  </script>
+{% endblock %}

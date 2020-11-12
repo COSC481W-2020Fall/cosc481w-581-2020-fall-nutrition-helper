@@ -2,6 +2,7 @@ from decimal import Decimal
 from dal import autocomplete
 from datetime import datetime
 
+
 from django.http import HttpResponse, HttpResponseRedirect	
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
@@ -84,7 +85,7 @@ class FactsView(DetailView):
 
 		# pass query as 'portions'
 		context['portions'] = query
-		
+
 		# multiply nutrition data fields by query and chop trailing zeros
 		context['food'].servingSize = chop_zeros(query * context['food'].servingSize)
 		context['food'].calories = chop_zeros(query * context['food'].calories)
@@ -95,6 +96,16 @@ class FactsView(DetailView):
 		context['food'].protein = chop_zeros(query * context['food'].protein)
 
 		return context
+#pichart (this function isnot used at the moment)
+	def get_piechart_data(request):
+		label = ['totalFat' , 'cholesterol', 'sodium', 'totalCarb', 'protein']
+		data = [food.totalFat]
+
+
+		return render(request, 'pi_chart.html', {
+			'label': label,
+			'data': data,
+		})
 
 # displays the food that match a search, passed to the template as a list
 class SearchFoodView(ListView):
@@ -124,8 +135,24 @@ class SearchFoodView(ListView):
 				Q(name__icontains = query)
 			)
 			return object_list
-		
+		#request.session['pie_list'] = object_list #passing the query objectlist by the help of session
+		#this function will be used for pi-chart
 
+
+
+		# retriving the value of object list from the above function
+		# label = []
+		# data = []
+		# object_list = request.session['pie_list']
+		# if self.request.method =='GET':
+		# 	queryset = self.request.GET.get('pie_list')
+		# 	context['pie_list'] = queryset
+		#
+		# for food in queryset:
+		# 	label.append(food.name)
+		# 	data.append(food.object_list)
+
+###
 class SearchRecipeView(ListView):
     paginate_by = 50
     model = Recipe

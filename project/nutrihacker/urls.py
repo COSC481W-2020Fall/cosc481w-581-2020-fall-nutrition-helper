@@ -80,5 +80,8 @@ urlpatterns = [
     path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
     
     
-    #---------------------------------------------------------------------
+    #------------------------PI-CHART STUFF-------------------------------------------
+
+    path('pi_chart/', views.FactsView.as_view() , name='pi_chart')
+    #----------------------------------------------------------------------------------
 ]
