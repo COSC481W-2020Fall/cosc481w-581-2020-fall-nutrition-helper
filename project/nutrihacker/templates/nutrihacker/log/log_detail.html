@@ -124,13 +124,19 @@
 				from {opacity: 0;}
 				to {opacity:1 ;}
 			}
+			.back{
+				margin-left: 5%;
+				padding: 5px;
+				font-size: 15px;
+				border-radius:12px;
+			}
 		</style>
 	</head>
 	<body>
 	{% include "nutrihacker/navigation_bar.html" %}
 
 	<p>Overview for {{ dailylog.date }}</p>
-	<a href="{% url 'nutrihacker:log_list' %}"><button style="margin-left: 5%; padding: 5px;">&#9204; Back to My Logs</button></a>
+	<a href="{% url 'nutrihacker:log_list' %}"><button class="back" style=" ">&#9204; Back to My Logs</button></a>
 	<br>
 	<br>
 	<table class="detailtable" align="center">
@@ -167,7 +173,7 @@
 			{% for meallog in info_list %}
 				<tr style="background-color: #242424">
 					<th style="width: 8%">{{ meallog.time }}</th>
-					<th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+					<th colspan="8"><th></th>
 					<th>
 						<a href="{% url 'nutrihacker:log_update' meallog.id %}"><button class="btn">&#9998;</button></a>
 					</th>
