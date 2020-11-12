@@ -6,6 +6,8 @@
 	    <meta charset="UTF-8">
 	    <title>Log Details</title>
 	    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- the above style sheet is imported her for the trash sign purpose only -->
 	    <style>
 			table, td {
 				border-collapse: collapse;
@@ -15,7 +17,19 @@
 			.detailtable {
 				padding:100px;
 				width: 90%;
-				background-color: black;
+				background-color:white;
+
+			}
+			table, td, th{
+				border: 1px solid black;
+			}
+			.detailtable tbody tr {
+				background-color: #009879;
+				color: #ffffff;
+			}
+			.detailtable tfoot tr {
+				background-color: #009879;
+				color: #ffffff;
 			}
 			.facts {
 				width: 35%;
@@ -121,9 +135,9 @@
 	<br>
 	<table class="detailtable" align="center">
 		{% if info_list %}
+		<thead>
 			<tr>
-				<th></th>
-				<th></th>
+				<th colspan="2" ></th>
 				<th>Portions</th>
 				<th>Calories<br>(kcal)</th>
 				<th>Total Fat<br>(g)</th>
@@ -132,9 +146,10 @@
 				<th>Total Carbs<br>(g)</th>
 				<th>Protein<br>(g)</th>
 			</tr>
+		</thead>
+		<tbody>
 			<tr>
-				<th></th>
-				<th style="text-align: right">Day Total </th>
+				<th colspan="2" style="text-align: center">Day Total </th>
 				<th></th>
 				<th class="right">{{ daytotal.calories }}</th>
 				<th class="right">{{ daytotal.totalFat }}</th>
@@ -143,9 +158,11 @@
 				<th class="right">{{ daytotal.totalCarb }}</th>
 				<th class="right">{{ daytotal.protein }}</th>
 			</tr>
+			</tbody>
+		<thead>
 			<tr>
-				<th></th>
-				<th style="padding-top: 20px; padding-bottom: 10px">Breakdown by meal:</th>
+
+				<th colspan="9" style="padding-top: 20px; padding-bottom: 10px">Breakdown by meal:</th>
 			</tr>
 			{% for meallog in info_list %}
 				<tr style="background-color: #242424">
@@ -163,12 +180,14 @@
 									<button type="submit">Yes</button>
 								</form><button>No</button>
 							</span>
-							<button class="btn">🗑️</button>
+							<button class="btn"><i class="fa fa-trash"></i></button>
 						</div>
 					</th>
 				</tr>
+			</thead>
 				{% if meallog.food_list %}
 					{% for food in meallog.food_list %}
+		<thead>
 						<tr>
 							<th></th>
 							<th style="text-align: left">{{ food.name }}</th>
@@ -180,7 +199,9 @@
 							<th class="right">{{ food.totalCarb }}</th>
 							<th class="right">{{ food.protein }}</th>
 						</tr>
+						</thead>
 					{% endfor %}
+				<tfoot>
 					<tr>
 						<th></th>
 						<th style="text-align: left">Meal Total</th>
@@ -192,6 +213,7 @@
 						<th class="right">{{ meallog.total.totalCarb }}</th>
 						<th class="right">{{ meallog.total.protein }}</th>
 					</tr>
+				</tfoot>
 				{% else %}
 				<tr>
 					<th></th>

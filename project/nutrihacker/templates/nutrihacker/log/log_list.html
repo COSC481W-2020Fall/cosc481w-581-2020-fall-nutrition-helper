@@ -6,9 +6,10 @@
 		<meta charset="UTF-8">
 		<title>Daily Log List</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- the above style sheet is imported her for the trash sign purpose only -->
 		<style>
 			table, td {
-				border: 3px solid black;
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 100px;
@@ -107,15 +108,20 @@
 				from {opacity: 0;}
 				to {opacity:1 ;}
 			}
+			.title{
+				text-align: center;
+				margin-left: 380px;
+				margin-right: 380px;
+			}
 		</style>
 	</head>
 	<body style="background-size: cover">
 		{% include "nutrihacker/navigation_bar.html" %}
 		
 		<br>
-		<p>Your Daily Logs</p>
+		<div class="title"><p>Your Daily Logs</p></div>
 		<p><a href="{% url 'nutrihacker:log_create' %}"><button class="B">&#10010; Add a new log</button></a></p>
-		<table style="background-color:black; padding:100px" align="center">
+		<table style=" padding:100px" align="center">
 		{% if object_list %}
 			{% for dailylog in object_list %}
 				<tr>
@@ -133,7 +139,7 @@
 									<button type="submit">Yes</button>
 								</form><button>No</button>
 							</span>
-							<button class="delbtn">🗑️</button>
+							<button class="delbtn"><i class="fa fa-trash"></i></button> <!-- fa fa-trash is a trash sign -->
 						</div>
 					</th>
 				</tr>
