@@ -2,13 +2,13 @@
 
 <div class="nav-bar">
     <ul>
-        <div class="logo">
+        <div class="logo" style="text-align:left ;">
             <a href="{% url 'nutrihacker:index' %}">
-            <img src="{% static 'nutrihacker/images/w2.png' %}">
+            <img src="{% static 'nutrihacker/images/w2.png' %}" style="width: 130px;">
             </a>
         </div>
-        <div class="search-bar">
-            <li>
+        <div class="search-bar" >
+            <li style="text-align:center;">
                 <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
                     <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="65%"/>
                     <button id="oneButoon" type="submit">&#128269;</button>
@@ -51,18 +51,22 @@
     }
     .nav-bar {
         background: black;
-        text-align: center;
+        text-align: justify;
     }
 
     .logo{
         margin-top: 10px;
         text-align: left;
+        padding-left: 40px;
+        padding-right: 120px;
     }
 
     .search-bar{
-        padding-top: 20px;
+        padding-top: 40px;
         display: inline-flex;
-        align-items: center;
+        align-items: left;
+        padding-left: 100px;
+        padding-right: 100px;
     }
     .search-bar input {
         margin: 8px;
@@ -95,6 +99,9 @@
         display: inline-flex;
         list-style: none;
         text-align: center;
+        padding-top: 40px;
+        padding-left: 50px;
+        padding-right: 20px;
     }
 
     .menu-items a{
