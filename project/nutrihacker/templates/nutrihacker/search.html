@@ -37,6 +37,13 @@
 				margin-left: 5px;
 				margin-right: 5px;
 			}
+			.t02 thead tr{
+				background-color: #009879;
+				color: white;
+			}
+			.t02 tbody tr{
+				background-color: #f3f3f3;
+			}
         </style>
 	</head>
 	<body>
@@ -49,20 +56,22 @@
 		<p>Search Results</p>
 		<br>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<table class="t02" width="70%" align="center" style="background-color:black;padding:10px" >
+		<table class="t02" width="70%" align="center"  >
+			<thead>
 			<tr>
 				<th></th>
-				<th>servingSize </th>
-				<th>calories </th>
-				<th>totalFat </th>
-				<th>cholesterol </th>
-				<th>sodium </th>
-				<th>totalCarb </th>
-				<th>protein </th>
+				<th style="width: 150px;">servingSize </th>
+				<th style="width: 150px;">calories </th>
+				<th style="width: 150px;">totalFat </th>
+				<th style="width: 150px;">cholesterol </th>
+				<th style="width: 150px;">sodium </th>
+				<th style="width: 150px;">totalCarb </th>
+				<th style="width: 150px;">protein </th>
 			</tr>
-			
+			</thead>
 			<!-- For loop that loops for each food that the query returned -->
 			{% for food in object_list %}
+			<tbody>
 			<tr>
 				<th>			
 				<!-- Button of the food in question -->
@@ -77,6 +86,7 @@
 				<th>{{ food.totalCarb }}g</th>
 				<th>{{ food.protein }}g</th>
 			</tr>
+			</tbody>
 			{% endfor %}
 		</table>
 		{% else %}

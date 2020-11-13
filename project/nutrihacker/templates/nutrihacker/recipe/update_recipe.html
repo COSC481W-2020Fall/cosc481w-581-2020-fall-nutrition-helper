@@ -2,19 +2,24 @@
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"><html>
-        <title>UpdateView</title>
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    <title>UpdateView</title>
+    <style>
             body {
 				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-				text-align: center;
-				font-size: 20px;
+				background-size: cover;
+			}
+			.update{
+			    text-align: center;
 				font-family:"Times New Roman", Times, serif;
 				color: white;
+                margin-left: 400px;
+                margin-right: 400px;
 			}
 			.sub{
-                font-size: 25px;
+                font-size: 22px;
                 border-radius: 12%;
                 background-color:GREEN;
 			}
@@ -22,19 +27,19 @@
 			    background-color: BLUE;
 				cursor:pointer;
 			}
-        </style>
-    <head>
-
-    <body style="background-size: cover;">
-    		{% include "nutrihacker/navigation_bar.html" %}
+    </style>
+</head>
+<body>
+        {% include "nutrihacker/navigation_bar.html" %}
 <br><br>
-<form method="POST">{% csrf_token %}
-    
-<!-- form variable -->    
- {{ form.as_p }} 
+<form class="update" method="POST">
+    {% csrf_token %}
 
-  <input class="sub" type="submit" name="submit">
+    <!-- form variable -->
+       {{ form.as_p }}
+
+    <input class="sub" type="submit" name="Submit" />
 </form>
-    </body>
+</body>
 
 </html>

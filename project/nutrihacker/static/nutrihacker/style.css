@@ -81,6 +81,9 @@ h2{
 form{
     text-align:center;
     }
+.Updateform{
+    text-align: center;
+}
 input{
     width: 50%;
     padding: 12px 20px;

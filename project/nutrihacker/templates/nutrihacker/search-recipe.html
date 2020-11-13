@@ -37,12 +37,17 @@
 				margin-left: 5px;
 				margin-right: 5px;
 			}
+			.t02 thead tr{
+				background-color: #009879;
+				color: white;
+			}
+			.t02 tbody tr{
+				background-color: #f3f3f3;
+			}
         </style>
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
-
-		<p>This website helps with meal planning and provides nutrition information.</p>
 		<br>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
 		<th><form action="{% url 'nutrihacker:search-recipe' %}" method="get">
@@ -50,23 +55,25 @@
                 <button type="submit" name="search">&#128269;</button>
             </form>
 		</th>
-		<table class="t02" width="70%" align="center" style="background-color:black;padding:10px" >
-			<tr><th>
-				<h1>Recipe Results</h1>
-			</th>
+		<table class="t02" width="70%" align="center" style="padding:10px" >
+			<thead>
+			<tr>
+				{% if object_list %}
+				<th><h2 style="color:white;">Recipe Results</h2></th>
                 <th>Calories</th>
 				<th>Allergy</th>
 				<th>Diet</th>
 				<th>Created by</th>
 				<th>Date created</th>
 			</tr>
+			</thead>
 			<!-- For loop that loops for each food that the query returned -->
 				{% for recipe in object_list %}
+			<tbody>
 				<tr>
-				<th>
 				<!-- Button of the food in question -->
-				<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
-				</th>
+					<th><a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a></th>
+
 				<!-- Convenient food information at a glance -->
 				<th>{{ recipe.get_total.calories|floatformat }}</th>
 				<th>{{ recipe.allergy }}</th>
@@ -74,9 +81,12 @@
 				<th>{{ recipe.user }}</th>
 				<th>{{ recipe.created_at|date:"m/d/y" }}</th>
 				</tr>
+				</tbody>
 				{% endfor %}
 		</table>
-
+		{% else %}
+		<p>Searched recipe not found</p>
+		{% endif %}
         <br>
         <div class="page_bar">
         {% if search %}
