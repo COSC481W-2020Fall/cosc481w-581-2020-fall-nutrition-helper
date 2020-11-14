@@ -202,6 +202,14 @@ class Recipe(models.Model):
 	def set_diet(self, value):
 		profile.diets.add(value)
 
+	# return comma separated list of allergy names
+	def allergies_string(self):
+		return ", ".join(self.allergies.values_list('name', flat=True))
+		
+	def diets_string(self):
+		return ", ".join(self.diets.values_list('name', flat=True))
+		
+
 class RecipeFood(models.Model):
 	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 	food = models.ForeignKey(Food, on_delete=models.CASCADE)
