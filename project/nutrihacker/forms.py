@@ -131,8 +131,8 @@ class RecipeForm(forms.Form):
 	# form fields
 	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
 	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
-	diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
+	allergies = forms.ModelMultipleChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
+	diets = forms.ModelMultipleChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
 	instruction = forms.CharField(label="How it's made", widget=forms.Textarea, required=False)
 	is_public = forms.BooleanField(initial=True, required=False)
 	food1 = forms.ModelChoiceField(

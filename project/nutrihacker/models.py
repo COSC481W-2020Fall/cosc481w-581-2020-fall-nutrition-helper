@@ -156,8 +156,8 @@ class Recipe(models.Model):
 	created_at = models.DateTimeField(default=datetime.now)
 	instruction = models.TextField(default="")
 	servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
-	allergy = models.ForeignKey(Allergy, on_delete=models.CASCADE, null=True)
-	diet = models.ForeignKey(DietPreference, on_delete=models.CASCADE, null=True)
+	allergies = models.ManyToManyField(Allergy, blank=True)
+	diets = models.ManyToManyField(DietPreference, blank=True)
 	
 	@classmethod
 	def create(cls, user, name, servingsProduced, instruction, is_public):
@@ -197,10 +197,10 @@ class Recipe(models.Model):
 		return total
 	
 	def set_allergy(self, value):
-		self.allergy = value
+		profile.allergies.add(value)
 	
 	def set_diet(self, value):
-		self.diet = value
+		profile.diets.add(value)
 
 class RecipeFood(models.Model):
 	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
