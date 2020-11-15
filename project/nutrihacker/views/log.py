@@ -1,10 +1,10 @@
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, DeleteView
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
-from nutrihacker.models import DailyLog, MealLog, MealFood
+from nutrihacker.models import DailyLog, MealLog, MealItem
 from nutrihacker.forms import LogForm
 from nutrihacker.functions import chop_zeros
 
@@ -22,19 +22,24 @@ class LogListView(LoginRequiredMixin, ListView):
 class LogCreateView(LoginRequiredMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_create.html'
-	daily_log_id = 0 # id of daily log to be redirected to
+	dailylog_id = 0 # id of daily log to be redirected to
 	
 	# override get_success_url to correct daily log
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_form_kwargs to get number of extra fields
 	def get_form_kwargs(self):
 		kwargs = super(LogCreateView, self).get_form_kwargs()
 		if 'data' in kwargs:
-			kwargs['extra'] = kwargs['data']['extra_field_count']
+			kwargs['f_extra'] = kwargs['data']['extra_food_count']
+			kwargs['r_extra'] = kwargs['data']['extra_recipe_count']
 		
 		return kwargs
+
+	def get_context_data(self, **kwargs):
+		context = super(LogCreateView, self).get_context_data(**kwargs)
+		return context
 
 	# override form_valid to create model instances from submitted data
 	def form_valid(self, form):
@@ -42,20 +47,25 @@ class LogCreateView(LoginRequiredMixin, FormView):
 		date = form.cleaned_data.get('date')
 		time = form.cleaned_data.get('time')
 		# get number of foods in form
-		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+		food_number = int(form.cleaned_data.get('extra_food_count')) + 1
+		recipe_number = int(form.cleaned_data.get('extra_recipe_count')) + 1
 		
-		food = {}
+		item = {}
 		portions = {}
 
 		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-		for i in range(1, food_number+1):
+		for i in range(1, max(food_number, recipe_number)+1):
 			food_field = 'food'+str(i)
-			portions_field = 'portions'+str(i)
+			recipe_field = 'recipe'+str(i)
+			portions_field = '_portions'+str(i)
 
 			# checks if fields exist
 			if form.cleaned_data.get(food_field):
-				food[food_field] = form.cleaned_data.get(food_field)
-				portions[portions_field] = form.cleaned_data.get(portions_field)
+				item[food_field] = form.cleaned_data.get(food_field)
+				portions['food'+portions_field] = form.cleaned_data.get('food'+portions_field)
+			if form.cleaned_data.get(recipe_field):
+				item[recipe_field] = form.cleaned_data.get(recipe_field)
+				portions['recipe'+portions_field] = form.cleaned_data.get('recipe'+portions_field)
 
 		try: # searches for an existing daily log for this day and user
 			daily_log = DailyLog.objects.get(user=self.request.user, date=date)
@@ -64,18 +74,21 @@ class LogCreateView(LoginRequiredMixin, FormView):
 			daily_log.save()
 		
 		# update the daily log id to be passed to success url
-		self.daily_log_id = daily_log.id
+		self.dailylog_id = daily_log.id
 		
 		# creates the meal log for this time
 		meal_log = MealLog.create(time, daily_log)
 		meal_log.save()
 
 		# creates a meal food for each food for this meal log
-		for i in range(1, food_number+1):
+		for i in range(1, max(food_number, recipe_number)+1):
 			# checks if fields exist
-			if 'food'+str(i) in food:
-				meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-				meal_food.save()
+			if 'food'+str(i) in item:
+				meal_item = MealItem.create(meal_log, item['food'+str(i)], None, portions['food_portions'+str(i)])
+				meal_item.save()
+			if 'recipe'+str(i) in item:
+				meal_item = MealItem.create(meal_log, None, item['recipe'+str(i)], portions['recipe_portions'+str(i)])
+				meal_item.save()
 
 		return super(LogCreateView, self).form_valid(form)
 
@@ -103,27 +116,34 @@ class LogDetailView(LoginRequiredMixin, DetailView):
 			info = {}
 			info['id'] = ml.id
 			info['time'] = ml.log_time.strftime('%I:%M %p')
-			info['food_list'] = []
+			info['item_list'] = []
 			info['total'] = ml.get_total()
 			
 			# get list of meal foods for each meal log
-			mf_list = MealFood.objects.filter(meal_log=ml)
+			mi_list = MealItem.objects.filter(meal_log=ml)
 
 			# build a dictionary for each food in each meal log
-			for mf in mf_list:
-				food = {}
-				food['name'] = mf.food.name
-				food['portions'] = chop_zeros(mf.portions)
-				food['amount'] = chop_zeros(mf.portions * mf.food.servingSize)
-				food = {**food, **mf.get_total()}
+			for mi in mi_list:
+				item = {}
+				if mi.food:
+					item['type'] = 'food'
+					item['id'] = mi.food.id
+					item['name'] = mi.food.name
+				else:
+					item['type'] = 'recipe'
+					item['id'] = mi.recipe.id
+					item['name'] = mi.recipe.name
+				
+				item['portions'] = chop_zeros(mi.portions)
+				item = {**item, **mi.get_total()}
 
-				info['food_list'].append(food)
+				info['item_list'].append(item)
 
 			info_list.append(info)
 		
 		# add to context
-		context['info_list'] = info_list
 		context['daytotal'] = dl.get_total()
+		context['info_list'] = info_list
 		
 		return context
 
@@ -145,10 +165,10 @@ class DailyLogDeleteView(LoginRequiredMixin, DeleteView):
 # delete MealLog
 class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 	model = MealLog
-	daily_log_id = 0 # id of daily log to be redirected to
+	dailylog_id = 0 # id of daily log to be redirected to
 
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_object to get id from form
 	def get_object(self, queryset=None):
@@ -158,30 +178,44 @@ class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 		except MealLog.DoesNotExist:
 			raise PermissionDenied
 
-		self.daily_log_id = ml.daily_log.id
+		self.dailylog_id = ml.daily_log.id
 
 		return ml
 
 # page for user to edit log information, modifies database according to submitted data
-class LogUpdateView(LoginRequiredMixin, FormView):
+class LogUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_update.html'
-	daily_log_id = 0 # id of DailyLog to be redirected to
-	meal_log_id = 0 # id of MealLog
+	dailylog_id = 0 # id of DailyLog to be redirected to
+	meallog_id = 0 # id of MealLog
+
+	# override test_func to make sure only user that created log can edit
+	def test_func(self):
+		self.meallog_id = self.kwargs['pk']
+		dl = MealLog.objects.get(id=self.meallog_id).daily_log
+		return dl.user == self.request.user
 	
 	# override get_success_url to correct daily log
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_form_kwargs to get number of extra fields
 	def get_form_kwargs(self):
 		kwargs = super(LogUpdateView, self).get_form_kwargs()
-
+		
 		# checks whether form data was submitted
-		if 'data' in kwargs: # if submitted, set 'extra' to 'extra_field_count' from form
-			kwargs['extra'] = kwargs['data']['extra_field_count']
-		else: # if not submitted, 'extra' is the number of MealFoods minus 1
-			kwargs['extra'] = MealFood.objects.filter(meal_log__id=self.kwargs['pk']).count() - 1
+		if 'data' in kwargs: # if submitted, set 'f/r_extra' to 'extra_food/recipe_count' from form
+			kwargs['f_extra'] = kwargs['data']['extra_food_count']
+			kwargs['r_extra'] = kwargs['data']['extra_recipe_count']
+		else: # if not submitted, 'f/r_extra' is the number of food/recipe MealItems minus 1
+			m_item_list = MealItem.objects.filter(meal_log__id=self.meallog_id)
+			# exclude the recipe MealItems
+			food_count = m_item_list.exclude(food=None).count()
+			# subtract the number of food MealItems from the total
+			recipe_count = m_item_list.count() - food_count
+			
+			kwargs['f_extra'] = food_count - 1
+			kwargs['r_extra'] = recipe_count - 1
 		
 		return kwargs
 
@@ -189,7 +223,7 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 	def get_context_data(self, **kwargs):
 		context = super(LogUpdateView, self).get_context_data(**kwargs)
 		
-		ml = MealLog.objects.get(id=self.kwargs['pk'])
+		ml = MealLog.objects.get(id=self.meallog_id)
 		
 		context['dailylog_id'] = ml.daily_log.id
 		context['meallog_id'] = ml.id
@@ -199,19 +233,28 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 	# override get_initial to provide initial form values
 	def get_initial(self):
 		initial = super(LogUpdateView, self).get_initial()
-		ml = MealLog.objects.get(id=self.kwargs['pk'])
+		
+		ml = MealLog.objects.get(id=self.meallog_id)
 		dl = ml.daily_log
 
-		self.meal_log_id = ml.id
-		self.daily_log_id = dl.id
+		self.dailylog_id = dl.id
 
 		initial['date'] = dl.date
 		initial['time'] = ml.log_time
 
-		mf_list = MealFood.objects.filter(meal_log=ml)
-		for i in range(mf_list.count()):
-			initial['food'+str(i+1)] = mf_list[i].food
-			initial['portions'+str(i+1)] = chop_zeros(mf_list[i].portions)
+		mi_list = MealItem.objects.filter(meal_log=ml)
+
+		food_count = 1
+		recipe_count = 1
+		for item in mi_list:
+			if item.food:
+				initial['food'+str(food_count)] = item.food
+				initial['food_portions'+str(food_count)] = chop_zeros(item.portions)
+				food_count += 1
+			else:
+				initial['recipe'+str(recipe_count)] = item.recipe
+				initial['recipe_portions'+str(recipe_count)] = chop_zeros(item.portions)
+				recipe_count += 1
 		
 		return initial
 
@@ -221,20 +264,25 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 		date = form.cleaned_data.get('date')
 		time = form.cleaned_data.get('time')
 		# get number of foods in form
-		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+		food_number = int(form.cleaned_data.get('extra_food_count')) + 1
+		recipe_number = int(form.cleaned_data.get('extra_recipe_count')) + 1
 		
-		food = {}
+		item = {}
 		portions = {}
 
 		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
-		for i in range(1, food_number+1):
+		for i in range(1, max(food_number, recipe_number)+1):
 			food_field = 'food'+str(i)
-			portions_field = 'portions'+str(i)
-			
+			recipe_field = 'recipe'+str(i)
+			portions_field = '_portions'+str(i)
+
 			# checks if fields exist
 			if form.cleaned_data.get(food_field):
-				food[food_field] = form.cleaned_data.get(food_field)
-				portions[portions_field] = form.cleaned_data.get(portions_field)
+				item[food_field] = form.cleaned_data.get(food_field)
+				portions['food'+portions_field] = form.cleaned_data.get('food'+portions_field)
+			if form.cleaned_data.get(recipe_field):
+				item[recipe_field] = form.cleaned_data.get(recipe_field)
+				portions['recipe'+portions_field] = form.cleaned_data.get('recipe'+portions_field)
 
 		try: # searches for an existing daily log for this day and user
 			daily_log = DailyLog.objects.get(user=self.request.user, date=date)
@@ -243,10 +291,10 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 			daily_log.save()
 		
 		# update the daily log id to be passed to success url
-		self.daily_log_id = daily_log.id
+		self.dailylog_id = daily_log.id
 		
 		# gets the meal log for this time
-		meal_log = MealLog.objects.get(id=self.meal_log_id)
+		meal_log = MealLog.objects.get(id=self.meallog_id)
 
 		# change the daily_log field if different date
 		if meal_log.daily_log is not daily_log:
@@ -259,37 +307,16 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 			meal_log.save()
 
 		# delete current list of foods
-		MealFood.objects.filter(meal_log=meal_log).delete()
+		MealItem.objects.filter(meal_log=meal_log).delete()
 
-		# creates new meal foods for each food for this meal log
-		for i in range(1, food_number+1):
+		# creates new MealItem for each food for this MealLog
+		for i in range(1, max(food_number, recipe_number)+1):
 			# checks if fields exist
-			if 'food'+str(i) in food:
-				meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-				meal_food.save()
-
-		# checks if each food already exists
-		# for i in range(1, food_number+1):
-		#	  print('food', i)
-		#	  if mf_list:
-		#		  for mf in mf_list:
-		#			  if mf.food == food['food'+str(i)]:
-		#				  print('same')
-		#				  if mf.portions is not portions['portions'+str(i)]:
-		#					  mf.portions = portions['portions'+str(i)]
-		#					  mf.save()
-		#				  mf_list = mf_list.exclude(id=mf.id)
-		#				  print('removed')
-		#				  break
-		#			  else:
-		#				  print('new')
-		#				  meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-		#				  meal_food.save()
-		#				  newfood = True
-		#				  break
-		#	  else:
-		#		  print('new')
-		#		  meal_food = MealFood.create(meal_log, food['food'+str(i)], portions['portions'+str(i)])
-		#		  meal_food.save()
+			if 'food'+str(i) in item:
+				meal_item = MealItem.create(meal_log, item['food'+str(i)], None, portions['food_portions'+str(i)])
+				meal_item.save()
+			if 'recipe'+str(i) in item:
+				meal_item = MealItem.create(meal_log, None, item['recipe'+str(i)], portions['recipe_portions'+str(i)])
+				meal_item.save()
 
 		return super(LogUpdateView, self).form_valid(form)

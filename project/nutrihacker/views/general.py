@@ -32,7 +32,7 @@ class RecipeAutocomplete(autocomplete.Select2QuerySetView):
 		if not self.request.user.is_authenticated:
 			return Recipe.objects.none()
 
-		qs = Recipe.objects.all()
+		qs = Recipe.objects.filter(Q(user=self.request.user) | Q(is_public=True))
 
 		if self.q:
 			qs = qs.filter(name__icontains=self.q)
