@@ -22,6 +22,15 @@ class ProfileForm(ModelForm):
 class FilterRecipeForm(forms.Form):
 	allergy_filter = forms.ModelMultipleChoiceField(label="Allergy", queryset=Allergy.objects.all(), required=False)
 	diet_filter = forms.ModelMultipleChoiceField(label="Diet",queryset=DietPreference.objects.all(), required=False)
+	
+	def __init__(self,*args,**kwargs):
+		self.current_profile = kwargs.pop('current_profile', None) 
+		super(FilterRecipeForm,self).__init__(*args,**kwargs)
+		
+		# set initial allergy/diet filters from the profile
+		if self.current_profile != None:
+			self.initial['allergy_filter'] = self.current_profile.allergy_set.all()
+			self.initial['diet_filter'] = self.current_profile.dietpreference_set.all()
 
 # creates a model choice select field to add allergies
 class AllergyChoiceForm(forms.Form):

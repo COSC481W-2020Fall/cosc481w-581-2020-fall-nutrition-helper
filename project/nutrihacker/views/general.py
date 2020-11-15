@@ -120,9 +120,14 @@ class SearchRecipeView(ListView):
 		context = super(SearchRecipeView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
-	
+		
+		if self.request.user.is_authenticated:
+			profile = Profile.objects.get(user=self.request.user)
+		else:
+			profile = None
+
 		# for filtering recipes
-		context['filter_form'] = FilterRecipeForm() 
+		context['filter_form'] = FilterRecipeForm(current_profile=profile) 
 		
 		return context
 
@@ -130,7 +135,7 @@ class SearchRecipeView(ListView):
 	def get_queryset(self):
 		if self.request.user.is_authenticated:
 			user = self.request.user
-			#profile = Profile.objects.get(user=user)
+			profile = Profile.objects.get(user=user)
 		else:
 			user = None
 		
@@ -139,6 +144,8 @@ class SearchRecipeView(ListView):
 			
 		if self.request.method == 'GET':
 			query = self.request.GET.get('term')
+			default_filter = self.request.GET.get('filter')
+			print(default_filter)
 			filter_form = FilterRecipeForm(self.request.GET)
 			if filter_form.is_valid():
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
@@ -146,11 +153,11 @@ class SearchRecipeView(ListView):
 		else:
 			query = None
 		
-		# if user logged in, allergy and diet filters default to their profile
-		# if (user and not allergy_filter):
-			# allergy_filter = profile.allergy_set.all()
-		# if (user and not diet_filter):
-			# diet_filter = profile.dietpreference_set.all()
+		# if user searches from nav bar, allergy and diet filters default to their profile
+		if (profile and default_filter == 'true'):
+			allergy_filter = profile.allergy_set.all()
+		if (profile and default_filter == 'true'):
+			diet_filter = profile.dietpreference_set.all()
 	
 		if (query == None):
 			return Recipe.objects.filter(is_public=True)
