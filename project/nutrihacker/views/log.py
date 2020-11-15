@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, DeleteView
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
 from nutrihacker.models import DailyLog, MealLog, MealItem
@@ -22,11 +22,11 @@ class LogListView(LoginRequiredMixin, ListView):
 class LogCreateView(LoginRequiredMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_create.html'
-	daily_log_id = 0 # id of daily log to be redirected to
+	dailylog_id = 0 # id of daily log to be redirected to
 	
 	# override get_success_url to correct daily log
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_form_kwargs to get number of extra fields
 	def get_form_kwargs(self):
@@ -74,7 +74,7 @@ class LogCreateView(LoginRequiredMixin, FormView):
 			daily_log.save()
 		
 		# update the daily log id to be passed to success url
-		self.daily_log_id = daily_log.id
+		self.dailylog_id = daily_log.id
 		
 		# creates the meal log for this time
 		meal_log = MealLog.create(time, daily_log)
@@ -165,10 +165,10 @@ class DailyLogDeleteView(LoginRequiredMixin, DeleteView):
 # delete MealLog
 class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 	model = MealLog
-	daily_log_id = 0 # id of daily log to be redirected to
+	dailylog_id = 0 # id of daily log to be redirected to
 
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_object to get id from form
 	def get_object(self, queryset=None):
@@ -178,20 +178,26 @@ class MealLogDeleteView(LoginRequiredMixin, DeleteView):
 		except MealLog.DoesNotExist:
 			raise PermissionDenied
 
-		self.daily_log_id = ml.daily_log.id
+		self.dailylog_id = ml.daily_log.id
 
 		return ml
 
 # page for user to edit log information, modifies database according to submitted data
-class LogUpdateView(LoginRequiredMixin, FormView):
+class LogUpdateView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 	form_class = LogForm
 	template_name = 'nutrihacker/log/log_update.html'
-	daily_log_id = 0 # id of DailyLog to be redirected to
-	meal_log_id = 0 # id of MealLog
+	dailylog_id = 0 # id of DailyLog to be redirected to
+	meallog_id = 0 # id of MealLog
+
+	# override test_func to make sure only user that created log can edit
+	def test_func(self):
+		self.meallog_id = self.kwargs['pk']
+		dl = MealLog.objects.get(id=self.meallog_id).daily_log
+		return dl.user == self.request.user
 	
 	# override get_success_url to correct daily log
 	def get_success_url(self):
-		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.daily_log_id})
+		return reverse_lazy('nutrihacker:log_detail', kwargs={'pk':self.dailylog_id})
 
 	# override get_form_kwargs to get number of extra fields
 	def get_form_kwargs(self):
@@ -202,7 +208,7 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 			kwargs['f_extra'] = kwargs['data']['extra_food_count']
 			kwargs['r_extra'] = kwargs['data']['extra_recipe_count']
 		else: # if not submitted, 'f/r_extra' is the number of food/recipe MealItems minus 1
-			m_item_list = MealItem.objects.filter(meal_log__id=self.kwargs['pk'])
+			m_item_list = MealItem.objects.filter(meal_log__id=self.meallog_id)
 			# exclude the recipe MealItems
 			food_count = m_item_list.exclude(food=None).count()
 			# subtract the number of food MealItems from the total
@@ -217,7 +223,7 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 	def get_context_data(self, **kwargs):
 		context = super(LogUpdateView, self).get_context_data(**kwargs)
 		
-		ml = MealLog.objects.get(id=self.kwargs['pk'])
+		ml = MealLog.objects.get(id=self.meallog_id)
 		
 		context['dailylog_id'] = ml.daily_log.id
 		context['meallog_id'] = ml.id
@@ -228,11 +234,10 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 	def get_initial(self):
 		initial = super(LogUpdateView, self).get_initial()
 		
-		ml = MealLog.objects.get(id=self.kwargs['pk'])
+		ml = MealLog.objects.get(id=self.meallog_id)
 		dl = ml.daily_log
 
-		self.meal_log_id = ml.id
-		self.daily_log_id = dl.id
+		self.dailylog_id = dl.id
 
 		initial['date'] = dl.date
 		initial['time'] = ml.log_time
@@ -286,10 +291,10 @@ class LogUpdateView(LoginRequiredMixin, FormView):
 			daily_log.save()
 		
 		# update the daily log id to be passed to success url
-		self.daily_log_id = daily_log.id
+		self.dailylog_id = daily_log.id
 		
 		# gets the meal log for this time
-		meal_log = MealLog.objects.get(id=self.meal_log_id)
+		meal_log = MealLog.objects.get(id=self.meallog_id)
 
 		# change the daily_log field if different date
 		if meal_log.daily_log is not daily_log:
