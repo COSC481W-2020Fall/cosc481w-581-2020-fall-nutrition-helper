@@ -20,8 +20,8 @@ class ProfileForm(ModelForm):
 		fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
 
 class FilterRecipeForm(forms.Form):
-	allergy_filter = forms.ModelMultipleChoiceField(label="Allergy", queryset=Allergy.objects.all(), required=False)
-	diet_filter = forms.ModelMultipleChoiceField(label="Diet",queryset=DietPreference.objects.all(), required=False)
+	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False)
+	diet_filter = forms.ModelMultipleChoiceField(label="Include diet",queryset=DietPreference.objects.all(), required=False)
 	
 	def __init__(self,*args,**kwargs):
 		self.current_profile = kwargs.pop('current_profile', None) 
