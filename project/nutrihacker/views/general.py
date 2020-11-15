@@ -138,6 +138,7 @@ class SearchRecipeView(ListView):
 			profile = Profile.objects.get(user=user)
 		else:
 			user = None
+			profile = None
 		
 		allergy_filter = None
 		diet_filter = None
