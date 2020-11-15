@@ -146,7 +146,6 @@ class SearchRecipeView(ListView):
 		if self.request.method == 'GET':
 			query = self.request.GET.get('term')
 			default_filter = self.request.GET.get('filter')
-			print(default_filter)
 			filter_form = FilterRecipeForm(self.request.GET)
 			if filter_form.is_valid():
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
