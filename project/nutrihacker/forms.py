@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
-from .models import Food, Allergy, DietPreference, Profile
+from .models import Food, Recipe, Allergy, DietPreference, Profile
 
 class UserForm(ModelForm):
 	class Meta:
@@ -69,19 +69,30 @@ class LogForm(forms.Form):
 		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
 		required=True
 	)
-	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	# hidden field that keeps track of how many extra fields have been added
-	extra_field_count = forms.CharField(widget=forms.HiddenInput())
+	food_portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	recipe1 = forms.ModelChoiceField(
+		label="Choose a recipe", queryset=Recipe.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:recipe_autocomplete'),
+		required=True
+	)
+	recipe_portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	
+	# hidden fields that keep track of how many extra fields have been added
+	extra_food_count = forms.CharField(widget=forms.HiddenInput())
+	extra_recipe_count = forms.CharField(widget=forms.HiddenInput())
 
-	portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+	food_portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+	recipe_portions1.widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
 
 	# override __init__ to create dynamic number of food and portions fields
 	def __init__(self, *args, **kwargs):
 		# get number of extra fields from kwargs
-		extra_fields = kwargs.pop('extra', 0)
+		extra_foods = kwargs.pop('f_extra', 0)
+		extra_recipes = kwargs.pop('r_extra', 0)
 		
 		super(LogForm, self).__init__(*args, **kwargs)
-		self.fields['extra_field_count'].initial = extra_fields
+		
+		self.fields['extra_food_count'].initial = extra_foods
+		self.fields['extra_recipe_count'].initial = extra_recipes
 
 		form_data = {}
 		
@@ -89,14 +100,24 @@ class LogForm(forms.Form):
 		if submitted:
 			form_data = kwargs['data']
 
-		if submitted and 'food1' not in form_data:
-			del self.fields['food1']
-			del self.fields['portions1']
+			if 'food1' not in form_data:
+				del self.fields['food1']
+				del self.fields['food_portions1']
+			if 'recipe1' not in form_data:
+				del self.fields['recipe1']
+				del self.fields['recipe_portions1']
 
-		# add extra fields
-		for i in range(int(extra_fields)):
-			food_field = 'food%s' % (i+2)
-			portions_field = 'portions%s' % (i+2)
+		if extra_foods == -1:
+			del self.fields['food1']
+			del self.fields['food_portions1']
+		if extra_recipes == -1:
+			del self.fields['recipe1']
+			del self.fields['recipe_portions1']
+
+		# add extra food fields
+		for i in range(int(extra_foods)):
+			food_field = 'food'+str(i+2)
+			portions_field = 'food_portions'+str(i+2)
 
 			# checks if current food and portions field exists
 			if not submitted or food_field in form_data:
@@ -107,6 +128,21 @@ class LogForm(forms.Form):
 					max_value=99, initial=1, required=True
 				)
 				self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})
+
+		# add extra recipe fields
+		for i in range(int(extra_recipes)):
+			recipe_field = 'recipe'+str(i+2)
+			portions_field = 'recipe_portions'+str(i+2)
+
+			# checks if current recipe and portions field exists
+			if not submitted or recipe_field in form_data:
+				self.fields[recipe_field] = forms.ModelChoiceField(label="Choose a recipe", queryset=Recipe.objects.all(),
+					widget=autocomplete.ModelSelect2(url='nutrihacker:recipe_autocomplete'), required=True
+				)
+				self.fields[portions_field] = forms.DecimalField(label="Portions", decimal_places=2, min_value=0,
+					max_value=99, initial=1, required=True
+				)
+				self.fields[portions_field].widget.attrs.update({'step': 'any', 'style': 'width: 48px'})			
 
 	# override clean to add other errors
 	def clean(self):
@@ -120,12 +156,30 @@ class LogForm(forms.Form):
 		elif datetime.combine(cleaned_data['date'], cleaned_data['time']) > now:
 			self.add_error('time', forms.ValidationError(_('Invalid future time'), code='future time'))
 
-		for i in range(int(cleaned_data['extra_field_count'])+1):
-			if ('portions'+str(i+1)) in cleaned_data and cleaned_data['portions'+str(i+1)] == 0:
-				self.add_error('portions'+str(i+1), forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
+		empty = True
+		# loops through all food/recipe and portions fields
+		for i in range(max(int(cleaned_data['extra_food_count']), int(cleaned_data['extra_recipe_count']))+1):
+			portions_field = 'food_portions'+str(i+1)
+			# check if food field exists
+			if portions_field in cleaned_data:
+				empty = False
+				# check if portions field is zero
+				if cleaned_data[portions_field] == 0:
+					self.add_error(portions_field, forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
 		
+			portions_field = 'recipe_portions'+str(i+1)
+			# check if recipe field exists
+			if portions_field in cleaned_data:
+				empty = False
+				# check if portions field is zero
+				if cleaned_data[portions_field] == 0:
+					self.add_error(portions_field, forms.ValidationError(_('Must be greater than zero'), code='zero portions'))
+		
+		if empty:
+			self.add_error(None, forms.ValidationError(_('Must have at least one food or recipe'), code='empty log'))
+
 		return cleaned_data
-			
+	
 # form for users to log their recipes
 class RecipeForm(forms.Form):
 	# form fields

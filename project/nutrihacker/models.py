@@ -26,6 +26,7 @@ class Food(models.Model):
 	# returns dictionary containing just nutrients
 	def get_nutrients(self):
 		return {
+			'servingSize':self.servingSize,
 			'calories':self.calories,
 			'totalFat':self.totalFat,
 			'cholesterol':self.cholesterol,
@@ -171,6 +172,7 @@ class Recipe(models.Model):
 	# calculates total nutrition information of a single serving of the recipe
 	def get_total(self):
 		total = {
+			'servingSize':0,
 			'calories':0,
 			'totalFat':0,
 			'cholesterol':0,
@@ -218,6 +220,7 @@ class RecipeFood(models.Model):
 	# calculates total nutrition of the recipe food
 	def get_total(self):
 		total = {
+			'servingSize':0,
 			'calories':0,
 			'totalFat':0,
 			'cholesterol':0,
@@ -232,7 +235,7 @@ class RecipeFood(models.Model):
 		# for each nutrient
 		for key in nutrients:
 			# adds the food's nutrients times the portion size
-			total[key] += nutrients[key]
+			total[key] += nutrients[key] * self.portions
 		
 		# chops all unnecessary zeros
 		for key in total:
@@ -256,6 +259,7 @@ class DailyLog(models.Model):
 	# function that calculates total nutrition information of the daily log
 	def get_total(self):
 		total = {
+			'servingSize':0,
 			'calories':0,
 			'totalFat':0,
 			'cholesterol':0,
@@ -297,9 +301,10 @@ class MealLog(models.Model):
 	def __str__(self):
 		return str(self.daily_log.date) + " " + str(self.log_time)
 
-	# calculates total nutrition information of the meal log
+	# calculates total nutrition information of the MealLog
 	def get_total(self):
 		total = {
+			'servingSize':0,
 			'calories':0,
 			'totalFat':0,
 			'cholesterol':0,
@@ -308,13 +313,13 @@ class MealLog(models.Model):
 			'protein':0
 		}
 
-		# gets list of meal foods in current meal log
-		meal_food_list = MealFood.objects.filter(meal_log=self)
+		# gets list of MealItems in current MealLog
+		meal_item_list = MealItem.objects.filter(meal_log=self)
 		
-		# for each meal food
-		for m_food in meal_food_list:
-			# gets total nutrients for each food
-			nutrients = m_food.get_total()
+		# for each MealItem
+		for m_item in meal_item_list:
+			# gets total nutrients for each MealItem
+			nutrients = m_item.get_total()
 			# total the nutrients
 			for key in nutrients:
 				total[key] += nutrients[key]
@@ -325,23 +330,29 @@ class MealLog(models.Model):
 
 		return total
 
-# meal food model that contains key to meal log, key to food, and portion size
-class MealFood(models.Model):
+# model that contains key to MealLog, key to food, key to recipe, and number of portions
+class MealItem(models.Model):
 	meal_log = models.ForeignKey(MealLog, on_delete=models.CASCADE)
-	food = models.ForeignKey(Food, on_delete=models.CASCADE)
+	food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True)
+	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True)
 	portions = models.DecimalField(max_digits=5, decimal_places=2)
 
 	@classmethod
-	def create(cls, meal_log, food, portions):
-		meal_food = cls(meal_log=meal_log, food=food, portions=portions)
-		return meal_food
+	def create(cls, meal_log, food, recipe, portions):
+		meal_item = cls(meal_log=meal_log, food=food, recipe=recipe, portions=portions)
+		return meal_item
 
 	def __str__(self):
-		return str(self.meal_log.daily_log.date) + " " + str(self.meal_log.log_time) + " " + self.food.name
+		date_time = str(self.meal_log.daily_log.date) + " " + str(self.meal_log.log_time) + " "
+		
+		if self.food is None:
+			return date_time + self.recipe.name
+		return date_time + self.food.name
 
 	# calculates total nutrition of the meal food
 	def get_total(self):
 		total = {
+			'servingSize':0,
 			'calories':0,
 			'totalFat':0,
 			'cholesterol':0,
@@ -350,8 +361,12 @@ class MealFood(models.Model):
 			'protein':0
 		}
 
-		# gets the nutrients for single serving of the food
-		nutrients = self.food.get_nutrients()
+		# gets the nutrients for single serving of the food/recipe
+		nutrients = {}
+		if self.food:
+			nutrients = self.food.get_nutrients()
+		else:
+			nutrients = self.recipe.get_total()
 		
 		# for each nutrient
 		for key in nutrients:
@@ -363,45 +378,6 @@ class MealFood(models.Model):
 			total[key] = chop_zeros(total[key])
 
 		return total
-
-class MealRecipe(models.Model):
-	meal_log = models.ForeignKey(MealLog, on_delete=models.CASCADE)
-	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-	portions = models.DecimalField(max_digits=5, decimal_places=2)
-
-	@classmethod
-	def create(cls, meal_log, recipe, portions):
-		meal_recipe = cls(meal_log=meal_log, recipe=recipe, portions=portions)
-		return meal_recipe
-
-	def __str__(self):
-		return str(self.meal_log.daily_log.date) + " " + str(self.meal_log.log_time) + " " + self.recipe.name
-
-	# calculates total nutrition of the meal food
-	def get_total(self):
-		total = {
-			'calories':0,
-			'totalFat':0,
-			'cholesterol':0,
-			'sodium':0,
-			'totalCarb':0,
-			'protein':0
-		}
-
-		# gets the nutrients for single serving of the food
-		nutrients = self.recipe.get_total()
-		
-		# for each nutrient
-		for key in nutrients:
-			# adds the food's nutrients times the portion size
-			total[key] += nutrients[key] * self.portions
-		
-		# chops all unnecessary zeros
-		for key in total:
-			total[key] = chop_zeros(total[key])
-
-		return total
-
 
 #fdcid model for database
 class BrandedIds(models.Model):
