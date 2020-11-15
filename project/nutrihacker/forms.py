@@ -19,6 +19,10 @@ class ProfileForm(ModelForm):
 		model = Profile
 		fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
 
+class FilterRecipeForm(forms.Form):
+	allergy_filter = forms.ModelMultipleChoiceField(label="Allergy", queryset=Allergy.objects.all(), required=False)
+	diet_filter = forms.ModelMultipleChoiceField(label="Diet",queryset=DietPreference.objects.all(), required=False)
+
 # creates a model choice select field to add allergies
 class AllergyChoiceForm(forms.Form):
 	allergy_select = forms.ModelChoiceField(label="Add allergy", queryset=Allergy.objects.all())

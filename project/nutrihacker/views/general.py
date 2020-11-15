@@ -4,8 +4,9 @@ from dal import autocomplete
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
 
-from nutrihacker.models import Food, Recipe
+from nutrihacker.models import Food, Recipe, Profile
 from nutrihacker.functions import chop_zeros
+from nutrihacker.forms import FilterRecipeForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -111,33 +112,57 @@ class SearchFoodView(ListView):
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
 class SearchRecipeView(ListView):
-    paginate_by = 50
-    model = Recipe
-    template_name = 'nutrihacker/search-recipe.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super(SearchRecipeView, self).get_context_data(**kwargs)
-        if self.request.method == 'GET':
-            context['search'] = self.request.GET.get('term')
-        return context
+	paginate_by = 50
+	model = Recipe
+	template_name = 'nutrihacker/search-recipe.html'
+	
+	def get_context_data(self, **kwargs):
+		context = super(SearchRecipeView, self).get_context_data(**kwargs)
+		if self.request.method == 'GET':
+			context['search'] = self.request.GET.get('term')
+	
+		# for filtering recipes
+		context['filter_form'] = FilterRecipeForm() 
+		
+		return context
 
-    # overrides ListView get_queryset to find names containing search term and pass them to template
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            user = self.request.user
-        else:
-            user = None
-            
-        if self.request.method == 'GET':
-            query = self.request.GET.get('term')
-        else:
-            query = None
-            
-        if (query == None):
-            return Recipe.objects.filter(is_public=True)
-        else:
-            object_list = Recipe.objects.filter(
-                Q(name__icontains=query),
-                Q(user=user) | Q(is_public=True)
-            )
-            return object_list
+	# overrides ListView get_queryset to find names containing search term and pass them to template
+	def get_queryset(self):
+		if self.request.user.is_authenticated:
+			user = self.request.user
+			#profile = Profile.objects.get(user=user)
+		else:
+			user = None
+		
+		allergy_filter = None
+		diet_filter = None
+			
+		if self.request.method == 'GET':
+			query = self.request.GET.get('term')
+			filter_form = FilterRecipeForm(self.request.GET)
+			if filter_form.is_valid():
+				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
+				diet_filter = filter_form.cleaned_data.get('diet_filter')
+		else:
+			query = None
+		
+		# if user logged in, allergy and diet filters default to their profile
+		# if (user and not allergy_filter):
+			# allergy_filter = profile.allergy_set.all()
+		# if (user and not diet_filter):
+			# diet_filter = profile.dietpreference_set.all()
+	
+		if (query == None):
+			return Recipe.objects.filter(is_public=True)
+		else:
+			object_list = Recipe.objects.filter(
+				Q(name__icontains=query),
+				Q(user=user) | Q(is_public=True),
+			)
+			# don't include recipes with filtered allergies
+			if allergy_filter:
+				object_list = object_list.exclude(allergies__in=allergy_filter)
+			# only include recipes with filtered diets
+			if diet_filter:
+				object_list = object_list.filter(diets__in=diet_filter).distinct()
+			return object_list
