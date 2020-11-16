@@ -13,6 +13,19 @@
 				padding: 100px;
 				width: 55%;
 			}
+
+			table.center {
+  			margin-left: auto;
+  			margin-right: auto;
+			}
+			.center-div {
+			  margin: auto;
+  			  width: 60%;
+  			  padding: 10px;
+  			  text-align: center;
+			}
+
+
 			.facts {
 				width: 35%;
 				margin: auto;
@@ -72,10 +85,10 @@
 	</head>
 	<body style="background-size: cover text-align:center;">
 		{% include "nutrihacker/navigation_bar.html" %}
-        
+
 		<br>
 		<br>
-			<table style="background-color:none; padding:100px; text-align:center;">
+			<table class="center">
 				{% for recipe in object_list %}
 					<tr>
 					<th>
@@ -94,7 +107,7 @@
 				{% endfor %}
 			</table>
 		<br>
-		<div style="display: flex; margin-left: 300px; text-align:center;">
+		<div class="center-div">
 			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
 		</div>
 		<br>

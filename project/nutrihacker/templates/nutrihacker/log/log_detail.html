@@ -20,14 +20,13 @@
 				background-color:white;
 
 			}
+			.detailtable th {
+				padding: 2px;
+			}
 			table, td, th{
 				border: 1px solid black;
 			}
-			.detailtable tbody tr {
-				background-color: #009879;
-				color: #ffffff;
-			}
-			.detailtable tfoot tr {
+			tr.teal {
 				background-color: #009879;
 				color: #ffffff;
 			}
@@ -133,18 +132,16 @@
 		</style>
 	</head>
 	<body>
-	{% include "nutrihacker/navigation_bar.html" %}
+		{% include "nutrihacker/navigation_bar.html" %}
 
-	<p>Overview for {{ dailylog.date }}</p>
-	<a href="{% url 'nutrihacker:log_list' %}"><button class="back" style=" ">&#9204; Back to My Logs</button></a>
-	<br>
-	<br>
-	<table class="detailtable" align="center">
-		{% if info_list %}
-		<thead>
-			<tr>
+		<p>Overview for {{ dailylog.date }}</p>
+		<a href="{% url 'nutrihacker:log_list' %}"><button class="back" style=" ">&#9204; Back to My Logs</button></a>
+		<br><br>
+		<table class="detailtable" align="center">
+			{% if info_list %}
+			<tr class="teal">
 				<th colspan="2" ></th>
-				<th>Portions</th>
+				<th>Amount (g)<br>(Servings)</th>
 				<th>Calories<br>(kcal)</th>
 				<th>Total Fat<br>(g)</th>
 				<th>Cholesterol<br>(mg)</th>
@@ -152,28 +149,23 @@
 				<th>Total Carbs<br>(g)</th>
 				<th>Protein<br>(g)</th>
 			</tr>
-		</thead>
-		<tbody>
-			<tr>
+			<tr class="teal">
 				<th colspan="2" style="text-align: center">Day Total </th>
-				<th></th>
-				<th class="right">{{ daytotal.calories }}</th>
-				<th class="right">{{ daytotal.totalFat }}</th>
-				<th class="right">{{ daytotal.cholesterol }}</th>
-				<th class="right">{{ daytotal.sodium }}</th>
-				<th class="right">{{ daytotal.totalCarb }}</th>
-				<th class="right">{{ daytotal.protein }}</th>
+				<th class="right">{{ daytotal.servingSize|floatformat }}</th>
+				<th class="right">{{ daytotal.calories|floatformat }}</th>
+				<th class="right">{{ daytotal.totalFat|floatformat }}</th>
+				<th class="right">{{ daytotal.cholesterol|floatformat }}</th>
+				<th class="right">{{ daytotal.sodium|floatformat }}</th>
+				<th class="right">{{ daytotal.totalCarb|floatformat }}</th>
+				<th class="right">{{ daytotal.protein|floatformat }}</th>
 			</tr>
-			</tbody>
-		<thead>
-			<tr>
-
-				<th colspan="9" style="padding-top: 20px; padding-bottom: 10px">Breakdown by meal:</th>
+			<tr class="teal">
+				<th colspan="11" style="padding-top: 20px; padding-bottom: 10px">Breakdown by meal:</th>
 			</tr>
-			{% for meallog in info_list %}
+				{% for meallog in info_list %}
 				<tr style="background-color: #242424">
 					<th style="width: 8%">{{ meallog.time }}</th>
-					<th colspan="8"><th></th>
+					<th colspan="8"></th>
 					<th>
 						<a href="{% url 'nutrihacker:log_update' meallog.id %}"><button class="btn">&#9998;</button></a>
 					</th>
@@ -190,54 +182,56 @@
 						</div>
 					</th>
 				</tr>
-			</thead>
-				{% if meallog.food_list %}
-					{% for food in meallog.food_list %}
-		<thead>
+					{% if meallog.item_list %}
+						{% for item in meallog.item_list %}
 						<tr>
 							<th></th>
-							<th style="text-align: left">{{ food.name }}</th>
-							<th class="right">{{ food.portions }} <br>({{ food.amount }}g)</th>
-							<th class="right">{{ food.calories }}</th>
-							<th class="right">{{ food.totalFat }}</th>
-							<th class="right">{{ food.cholesterol }}</th>
-							<th class="right">{{ food.sodium }}</th>
-							<th class="right">{{ food.totalCarb }}</th>
-							<th class="right">{{ food.protein }}</th>
+							<th style="text-align: left"><a href="
+								{% if item.type == 'food' %}
+									{% url 'nutrihacker:nutrifacts' item.id %}
+								{% else %}
+									{% url 'nutrihacker:detail_recipe' item.id %}
+								{% endif %}
+							">{{ item.name }}</a></th>
+							<th class="right">{{ item.servingSize|floatformat }} ({{ item.portions }})</th>
+							<th class="right">{{ item.calories|floatformat }}</th>
+							<th class="right">{{ item.totalFat|floatformat }}</th>
+							<th class="right">{{ item.cholesterol|floatformat }}</th>
+							<th class="right">{{ item.sodium|floatformat }}</th>
+							<th class="right">{{ item.totalCarb|floatformat }}</th>
+							<th class="right">{{ item.protein|floatformat }}</th>
 						</tr>
-						</thead>
-					{% endfor %}
-				<tfoot>
+						{% endfor %}
+					<tr class="teal">
+						<th style="background-color: white"></th>
+						<th style="text-align: left">Meal Total</th>
+						<th class="right">{{ meallog.total.servingSize|floatformat }}</th>
+						<th class="right">{{ meallog.total.calories|floatformat }}</th>
+						<th class="right">{{ meallog.total.totalFat|floatformat }}</th>
+						<th class="right">{{ meallog.total.cholesterol|floatformat }}</th>
+						<th class="right">{{ meallog.total.sodium|floatformat }}</th>
+						<th class="right">{{ meallog.total.totalCarb|floatformat }}</th>
+						<th class="right">{{ meallog.total.protein|floatformat }}</th>
+					</tr>
+					{% else %}
 					<tr>
 						<th></th>
-						<th style="text-align: left">Meal Total</th>
-						<th></th>
-						<th class="right">{{ meallog.total.calories }}</th>
-						<th class="right">{{ meallog.total.totalFat }}</th>
-						<th class="right">{{ meallog.total.cholesterol }}</th>
-						<th class="right">{{ meallog.total.sodium }}</th>
-						<th class="right">{{ meallog.total.totalCarb }}</th>
-						<th class="right">{{ meallog.total.protein }}</th>
+						<th colspan="8">There is no information logged for this time</th>
 					</tr>
-				</tfoot>
-				{% else %}
-				<tr>
-					<th></th>
-					<th colspan="8">There is no information logged for this time</th>
-				</tr>
-				{% endif %}
-			{% endfor %}
-		{% else %}
+					{% endif %}
+				{% endfor %}
+			{% else %}
 			<tr>
 				<th>You have no meals logged for this day</th>
 			</tr>
-		{% endif %}
-		<script>
+			{% endif %}
+		</table>
+	</body>
+	<script>
 		// When the user clicks on <div>, open the popup
 		function confirm(clicked_id) {
 		  	var popup = document.getElementById("popup"+clicked_id);
 		  	popup.classList.toggle("show");
 		}
-		</script>
-	</body>
+	</script>
 </html>
