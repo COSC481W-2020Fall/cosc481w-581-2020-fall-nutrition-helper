@@ -44,6 +44,9 @@
 			.t02 tbody tr{
 				background-color: #f3f3f3;
 			}
+			label {
+				color: white;
+			}
         </style>
 	</head>
 	<body>
@@ -53,6 +56,10 @@
 		<th><form action="{% url 'nutrihacker:search-recipe' %}" method="get">
                 <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
                 <button type="submit" name="search">&#128269;</button>
+				{{ filter_form.allergy_filter.label_tag }}
+				{{ filter_form.allergy_filter }}
+				{{ filter_form.diet_filter.label_tag }}
+				{{ filter_form.diet_filter }}
             </form>
 		</th>
 		<table class="t02" width="70%" align="center" style="padding:10px" >
@@ -76,8 +83,8 @@
 
 				<!-- Convenient food information at a glance -->
 				<th>{{ recipe.get_total.calories|floatformat }}</th>
-				<th>{{ recipe.allergy }}</th>
-				<th>{{ recipe.diet }}</th>
+				<th>{{ recipe.allergies_string }}</th>
+				<th>{{ recipe.diets_string }}</th>
 				<th>{{ recipe.user }}</th>
 				<th>{{ recipe.created_at|date:"m/d/y" }}</th>
 				</tr>
