@@ -11,6 +11,10 @@
             <li style="text-align:center;">
                 <form id="searchfood" action="{% url 'nutrihacker:search' %}" method="get">
                     <input id="oneSearch" type="search" name="search" placeholder="Search Food..." size="65%"/>
+					
+					<!-- This tells the view the search was from the nav bar, to use default filters -->
+					<input type="hidden" name="filter" value="true" />
+					
                     <button id="oneButoon" type="submit">&#128269;</button>
                 </form>
                 <div class="search-bar-radio">

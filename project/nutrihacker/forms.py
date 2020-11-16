@@ -19,6 +19,19 @@ class ProfileForm(ModelForm):
 		model = Profile
 		fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
 
+class FilterRecipeForm(forms.Form):
+	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False)
+	diet_filter = forms.ModelMultipleChoiceField(label="Include diet",queryset=DietPreference.objects.all(), required=False)
+	
+	def __init__(self,*args,**kwargs):
+		self.current_profile = kwargs.pop('current_profile', None) 
+		super(FilterRecipeForm,self).__init__(*args,**kwargs)
+		
+		# set initial allergy/diet filters from the profile
+		if self.current_profile != None:
+			self.initial['allergy_filter'] = self.current_profile.allergy_set.all()
+			self.initial['diet_filter'] = self.current_profile.dietpreference_set.all()
+
 # creates a model choice select field to add allergies
 class AllergyChoiceForm(forms.Form):
 	allergy_select = forms.ModelChoiceField(label="Add allergy", queryset=Allergy.objects.all())
@@ -185,8 +198,8 @@ class RecipeForm(forms.Form):
 	# form fields
 	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
 	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	allergy = forms.ModelChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
-	diet = forms.ModelChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
+	allergies = forms.ModelMultipleChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
+	diets = forms.ModelMultipleChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
 	instruction = forms.CharField(label="How it's made", widget=forms.Textarea, required=False)
 	is_public = forms.BooleanField(initial=True, required=False)
 	food1 = forms.ModelChoiceField(
