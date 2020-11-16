@@ -332,8 +332,8 @@ class CopyRecipe(FormView):
 
 		initial['name'] = ml.name
 		initial['servingsProduced'] = ml.servingsProduced
-		initial['allergy'] = ml.allergy
-		initial['diet'] = ml.diet
+		initial['allergies'] = ml.allergies
+		initial['diets'] = ml.diets
 		initial['instruction'] = ml.instruction
 		initial['is_public'] = ml.is_public
 
@@ -350,8 +350,8 @@ class CopyRecipe(FormView):
 		servingsProduced = form.cleaned_data.get('servingsProduced')
 		instruction = form.cleaned_data.get('instruction')
 		name = form.cleaned_data.get('name')
-		diet = form.cleaned_data.get('diet')
-		allergy = form.cleaned_data.get('allergy')
+		diets = form.cleaned_data.get('diets')
+		allergies = form.cleaned_data.get('allergies')
 		is_public = form.cleaned_data.get('is_public')
 		# get number of foods in form
 		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
@@ -367,8 +367,8 @@ class CopyRecipe(FormView):
 		
 		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
 		recipe.save()
-		recipe.allergy = allergy
-		recipe.diet = diet
+		recipe.allergies = allergies
+		recipe.diets = diets
 		recipe.save()
 
 		# creates a recipe food for each food for this recipe
