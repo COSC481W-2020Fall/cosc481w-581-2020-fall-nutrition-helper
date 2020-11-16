@@ -18,22 +18,21 @@ brandLoc = ("C:/Users/Johnny/usda data/branded_food.csv")
 brandSheet = pd.read_csv(brandLoc, low_memory=False, memory_map=True)
 
 foodLoc = ("C:/Users/Johnny/usda data/food.csv")
-foodSheet = pd.read_csv(foodLoc, low_memory=False, memory_map=True, nrows=110002)
+foodSheet = pd.read_csv(foodLoc, low_memory=False, memory_map=True)
 
 nutrientLoc = ("C:/Users/Johnny/usda data/food_nutrient.csv")
-nutrientSheet = pd.read_csv(nutrientLoc, low_memory=False, memory_map=True, nrows=1498186)
-
+nutrientSheet = pd.read_csv(nutrientLoc, skiprows=2343939, nrows=3202897, names=["id", "fdc_id", "nutrient_id", "amount", "data_points", "derivation_id", "min", "max", "median", "footnote", "min_year_acquired"])
+#3202897
 #adding fdc_ids into a table to use later
 
-#last fcd id added 354603 -- 404604 -- 454604
+#last fcd id added 354603 -- 404604 -- 454604 -- 517852 -- 581102
 
 #50000 number of ids to get from excel sheet
-numberOfItemsToAdd = 50000
+numberOfItemsToAdd = 63250
 #number of item already in db update this after items are added
-currentNumberOfItems = 60000
+currentNumberOfItems = 173250
 
 for i in range(numberOfItemsToAdd):
-
     
     idToStore = BrandedIds(fdcIds = int(brandSheet['fdc_id'].values[i+currentNumberOfItems]))
     idToStore.save()
@@ -49,12 +48,14 @@ protein = Decimal(0)
 totalFat = Decimal(0)
 
 #these are used to stop the loop from going through every single row and pick up again at the place it stopped. will need to be updated after code is run
-jOffset = 50000
-offset = 841500
+jOffset = 173250
+offset = 0
 
 #the range is the number of items being added
 
 #50000 change this the change the number of items to add must also change in next for loop
+#for chunk in foodSheet:
+#    currentChunk = chunk.to_csv(header="id, fdc_id, nutrient_id, amount, data_points, derivation_id, min, max, median, footnote, min_year_acquired")
 for i in range(numberOfItemsToAdd):      
     fdcId = BrandedIds.objects.get(id=i+(currentNumberOfItems+1)).fdcIds
     
@@ -65,7 +66,7 @@ for i in range(numberOfItemsToAdd):
     j = 0 + jOffset
     
     #getting name and serving size from food.csv
-    while j <= 110002:       #This is the number of rows grabbed from the sheet use the fcd ids to 
+    while j <= 173250:       #This is the number of rows grabbed from the sheet use the fcd ids to 
         if fdcId == int(foodSheet['fdc_id'].values[j]):
             name = str(foodSheet['description'].values[j])
             na = True
@@ -77,15 +78,15 @@ for i in range(numberOfItemsToAdd):
             break
         j+=1
     
-    #nutrient ids we need are cholesterol-1253 protein-1003 carbohydrate-1005 sodium-1093 fat-1004
-    #calories obtained through calorie conversion factor protein*4.27 fat*8.79 carbohydrate*3.87
+#nutrient ids we need are cholesterol-1253 protein-1003 carbohydrate-1005 sodium-1093 fat-1004
+#calories obtained through calorie conversion factor protein*4.27 fat*8.79 carbohydrate*3.87
     
     start = False
     factor = servingSize / 100
     x = 0 + offset
     
     #getting nutrition numbers from food_nutrient.csv
-    while x <= 1498186:      #number of rows
+    while x <= 2343940:      #number of rows
         if fdcId == int(nutrientSheet['fdc_id'].values[x]):
             start = True
             if int(nutrientSheet['nutrient_id'].values[x]) == 1253:
