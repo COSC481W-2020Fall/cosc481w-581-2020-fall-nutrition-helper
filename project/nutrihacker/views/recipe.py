@@ -127,8 +127,8 @@ class UpdateRecipe(UserPassesTestMixin, FormView):
 
 		initial['name'] = ml.name
 		initial['servingsProduced'] = ml.servingsProduced
-		initial['allergy'] = ml.allergy
-		initial['diet'] = ml.diet
+		initial['allergies'] = ml.allergies.all()
+		initial['diets'] = ml.diets.all()
 		initial['instruction'] = ml.instruction
 		initial['is_public'] = ml.is_public
 
@@ -144,8 +144,8 @@ class UpdateRecipe(UserPassesTestMixin, FormView):
 		# get data from the form
 		name = form.cleaned_data.get('name')
 		servingsProduced = form.cleaned_data.get('servingsProduced')
-		allergy = form.cleaned_data.get('allergy')
-		diet = form.cleaned_data.get('diet')
+		allergies = form.cleaned_data.get('allergies')
+		diets = form.cleaned_data.get('diets')
 		instruction = form.cleaned_data.get('instruction')
 		is_public = form.cleaned_data.get('is_public')
 		# get number of foods in form
@@ -178,12 +178,12 @@ class UpdateRecipe(UserPassesTestMixin, FormView):
 			recipe.servingsProduced = servingsProduced
 			recipe.save()
 			
-		if recipe.allergy is not allergy:
-			recipe.allergy = allergy
+		if recipe.allergies is not allergies:
+			recipe.allergies.set(allergies)
 			recipe.save()
 		
-		if recipe.diet is not diet:
-			recipe.diet = diet
+		if recipe.diets is not diets:
+			recipe.diets.set(diets)
 			recipe.save()
 		
 		if recipe.instruction is not instruction:
@@ -260,8 +260,8 @@ class RecordRecipeView(FormView):
 		servingsProduced = form.cleaned_data.get('servingsProduced')
 		instruction = form.cleaned_data.get('instruction')
 		name = form.cleaned_data.get('name')
-		diet = form.cleaned_data.get('diet')
-		allergy = form.cleaned_data.get('allergy')
+		diets = form.cleaned_data.get('diets')
+		allergies = form.cleaned_data.get('allergies')
 		is_public = form.cleaned_data.get('is_public')
 		# get number of foods in form
 		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
@@ -277,8 +277,8 @@ class RecordRecipeView(FormView):
 		
 		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
 		recipe.save()
-		recipe.allergy = allergy
-		recipe.diet = diet
+		recipe.allergies.set(allergies)
+		recipe.diets.set(diets)
 		recipe.save()
 
 		# creates a recipe food for each food for this recipe
