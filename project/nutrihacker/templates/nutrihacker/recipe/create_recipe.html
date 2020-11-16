@@ -84,6 +84,7 @@
             </table>
             <br>
             <input type="submit" value="Submit" />
+			<a class="cancel" href="{% url 'nutrihacker:list_recipe' %}">Cancel</a>
         </form>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
         {{ recipe_form.media }}
