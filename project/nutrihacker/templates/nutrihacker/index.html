@@ -7,6 +7,28 @@
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 	</head>
+	<style>
+		.foodBtn{
+			width: 30%;
+			border-radius: 90px;
+  			color: white;
+  			padding: 55px 88px;
+  			font-size: 16px;
+  			cursor: pointer;
+  			text-align: center;
+			float: left;
+		}
+		.recipeBtn{
+			width: 30%;
+			border-radius: 90px;
+  			color: white;
+  			padding: 55px 88px;
+  			font-size: 16px;
+  			cursor: pointer;
+  			text-align: center;
+			float: right;
+		}
+	</style>
 	<body style="background-size:cover">
 		{% include "nutrihacker/navigation_bar.html" %}
         
@@ -15,7 +37,14 @@
 
 		<!--  Form that submits food value as GET request (shouldn't change the database)  
 			  Field = "food" Value="Broccoli" or "Egg"  -->
-
+<!-- for the button that was suggested by other groups
+		<div class="foodBtn">
+			<button>Left button</button>
+		</div>
+		<div class="recipeBtn">
+			<button>Right button</button>
+		</div>
+-->
 		{% comment %}
 		<table class="t02" width="70%" align="right">
 			<form action="{% url 'nutrihacker:nutrifacts' %}" method="GET">

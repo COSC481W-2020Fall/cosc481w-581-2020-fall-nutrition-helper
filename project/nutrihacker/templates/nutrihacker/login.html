@@ -6,6 +6,24 @@
 		<meta charset="UTF-8">
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+        <style>
+            .usrnameLabel{
+                text-align:right;
+                 color:white;
+                 font-size:30px;
+            }
+            .usrnamebox{
+                text-align:left;
+            }
+            .pwdlabel{
+                text-align:right;
+                color:white;
+                font-size:30px;
+            }
+            .pwdbox{
+                text-align:left;
+            }
+        </style>
         <script>
             function registerRedirect()
             {
@@ -41,12 +59,12 @@
         {% csrf_token %}
         <table align="center" width="90%">
             <tr>
-                <td style="text-align:right; color:white; font-size:30px; ">{{ form.username.label_tag }}</td>
-                <td style="text-align:left;">{{ form.username }}</td>
+                <td class="usrnameLabel">{{ form.username.label_tag }}</td>
+                <td class="usrnamebox">{{ form.username }}</td>
             </tr>
             <tr>
-                <td style="text-align:right; color:white; font-size:30px;">{{ form.password.label_tag }}</td>
-                <td style="text-align:left;">{{ form.password }}</td>
+                <td class="pwdlabel">{{ form.password.label_tag }}</td>
+                <td class="pwdbox">{{ form.password }}</td>
             </tr>
             <tr>
                 <td></td>

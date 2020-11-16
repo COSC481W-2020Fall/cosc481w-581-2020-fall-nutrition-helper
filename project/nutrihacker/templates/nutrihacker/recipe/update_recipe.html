@@ -19,8 +19,8 @@
                 margin-right: 400px;
 			}
 			.sub{
-                font-size: 22px;
-                border-radius: 12%;
+                font-size: 20px;
+                border-radius: 13%;
                 background-color:GREEN;
 			}
 			.sub:hover{
@@ -32,12 +32,11 @@
 <body>
         {% include "nutrihacker/navigation_bar.html" %}
 <br><br>
+        <h2 style="color:white" >Update your Recipe!</h2>
 <form class="update" method="POST">
     {% csrf_token %}
-
-    <!-- form variable -->
-       {{ form.as_p }}
-
+         {{ form.as_p }}
+        <!-- form variable -->
     <input class="sub" type="submit" name="Submit" />
 </form>
 </body>
