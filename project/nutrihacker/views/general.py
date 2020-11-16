@@ -4,7 +4,10 @@ from dal import autocomplete
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
 
-from nutrihacker.models import Food, Recipe, Profile
+
+
+
+from nutrihacker.models import Food, Recipe, RecipeFood, Profile
 from nutrihacker.functions import chop_zeros
 from nutrihacker.forms import FilterRecipeForm
 
@@ -80,6 +83,35 @@ class FactsView(DetailView):
 		context['food'].protein = chop_zeros(query * context['food'].protein)
 
 		return context
+		
+	
+	# # overrides ListView get_queryset to find names containing search term and pass them to template recipefood_list = RecipeFood.objects.filter(food=food, is_public=True).values('
+	# def get_queryset(self):
+		# if self.request.user.is_authenticated:
+			# user = self.request.user
+		# else:
+			# user = None
+		
+		# try:
+			# food = Food.objects.get(id=self.kwargs['pk'])
+		# except Food.DoesNotExist:
+			# raise PermissionDenied
+		
+		# if (user == None):
+			
+			# recipe_list = Recipe.objects.filter(Q(recipefood__food=food), Q(is_public=True))
+		# else:
+			# recipe_list = Recipe.objects.filter(
+					# Q(recipefood__food=food),
+					# Q(user=user) | Q(is_public=True)
+				# )
+			
+		# object_list = []
+		# # build a list of each recipe
+		# for recipe in recipe_list:
+			# object_list.append(recipe)
+		
+		# return object_list
 
 # displays the foods that match a search, passed to the template as a paginated list
 class SearchFoodView(ListView):
@@ -120,7 +152,7 @@ class SearchRecipeView(ListView):
 		context = super(SearchRecipeView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
-		
+
 		if self.request.user.is_authenticated:
 			profile = Profile.objects.get(user=self.request.user)
 		else:
@@ -129,12 +161,17 @@ class SearchRecipeView(ListView):
 		# for filtering recipes
 		context['filter_form'] = FilterRecipeForm(current_profile=profile) 
 		
+
 		return context
 
 	# overrides ListView get_queryset to find names containing search term and pass them to template
 	def get_queryset(self):
 		if self.request.user.is_authenticated:
 			user = self.request.user
+
+	
+			
+
 			profile = Profile.objects.get(user=user)
 		else:
 			user = None
@@ -159,11 +196,14 @@ class SearchRecipeView(ListView):
 		if (profile and default_filter == 'true'):
 			diet_filter = profile.dietpreference_set.all()
 	
+
 		if (query == None):
 			return Recipe.objects.filter(is_public=True)
 		else:
 			object_list = Recipe.objects.filter(
 				Q(name__icontains=query),
+			
+
 				Q(user=user) | Q(is_public=True),
 			)
 			# don't include recipes with filtered allergies

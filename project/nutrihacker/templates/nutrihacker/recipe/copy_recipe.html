@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Create Recipe</title>
+        <title>Copy Recipe</title>
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <style>
             h1, h2 {
@@ -67,7 +67,7 @@
     </head>
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
-        <h1>Recipe Creator</h1>
+        <h1>Recipe Cloning</h1>
         <h2>Record what ingredients are in your recipe!</h2>
         <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}

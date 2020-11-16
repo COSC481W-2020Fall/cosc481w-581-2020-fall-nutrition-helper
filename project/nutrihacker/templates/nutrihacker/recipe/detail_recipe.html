@@ -96,6 +96,64 @@
         		background-color: none;
         		border: none;
     		}
+			/* Popup container */
+			.popup {
+				position: relative;
+				display: inline-block;
+				cursor: pointer;
+			}
+
+			/* The actual popup (appears on top) */
+			.popup .popuptext {
+				visibility: hidden;
+				width: 160px;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 8px 0;
+				position: absolute;
+				z-index: 1;
+				bottom: 125%;
+				left: 50%;
+				margin-left: -80px;
+			}
+
+			/* Popup arrow *
+			.popup .popuptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}*/
+
+			/* Toggle this class when clicking on the popup container (hide and show the popup) */
+			.popup .show {
+				visibility: visible;
+				-webkit-animation: fadeIn 0.5s;
+				animation: fadeIn 0.5s
+			}
+
+			/* Add animation (fade in the popup) */
+			@-webkit-keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity: 1;}
+			}
+
+			@keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity:1 ;}
+			}
+			.back{
+				margin-left: 5%;
+				padding: 5px;
+				font-size: 15px;
+				border-radius:12px;
+			}
         </style>
         <script type="text/javascript">
 
@@ -109,11 +167,17 @@
 		<div style="text-align:center">
 		<br>
 			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}" style="text-align:center" ><button class="B" style="text-align:center">Update Recipe</button></a>
-			<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
-				{% csrf_token %}
-				<input type="hidden" name="id" value={{ recipe.id }}>
-				<button class="B" type="submit" style="text-align:center">Delete Recipe</button></a>
-			</form>
+			<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
+				<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
+					<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
+						{% csrf_token %}
+						<input type="hidden" name="id" value={{ recipe.id }}>
+						<button type="submit">Yes</button>
+					</form>
+					<button>No</button>
+				</span>
+				<button class="B" type="submit" style="text-align:center">Delete Recipe</button>
+			</div>
 		</div>
 		{% endif %}
 		<br>
@@ -197,6 +261,13 @@
 	</div>
 	</table>
     </body>
+	<script>
+		// When the user clicks on <div>, open the popup
+		function confirm(clicked_id) {
+		  	var popup = document.getElementById("popup"+clicked_id);
+		  	popup.classList.toggle("show");
+		}
+	</script>
     <script type="text/javascript">
         var extra_count = Number(document.getElementById("id_extra_field_count").value);
         var food_number = 2;

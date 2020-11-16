@@ -80,6 +80,7 @@ urlpatterns = [
     path('recipe/<int:pk>/', views.DetailRecipe.as_view(), name='detail_recipe'),
     path('recipe/create/', views.RecordRecipeView.as_view(), name='create_recipe'),
     path('recipe/<int:pk>/update/', views.UpdateRecipe.as_view(), name='update_recipe'),
+	path('recipe/<int:pk>/copy/', views.CopyRecipe.as_view(), name='copy_recipe'),
     path('recipe/<int:pk>/delete/', views.DeleteRecipe.as_view(), name='delete_recipe'),
     
     
