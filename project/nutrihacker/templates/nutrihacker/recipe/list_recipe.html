@@ -157,6 +157,10 @@
 						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
 					</th>
 					<th>
+						<!-- Button to update recipe -->
+						<a href="{% url 'nutrihacker:copy_recipe' recipe.id %}"><button class="B">Clone Recipe</button></a>
+					</th>
+					<th>
 						<!-- Button to delete recipe -->
 						<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
 							<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>

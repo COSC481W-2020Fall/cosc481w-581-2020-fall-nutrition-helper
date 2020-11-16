@@ -77,6 +77,7 @@ class ListRecipe(ListView):
 	def get_queryset(self):
 		object_list = Recipe.objects.filter(user=self.request.user)
 		return object_list
+		
 
 
 
@@ -253,6 +254,8 @@ class RecordRecipeView(FormView):
 		context = super().get_context_data(**kwargs)
 		context['recipe_form'] = RecipeForm()
 		return context
+		
+	
 
 	# override form_valid to create model instances from submitted info
 	def form_valid(self, form):
@@ -287,3 +290,90 @@ class RecordRecipeView(FormView):
 			recipe_food.save()
 
 		return super(RecordRecipeView, self).form_valid(form)
+		
+		
+# saves submitted info to database
+class CopyRecipe(FormView):
+	form_class = RecipeForm
+	template_name = 'nutrihacker/recipe/copy_recipe.html'
+	success_url = reverse_lazy('nutrihacker:list_recipe')
+	recipe_id = 0 # id of recipe to be redirected to
+	
+	# override get_form_kwargs to get number of extra fields
+	def get_form_kwargs(self):
+		kwargs = super(CopyRecipe, self).get_form_kwargs()
+
+		# checks whether form data was submitted
+		if 'data' in kwargs: # if submitted, set 'extra' to 'extra_field_count' from form
+			kwargs['extra'] = kwargs['data']['extra_field_count']
+		else: # if not submitted, 'extra' is the number of RecipeFoods minus 1
+			kwargs['extra'] = RecipeFood.objects.filter(recipe__id=self.kwargs['pk']).count() - 1
+		
+		return kwargs
+
+	# override get_context_data to include form html
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['recipe_form'] = RecipeForm()
+		
+		recipe_source = Recipe.objects.get(id=self.kwargs['pk'])
+		context['recipe_id'] = recipe_source.id
+		
+		return context
+
+		
+	# override get_initial to provide initial form values
+	def get_initial(self):
+		initial = super(CopyRecipe, self).get_initial()
+		print(initial)
+		ml = Recipe.objects.get(id=self.kwargs['pk'])
+
+		self.recipe_id = ml.id
+
+		initial['name'] = ml.name
+		initial['servingsProduced'] = ml.servingsProduced
+		initial['allergy'] = ml.allergy
+		initial['diet'] = ml.diet
+		initial['instruction'] = ml.instruction
+		initial['is_public'] = ml.is_public
+
+		mf_list = RecipeFood.objects.filter(recipe=ml)
+		for i in range(mf_list.count()):
+			initial['food'+str(i+1)] = mf_list[i].food
+			initial['portions'+str(i+1)] = chop_zeros(mf_list[i].portions)
+		
+		return initial
+
+	# override form_valid to create model instances from submitted info
+	def form_valid(self, form):
+		name = form.cleaned_data.get('name')
+		servingsProduced = form.cleaned_data.get('servingsProduced')
+		instruction = form.cleaned_data.get('instruction')
+		name = form.cleaned_data.get('name')
+		diet = form.cleaned_data.get('diet')
+		allergy = form.cleaned_data.get('allergy')
+		is_public = form.cleaned_data.get('is_public')
+		# get number of foods in form
+		food_number = int(form.cleaned_data.get('extra_field_count')) + 1
+		
+		food = {}
+		portions = {}
+
+		# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+		for i in range(1, food_number+1):
+			food['food'+str(i)] = form.cleaned_data.get('food'+str(i))
+			portions['portions'+str(i)] = form.cleaned_data.get('portions'+str(i))
+
+		
+		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
+		recipe.save()
+		recipe.allergy = allergy
+		recipe.diet = diet
+		recipe.save()
+
+		# creates a recipe food for each food for this recipe
+		for i in range(1, food_number+1):
+			recipe_food = RecipeFood.create(recipe, food['food'+str(i)], portions['portions'+str(i)])
+			recipe_food.save()
+
+		return super(CopyRecipe, self).form_valid(form)
