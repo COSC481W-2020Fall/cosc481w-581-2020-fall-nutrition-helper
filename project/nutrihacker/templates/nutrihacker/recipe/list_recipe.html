@@ -53,13 +53,16 @@
 				margin: 4px 2px;
 				font-size: 18px;
 				font-family:"Times New Roman", Times, serif;
-				background-color:white;
 				border-radius:12px;
-
 			}
 			.btn:hover{
-				background-color: #008CBA;
+				background-color: blue;
 				cursor:pointer;
+			}
+			a {
+				color: black;
+			}
+			a:hover{
 				color: white;
 			}
 			input {
@@ -74,11 +77,69 @@
 				font-size: 18px;
 				border-radius:12px;
 				font-family:"Times New Roman", Times, serif;
+
 			}
 			.B:hover{
 				background-color: green;
 				cursor: pointer;
-				color: white;
+			}
+			/* Popup container */
+			.popup {
+				position: relative;
+				display: inline-block;
+				cursor: pointer;
+			}
+
+			/* The actual popup (appears on top) */
+			.popup .popuptext {
+				visibility: hidden;
+				width: 160px;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 8px 0;
+				position: absolute;
+				z-index: 1;
+				bottom: 125%;
+				left: 50%;
+				margin-left: -80px;
+			}
+
+			/* Popup arrow *
+			.popup .popuptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}*/
+
+			/* Toggle this class when clicking on the popup container (hide and show the popup) */
+			.popup .show {
+				visibility: visible;
+				-webkit-animation: fadeIn 0.5s;
+				animation: fadeIn 0.5s
+			}
+
+			/* Add animation (fade in the popup) */
+			@-webkit-keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity: 1;}
+			}
+
+			@keyframes fadeIn {
+				from {opacity: 0;}
+				to {opacity:1 ;}
+			}
+			.back{
+				margin-left: 5%;
+				padding: 5px;
+				font-size: 15px;
+				border-radius:12px;
 			}
 
 		</style>
@@ -101,7 +162,17 @@
 					</th>
 					<th>
 						<!-- Button to delete recipe -->
-						<a href="{% url 'nutrihacker:delete_recipe' recipe.id %}"><button class="B">Delete Recipe</button></a>
+						<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
+							<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
+								<form action="{% url 'nutrihacker:delete_recipe' recipe.id %}" method="POST">
+									{% csrf_token %}
+									<input type="hidden" name="id" value={{ recipe.id }}>
+									<button type="submit">Yes</button>
+								</form>
+								<button>No</button>
+							</span>
+							<button class="B" type="submit" style="text-align:center">Delete Recipe</button>
+						</div>
 					</th>
 					</tr>
 				{% endfor %}
@@ -112,4 +183,11 @@
 		</div>
 		<br>
 	</body>
+	<script>
+		// When the user clicks on <div>, open the popup
+		function confirm(clicked_id) {
+		  	var popup = document.getElementById("popup"+clicked_id);
+		  	popup.classList.toggle("show");
+		}
+	</script>
 </html>
