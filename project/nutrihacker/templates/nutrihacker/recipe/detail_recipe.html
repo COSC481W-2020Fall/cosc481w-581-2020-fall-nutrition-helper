@@ -14,6 +14,7 @@
                 color: white;
                 text-align: center;
             }
+
             label {
                 color: white;
                 text-align: right;
@@ -62,9 +63,27 @@
             .sbmtbtn:hover{
                 background-color: green;
             }
-			.boxcolumn {
-				float: left;
-				width: 50%;
+
+			table.facts-1 {
+  			margin-left: auto;
+  			margin-right: auto;
+  			margin-top: auto;
+  			margin-bottom: auto;
+			}
+			table.facts-2 {
+  			background-color: white;
+  			margin-left: auto;
+  			margin-right: auto;
+  			width:25%;
+			}
+			.boxcolumn-1 {
+				padding: 10px;
+				height: 300px;
+
+			}
+
+
+			.boxcolumn-2 {
 				padding: 10px;
 				height: 300px;
 			}
@@ -79,7 +98,7 @@
     		}
         </style>
         <script type="text/javascript">
-            
+
         </script>
     </head>
     <body>
@@ -99,8 +118,8 @@
 		{% endif %}
 		<br>
         <h2>Here is your recipe!</h2>
-	<div class="boxcolumn">
-		<table class="facts" style="background-color: white; border: 1px solid black;">
+	<div class="boxcolumn-1">
+		<table class="facts-1" style="background-color: white;">
 			<tr>
 				<th style="text-align: center;"colspan="5">{{ recipe.name }}</th>
 			</tr>
@@ -124,8 +143,8 @@
 			</tr>
 		</table>
 	</div>
-	<div class="boxcolumn">
-		<h1 style="color: white"><center>Nutrition Facts:</center></h1>
+	<div class="boxcolumn-2">
+		<h1 style="color: white; margin-top: 150px;"><center>Nutrition Facts:</center></h1>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
 			<center>
 				<label style="color: white">Number of portions: </label>
@@ -134,7 +153,7 @@
 			</center>
 			<br>
 		</form>
-		<table class="facts" style="background-color: white; margin-left: 200px; width:50%">
+		<table class="facts-2">
 			<tr>
 				<td>Calories</td>
 				<td class="right">{{ nutrition.calories|floatformat }}</td>
@@ -161,7 +180,7 @@
 			</tr>
 
 		</table>
-		<table style="background-color: white; margin-left: 200px;">
+		<table style="background-color: white; margin-left: auto; margin-right: auto;">
 				<hr>
 			<tr>
 				<td colspan="3" style="text-align:center; font-weight: bold;">Additional Diet Information</td>
