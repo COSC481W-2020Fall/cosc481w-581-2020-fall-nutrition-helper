@@ -18,21 +18,23 @@ Project is created with:
 We are getting all of our nutrition information from the USDA database found here: https://fdc.nal.usda.gov/
 
 ## Running the Web Server
+### Local
 1. Make sure you are inside the directory 'project'
 2. Run `python manage.py runserver`
 3. You should see the line `Starting development server at http://127.0.0.1:8000/`
 4. Enter the address followed by nutrihacker into your browser: http://127.0.0.1:8000/nutrihacker/
 
-### Running the Web Server on AWS for Teammates
+### AWS for Teammates
 1. Connect to the EC2 instance
-2. Run `source django-env/bin/activate` to start the virtual environment
-3. Navigate to the project directory: `cd 481/project`
-4. Run `python manage.py runserver 0.0.0.0:8000`
-    * Add `nohup` at the beginning to keep the server running after disconnecting from the session
-5. To stop the server, run `ps aux | awk '/runserver/ {print $2}'` and get the PID (either of the two consecutive results), then run `kill [PID]`
-6. Site address: http://3.88.6.165:8000/nutrihacker/
+2. Run `screen -r runserver` to reattach the screen the Django server is running on
+3. You should automatically be in the 481/project directory and django-env virtual environment
+    * The prompt should look like this: `(django-env) [ec2-user@ip project]`
+4. Press Ctrl-C to stop the server
+5. To start the server again, run `python manage.py runserver 0.0.0.0:8000`
+6. To keep the server running in the background, detach the screen by pressing Ctrl-A, then Ctrl-D
+7. Site address: http://3.88.6.165:8000/nutrihacker/
 
-### Running the Web Server on Your Own AWS Server
+### Your Own AWS Server
 1. Install Python packages from requirements.txt
 2. Install latest version of SQLite
     1. Rename existing sqlite3 file in `/usr/bin` to something else, such as sqlite3.7
