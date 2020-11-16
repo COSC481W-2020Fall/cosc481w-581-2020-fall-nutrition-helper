@@ -4,7 +4,7 @@ from dal import autocomplete
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
 
-from nutrihacker.models import Food, Recipe
+from nutrihacker.models import Food, Recipe, RecipeFood
 from nutrihacker.functions import chop_zeros
 
 class IndexView(TemplateView):
@@ -79,6 +79,35 @@ class FactsView(DetailView):
 		context['food'].protein = chop_zeros(query * context['food'].protein)
 
 		return context
+		
+	
+	# # overrides ListView get_queryset to find names containing search term and pass them to template recipefood_list = RecipeFood.objects.filter(food=food, is_public=True).values('
+	# def get_queryset(self):
+		# if self.request.user.is_authenticated:
+			# user = self.request.user
+		# else:
+			# user = None
+		
+		# try:
+			# food = Food.objects.get(id=self.kwargs['pk'])
+		# except Food.DoesNotExist:
+			# raise PermissionDenied
+		
+		# if (user == None):
+			
+			# recipe_list = Recipe.objects.filter(Q(recipefood__food=food), Q(is_public=True))
+		# else:
+			# recipe_list = Recipe.objects.filter(
+					# Q(recipefood__food=food),
+					# Q(user=user) | Q(is_public=True)
+				# )
+			
+		# object_list = []
+		# # build a list of each recipe
+		# for recipe in recipe_list:
+			# object_list.append(recipe)
+		
+		# return object_list
 
 # displays the foods that match a search, passed to the template as a paginated list
 class SearchFoodView(ListView):
@@ -111,33 +140,33 @@ class SearchFoodView(ListView):
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
 class SearchRecipeView(ListView):
-    paginate_by = 50
-    model = Recipe
-    template_name = 'nutrihacker/search-recipe.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super(SearchRecipeView, self).get_context_data(**kwargs)
-        if self.request.method == 'GET':
-            context['search'] = self.request.GET.get('term')
-        return context
+	paginate_by = 50
+	model = Recipe
+	template_name = 'nutrihacker/search-recipe.html'
+	
+	def get_context_data(self, **kwargs):
+		context = super(SearchRecipeView, self).get_context_data(**kwargs)
+		if self.request.method == 'GET':
+			context['search'] = self.request.GET.get('term')
+		return context
 
-    # overrides ListView get_queryset to find names containing search term and pass them to template
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            user = self.request.user
-        else:
-            user = None
-            
-        if self.request.method == 'GET':
-            query = self.request.GET.get('term')
-        else:
-            query = None
-            
-        if (query == None):
-            return Recipe.objects.filter(is_public=True)
-        else:
-            object_list = Recipe.objects.filter(
-                Q(name__icontains=query),
-                Q(user=user) | Q(is_public=True)
-            )
-            return object_list
+	# overrides ListView get_queryset to find names containing search term and pass them to template
+	def get_queryset(self):
+		if self.request.user.is_authenticated:
+			user = self.request.user
+		else:
+			user = None
+			
+		if self.request.method == 'GET':
+			query = self.request.GET.get('term')
+		else:
+			query = None
+			
+		if (query == None):
+			return Recipe.objects.filter(is_public=True)
+		else:
+			object_list = Recipe.objects.filter(
+				Q(name__icontains=query),
+				Q(user=user) | Q(is_public=True)
+			)
+			return object_list

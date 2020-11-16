@@ -96,8 +96,60 @@
 			</tr>
 		</table>
 
+                <!--  RECIPE LIST   -->
 		<br><br>
-		<div style="text-align: center"><button class="button"><a href="{% url 'nutrihacker:search' %}" alt="Return">Return to Search</a></button></div>
+		<table class="t02" width="70%" align="center" style="padding:10px" >
+			<thead>
+			<tr>
+				{% if object_list %}
+				<th><h2 style="color:white;">Recipe Results</h2></th>
+                <th>Calories</th>
+				<th>Allergy</th>
+				<th>Diet</th>
+				<th>Created by</th>
+				<th>Date created</th>
+			</tr>
+			</thead>
+			<!-- For loop that loops for each food that the query returned -->
+				{% for recipe in object_list %}
+			<tbody>
+				<tr>
+				<!-- Button of the food in question -->
+					<th><a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a></th>
+
+				<!-- Convenient food information at a glance -->
+				<th>{{ recipe.get_total.calories|floatformat }}</th>
+				<th>{{ recipe.allergy }}</th>
+				<th>{{ recipe.diet }}</th>
+				<th>{{ recipe.user }}</th>
+				<th>{{ recipe.created_at|date:"m/d/y" }}</th>
+				</tr>
+				</tbody>
+				{% endfor %}
+		</table>
+		{% else %}
+		<p>Searched recipe not found</p>
+		{% endif %}
+        <br>
+        <div class="page_bar">
+        {% if search %}
+            <div class="left">
+            {% if page_obj.has_previous %}
+                <a href="?term={{ search }}&page=1">&laquo; first</a>
+                <a href="?term={{ search }}&page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            </div>
+            
+            <div class="right">
+            {% if page_obj.has_next %}
+                <a href="?term={{ search }}&page={{ page_obj.next_page_number }}">next</a>
+                <a href="?term={{ search }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+            </div>
+            
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {% endif %}
+        </div>
 
 	</body>
 </html>
