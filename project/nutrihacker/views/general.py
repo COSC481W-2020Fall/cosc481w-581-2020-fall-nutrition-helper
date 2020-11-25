@@ -3,9 +3,7 @@ from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
-
-
-
+from django.db.models.functions import Length
 
 from nutrihacker.models import Food, Recipe, RecipeFood, Profile
 from nutrihacker.functions import chop_zeros
@@ -26,7 +24,7 @@ class FoodAutocomplete(autocomplete.Select2QuerySetView):
 		qs = Food.objects.all()
 
 		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+			qs = qs.filter(name__icontains=self.q).order_by(Length('name'))
 
 		return qs
 
@@ -39,7 +37,7 @@ class RecipeAutocomplete(autocomplete.Select2QuerySetView):
 		qs = Recipe.objects.filter(Q(user=self.request.user) | Q(is_public=True))
 
 		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+			qs = qs.filter(name__icontains=self.q).order_by(Length('name'))
 
 		return qs
 
@@ -134,12 +132,12 @@ class SearchFoodView(ListView):
 			query = None
 		
 		# no query terms returns an empty list
-		if (query == None or query == ''):
+		if query == None or query == '':
 			return Food.objects.none()
 		else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
 			object_list = Food.objects.filter(
 				Q(name__icontains = query)
-			)
+			).order_by(Length('name'))
 			return object_list
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
@@ -197,15 +195,15 @@ class SearchRecipeView(ListView):
 			diet_filter = profile.dietpreference_set.all()
 	
 
-		if (query == None):
-			return Recipe.objects.filter(is_public=True)
+		if query == None or query == '':
+			return Recipe.objects.filter( Q(user=user) | Q(is_public=True) )
 		else:
 			object_list = Recipe.objects.filter(
 				Q(name__icontains=query),
 			
 
 				Q(user=user) | Q(is_public=True),
-			)
+			).order_by(Length('name'))
 			# don't include recipes with filtered allergies
 			if allergy_filter:
 				object_list = object_list.exclude(allergies__in=allergy_filter)
