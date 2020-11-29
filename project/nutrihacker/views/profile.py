@@ -36,6 +36,7 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 			profile = profile_form.save(commit=False)
 			profile.set_height(profile_form.cleaned_data.get('height'))
 			profile.set_weight(profile_form.cleaned_data.get('weight'))
+			profile.set_caloriegoal(profile_form.cleaned_data.get('caloriegoal'))
 			profile.save()
 			return HttpResponseRedirect(reverse('nutrihacker:profile'))
 		

@@ -56,6 +56,7 @@ class Profile(models.Model):
 	birthdate = models.DateField(null=True)
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+	caloriegoal = models.DecimalField(max_digits=5, decimal_places=2)
 	showmetric = models.BooleanField(default=True)
 	
 	LBS_IN_KG = Decimal(2.20462)
@@ -91,7 +92,10 @@ class Profile(models.Model):
 			self.weight = value
 		else:
 			self.weight = Decimal(value) / Profile.LBS_IN_KG
-			
+
+	def set_caloriegoal(self, value):
+		self.caloriegoal = value
+
 	def get_height(self):
 		if (self.showmetric):
 			return self.height
@@ -125,6 +129,7 @@ class Profile(models.Model):
 			'birthdate':self.birthdate,
 			'height':chop_zeros(self.height),
 			'weight':chop_zeros(self.weight),
+			'caloriegoal':self.caloriegoal,
 			'showmetric':self.showmetric
 		}
 
