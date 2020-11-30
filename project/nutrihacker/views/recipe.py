@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, DeleteView
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -294,7 +294,7 @@ class RecordRecipeView(LoginRequiredMixin, FormView):
 		
 		
 # saves submitted info to database
-class CopyRecipe(FormView):
+class CopyRecipe(LoginRequiredMixin, FormView):
 	form_class = RecipeForm
 	template_name = 'nutrihacker/recipe/copy_recipe.html'
 	success_url = reverse_lazy('nutrihacker:list_recipe')
