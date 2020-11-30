@@ -2,10 +2,10 @@ from decimal import Decimal
 from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.db.models.functions import Length
 
-from nutrihacker.models import Food, Recipe, RecipeFood, Profile
+from nutrihacker.models import Food, Recipe, RecipeFood, Profile, DietPreference
 from nutrihacker.functions import chop_zeros
 from nutrihacker.forms import FilterRecipeForm
 
@@ -209,8 +209,8 @@ class SearchRecipeView(ListView):
 		# don't include recipes with filtered allergies
 		if allergy_filter:
 			object_list = object_list.exclude(allergies__in=allergy_filter)
-		# only include recipes with filtered diets
+		# only include recipes that are tagged with all of the diet filters
 		if diet_filter:
-			object_list = object_list.filter(diets__in=diet_filter).distinct()
+			object_list = object_list.filter(diets__in=diet_filter).annotate(dietCount=Count('diets')).filter(dietCount=len(diet_filter))
 			
 		return object_list
