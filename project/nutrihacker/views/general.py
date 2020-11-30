@@ -148,16 +148,23 @@ class SearchRecipeView(ListView):
 	
 	def get_context_data(self, **kwargs):
 		context = super(SearchRecipeView, self).get_context_data(**kwargs)
+				
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
-
-		if self.request.user.is_authenticated:
-			profile = Profile.objects.get(user=self.request.user)
+			default_filter = self.request.GET.get('filter')
+			
+			# set search filter form values to profile defaults if searched from the nav bar, otherwise create the form from the request
+			if default_filter and self.request.user.is_authenticated:
+				profile = Profile.objects.get(user=self.request.user)
+				context['filter_form'] = FilterRecipeForm(initial = { 
+					'allergy_filter' : profile.allergy_set.all(), 
+					'diet_filter' : profile.dietpreference_set.all() 
+					} )
+			else:	
+				context['filter_form'] = FilterRecipeForm(self.request.GET)
 		else:
-			profile = None
+			context['filter_form'] = FilterRecipeForm()
 
-		# for filtering recipes
-		context['filter_form'] = FilterRecipeForm(current_profile=profile) 
 		return context
 
 	# overrides ListView get_queryset to find names containing search term and pass them to template
@@ -180,7 +187,8 @@ class SearchRecipeView(ListView):
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
 				diet_filter = filter_form.cleaned_data.get('diet_filter')
 		
-		# show all recipes if no search query
+		# show all recipes if there's no search query
+		# (if you really want this to return here make sure you filter allergies and diets)
 		if query == None:
 			query = ''
 		
