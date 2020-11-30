@@ -58,11 +58,19 @@
 				color: white;
 
 			}
+			a {
+				cursor: pointer;
+			}
         </style>
 		<script type="text/javascript">
 			function order_by(field)
 			{
 				document.getElementById('order_by').value = field;
+				document.getElementById('search_form').submit();
+			}
+			function change_page(page)
+			{
+				document.getElementById('page_num').value = page;
 				document.getElementById('search_form').submit();
 			}
 		</script>
@@ -71,7 +79,8 @@
 		{% include "nutrihacker/navigation_bar.html" %}
         <form id="search_form" action="{% url 'nutrihacker:search' %}" method="get">
             <input type="search" name="search" placeholder="Search..." size="100%" value="{{ search }}" />
-			<input id="order_by" type="hidden" name="order_by" />
+			<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
+			<input id="page_num" type="hidden" name="page" value="1" />
             <button type="submit">&#128269;</button>
 			<div>
 				{{ filter_form.calories_min.label_tag }}
@@ -121,15 +130,15 @@
 		<div class="page_bar">
             <div class="left">
             {% if page_obj.has_previous %}
-                <a href="?search={{ search }}&page=1">&laquo; first</a>
-                <a href="?search={{ search }}&page={{ page_obj.previous_page_number }}">previous</a>
+                <a onclick="change_page(1);">&laquo; first</a>
+                <a onclick="change_page({{ page_obj.previous_page_number }});">previous</a>
             {% endif %}
             </div>
             
             <div class="right">
             {% if page_obj.has_next %}
-                <a href="?search={{ search }}&page={{ page_obj.next_page_number }}">next</a>
-                <a href="?search={{ search }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a onclick="change_page({{ page_obj.next_page_number }})">next</a>
+                <a onclick="change_page({{ page_obj.paginator.num_pages }})">last &raquo;</a>
             {% endif %}
             </div>
             

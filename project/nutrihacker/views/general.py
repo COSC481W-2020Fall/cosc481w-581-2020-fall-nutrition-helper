@@ -115,6 +115,7 @@ class SearchFoodView(ListView):
 		context = super(SearchFoodView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('search')
+			context['order_by'] = self.request.GET.get('order_by')
 			context['filter_form'] = FilterFoodForm(self.request.GET)
 		else:
 			context['filter_form'] = FilterRecipeForm()
