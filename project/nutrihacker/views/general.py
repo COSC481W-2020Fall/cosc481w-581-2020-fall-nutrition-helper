@@ -3,7 +3,7 @@ from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q, Count
-from django.db.models.functions import Length
+from django.db.models.functions import Length, Lower
 
 from nutrihacker.models import Food, Recipe, RecipeFood, Profile, DietPreference
 from nutrihacker.functions import chop_zeros
@@ -128,6 +128,7 @@ class SearchFoodView(ListView):
 		# check for GET request
 		if self.request.method == 'GET':
 			query = self.request.GET.get('search')
+			order_by = self.request.GET.get('order_by')
 		else:
 			query = None
 		
@@ -138,6 +139,11 @@ class SearchFoodView(ListView):
 			object_list = Food.objects.filter(
 				Q(name__icontains = query)
 			).order_by(Length('name'))
+			
+			# allow for user to order the search results on a certain field
+			if order_by and order_by in [field.name for field in Food._meta.get_fields()]:
+				object_list = object_list.order_by(Lower(order_by))
+			
 			return object_list
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
@@ -182,6 +188,8 @@ class SearchRecipeView(ListView):
 		if self.request.method == 'GET':
 			query = self.request.GET.get('term')
 			default_filter = self.request.GET.get('filter')
+			order_by = self.request.GET.get('order_by')
+			
 			filter_form = FilterRecipeForm(self.request.GET)
 			if filter_form.is_valid():
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
@@ -212,5 +220,12 @@ class SearchRecipeView(ListView):
 		# only include recipes that are tagged with all of the diet filters
 		if diet_filter:
 			object_list = object_list.filter(diets__in=diet_filter).annotate(dietCount=Count('diets')).filter(dietCount=len(diet_filter))
+			
+		# allow for user to order the search results on a certain field
+		if order_by:
+			if order_by in ['name', 'user', 'created_at']:
+				object_list = object_list.order_by(Lower(order_by))
+			# elif order_by == 'calories':
+			# order by calories can't be done with this approach... if recipe model used manytomany field maybe
 			
 		return object_list

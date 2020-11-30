@@ -48,13 +48,21 @@
 				color: white;
 			}
         </style>
+		<script type="text/javascript">
+			function order_by(field)
+			{
+				document.getElementById('order_by').value = field;
+				document.getElementById('search_form').submit();
+			}
+		</script>
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
 		<br>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<th><form action="{% url 'nutrihacker:search-recipe' %}" method="get">
+		<th><form id="search_form" action="{% url 'nutrihacker:search-recipe' %}" method="get">
                 <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
+				<input id="order_by" type="hidden" name="order_by" />
                 <button type="submit" name="search">&#128269;</button>
 				{{ filter_form.allergy_filter.label_tag }}
 				{{ filter_form.allergy_filter }}
@@ -66,12 +74,12 @@
 			<thead>
 			<tr>
 				{% if object_list %}
-				<th><h2 style="color:white;">Recipe Results</h2></th>
-                <th>Calories</th>
+				<th onclick="order_by('name');"><h2 style="color:white;">Recipe Results</h2></th>
+                <th onclick="order_by('calories');">Calories</th>
 				<th>Allergy</th>
 				<th>Diet</th>
-				<th>Created by</th>
-				<th>Date created</th>
+				<th onclick="order_by('user');">Created by</th>
+				<th onclick="order_by('date');">Date created</th>
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
