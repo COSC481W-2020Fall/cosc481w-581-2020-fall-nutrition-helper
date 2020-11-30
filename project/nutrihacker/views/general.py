@@ -7,7 +7,7 @@ from django.db.models.functions import Length, Lower
 
 from nutrihacker.models import Food, Recipe, RecipeFood, Profile, DietPreference
 from nutrihacker.functions import chop_zeros
-from nutrihacker.forms import FilterRecipeForm
+from nutrihacker.forms import FilterRecipeForm, FilterFoodForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
@@ -121,6 +121,10 @@ class SearchFoodView(ListView):
 		context = super(SearchFoodView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('search')
+			context['filter_form'] = FilterFoodForm(self.request.GET)
+		else:
+			context['filter_form'] = FilterRecipeForm()
+			
 		return context
 	
 	# overrides ListView get_queryset to find names containing search term and pass them to template
@@ -129,6 +133,10 @@ class SearchFoodView(ListView):
 		if self.request.method == 'GET':
 			query = self.request.GET.get('search')
 			order_by = self.request.GET.get('order_by')
+			filter_form = FilterFoodForm(self.request.GET)
+			if filter_form.is_valid():
+				calories_min = filter_form.cleaned_data.get('calories_min')
+				calories_max = filter_form.cleaned_data.get('calories_max')
 		else:
 			query = None
 		
@@ -140,9 +148,20 @@ class SearchFoodView(ListView):
 				Q(name__icontains = query)
 			).order_by(Length('name'))
 			
+			print(calories_min)
+			# filter results on given filters
+			if calories_min:
+				object_list = object_list.filter(calories__gt=calories_min)
+			if calories_max:
+				object_list = object_list.filter(calories__lt=calories_max)
+			
 			# allow for user to order the search results on a certain field
-			if order_by and order_by in [field.name for field in Food._meta.get_fields()]:
-				object_list = object_list.order_by(Lower(order_by))
+			if order_by:
+				# calories doesn't like Lower() because it's an int field?
+				if order_by == 'calories':
+					object_list = object_list.order_by('calories')
+				elif order_by in [field.name for field in Food._meta.get_fields()]:
+					object_list = object_list.order_by(Lower(order_by))
 			
 			return object_list
 		
@@ -194,6 +213,7 @@ class SearchRecipeView(ListView):
 			if filter_form.is_valid():
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
 				diet_filter = filter_form.cleaned_data.get('diet_filter')
+				food_filter = filter_form.cleaned_data.get('food_filter')
 		
 		# show all recipes if there's no search query
 		# (if you really want this to return here make sure you filter allergies and diets)
@@ -220,6 +240,11 @@ class SearchRecipeView(ListView):
 		# only include recipes that are tagged with all of the diet filters
 		if diet_filter:
 			object_list = object_list.filter(diets__in=diet_filter).annotate(dietCount=Count('diets')).filter(dietCount=len(diet_filter))
+		# only include recipes containing the filtered food
+		if food_filter:
+			recipe_food_list = RecipeFood.objects.filter(food=food_filter)
+			recipe_ids = recipe_food_list.distinct().values_list('recipe')
+			object_list = object_list.filter(pk__in=recipe_ids)
 			
 		# allow for user to order the search results on a certain field
 		if order_by:

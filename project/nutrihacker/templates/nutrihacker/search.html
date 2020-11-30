@@ -44,6 +44,13 @@
 			.t02 tbody tr{
 				background-color: #f3f3f3;
 			}
+			#id_calories_max,
+			#id_calories_min{
+			width : 5%;
+			}
+			label {
+				color: white;
+			}
         </style>
 		<script type="text/javascript">
 			function order_by(field)
@@ -59,6 +66,12 @@
             <input type="search" name="search" placeholder="Search..." size="100%" value="{{ search }}" />
 			<input id="order_by" type="hidden" name="order_by" />
             <button type="submit">&#128269;</button>
+			<div>
+				{{ filter_form.calories_min.label_tag }}
+				{{ filter_form.calories_min }}
+				{{ filter_form.calories_max.label_tag }}
+				{{ filter_form.calories_max }}
+			</div>
         </form>
         {% if object_list %}
 		<p>Search Results</p>
