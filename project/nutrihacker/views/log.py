@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, DeleteView
 from django.core.exceptions import PermissionDenied
@@ -37,9 +39,16 @@ class LogCreateView(LoginRequiredMixin, FormView):
 		
 		return kwargs
 
-	def get_context_data(self, **kwargs):
-		context = super(LogCreateView, self).get_context_data(**kwargs)
-		return context
+	def get_initial(self):
+		initial = super(LogCreateView, self).get_initial()
+
+		if self.request.GET.get('date'):
+			initial['date'] = self.request.GET.get('date')
+		else:
+			initial['date'] = datetime.now().date()
+			initial['time'] = datetime.now().time().replace(second=0)
+
+		return initial
 
 	# override form_valid to create model instances from submitted data
 	def form_valid(self, form):
