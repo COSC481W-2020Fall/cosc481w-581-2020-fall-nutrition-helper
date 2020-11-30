@@ -148,12 +148,11 @@ class SearchFoodView(ListView):
 			Q(name__icontains = query)
 		).order_by(Length('name'))
 		
-		print(calories_min)
 		# filter results on given filters
 		if calories_min:
-			object_list = object_list.filter(calories__gt=calories_min)
+			object_list = object_list.filter(calories__gt=calories_min-1)
 		if calories_max:
-			object_list = object_list.filter(calories__lt=calories_max)
+			object_list = object_list.filter(calories__lt=calories_max+1)
 		
 		# allow for user to order the search results on a certain field
 		if order_by:
