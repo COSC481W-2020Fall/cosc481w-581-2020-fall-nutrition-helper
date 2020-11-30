@@ -140,30 +140,31 @@ class SearchFoodView(ListView):
 		else:
 			query = None
 		
-		# no query terms returns an empty list
-		if query == None or query == '':
-			return Food.objects.none()
-		else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
-			object_list = Food.objects.filter(
-				Q(name__icontains = query)
-			).order_by(Length('name'))
+		# no query shows all foods (but still uses given filters)
+		if query == None:
+			query = ''
 			
-			print(calories_min)
-			# filter results on given filters
-			if calories_min:
-				object_list = object_list.filter(calories__gt=calories_min)
-			if calories_max:
-				object_list = object_list.filter(calories__lt=calories_max)
-			
-			# allow for user to order the search results on a certain field
-			if order_by:
-				# calories doesn't like Lower() because it's an int field?
-				if order_by == 'calories':
-					object_list = object_list.order_by('calories')
-				elif order_by in [field.name for field in Food._meta.get_fields()]:
-					object_list = object_list.order_by(Lower(order_by))
-			
-			return object_list
+		# If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
+		object_list = Food.objects.filter(
+			Q(name__icontains = query)
+		).order_by(Length('name'))
+		
+		print(calories_min)
+		# filter results on given filters
+		if calories_min:
+			object_list = object_list.filter(calories__gt=calories_min)
+		if calories_max:
+			object_list = object_list.filter(calories__lt=calories_max)
+		
+		# allow for user to order the search results on a certain field
+		if order_by:
+			# calories doesn't like Lower() because it's an int field?
+			if order_by == 'calories':
+				object_list = object_list.order_by('calories')
+			elif order_by in [field.name for field in Food._meta.get_fields()]:
+				object_list = object_list.order_by(Lower(order_by))
+		
+		return object_list
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
 class SearchRecipeView(ListView):
