@@ -5,6 +5,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Daily Log List</title>
+		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<!-- the above style sheet is imported her for the trash sign purpose only -->
@@ -113,14 +114,20 @@
 				margin-left: 380px;
 				margin-right: 380px;
 			}
+			.B:hover{
+			background-color: green;
+			color: white;
+			}
 		</style>
 	</head>
 	<body style="background-size: cover">
 		{% include "nutrihacker/navigation_bar.html" %}
 		
 		<br>
-		<div class="title"><p>Your Daily Logs</p></div>
-		<p><a href="{% url 'nutrihacker:log_create' %}"><button class="B">&#10010; Add a new log</button></a></p>
+		<div class="title"><p>Daily Logs</p></div>
+		{% include "nutrihacker/log/log_chart.html" %}
+		<script type="text/javascript" src="{% static 'nutrihacker/log_chart.js' %}"></script>
+		<p><a href="{% url 'nutrihacker:log_create' %}"><button class="B"><b>+</b>&nbsp;&nbsp;Add a Log&nbsp;</button></a></p>
 		<table style=" padding:100px" align="center">
 		{% if object_list %}
 			{% for dailylog in object_list %}

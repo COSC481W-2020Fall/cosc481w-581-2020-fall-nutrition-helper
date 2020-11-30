@@ -3,8 +3,9 @@ from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
 from django.db.models import Q
+from django.db.models.functions import Length
 
-from nutrihacker.models import Food, Recipe, Profile
+from nutrihacker.models import Food, Recipe, RecipeFood, Profile
 from nutrihacker.functions import chop_zeros
 from nutrihacker.forms import FilterRecipeForm
 
@@ -23,7 +24,7 @@ class FoodAutocomplete(autocomplete.Select2QuerySetView):
 		qs = Food.objects.all()
 
 		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+			qs = qs.filter(name__icontains=self.q).order_by(Length('name'))
 
 		return qs
 
@@ -36,7 +37,7 @@ class RecipeAutocomplete(autocomplete.Select2QuerySetView):
 		qs = Recipe.objects.filter(Q(user=self.request.user) | Q(is_public=True))
 
 		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+			qs = qs.filter(name__icontains=self.q).order_by(Length('name'))
 
 		return qs
 
@@ -80,6 +81,35 @@ class FactsView(DetailView):
 		context['food'].protein = chop_zeros(query * context['food'].protein)
 
 		return context
+		
+	
+	# # overrides ListView get_queryset to find names containing search term and pass them to template recipefood_list = RecipeFood.objects.filter(food=food, is_public=True).values('
+	# def get_queryset(self):
+		# if self.request.user.is_authenticated:
+			# user = self.request.user
+		# else:
+			# user = None
+		
+		# try:
+			# food = Food.objects.get(id=self.kwargs['pk'])
+		# except Food.DoesNotExist:
+			# raise PermissionDenied
+		
+		# if (user == None):
+			
+			# recipe_list = Recipe.objects.filter(Q(recipefood__food=food), Q(is_public=True))
+		# else:
+			# recipe_list = Recipe.objects.filter(
+					# Q(recipefood__food=food),
+					# Q(user=user) | Q(is_public=True)
+				# )
+			
+		# object_list = []
+		# # build a list of each recipe
+		# for recipe in recipe_list:
+			# object_list.append(recipe)
+		
+		# return object_list
 
 # displays the foods that match a search, passed to the template as a paginated list
 class SearchFoodView(ListView):
@@ -102,12 +132,12 @@ class SearchFoodView(ListView):
 			query = None
 		
 		# no query terms returns an empty list
-		if (query == None or query == ''):
+		if query == None or query == '':
 			return Food.objects.none()
 		else: # If there are any foods containing the query, they will be in the resulting object_list which is used by search.html in a for loop
 			object_list = Food.objects.filter(
 				Q(name__icontains = query)
-			)
+			).order_by(Length('name'))
 			return object_list
 		
 # displays the recipes marked as public that match a search, passed to the template as a paginated list
@@ -120,7 +150,7 @@ class SearchRecipeView(ListView):
 		context = super(SearchRecipeView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
-		
+
 		if self.request.user.is_authenticated:
 			profile = Profile.objects.get(user=self.request.user)
 		else:
@@ -129,12 +159,17 @@ class SearchRecipeView(ListView):
 		# for filtering recipes
 		context['filter_form'] = FilterRecipeForm(current_profile=profile) 
 		
+
 		return context
 
 	# overrides ListView get_queryset to find names containing search term and pass them to template
 	def get_queryset(self):
 		if self.request.user.is_authenticated:
 			user = self.request.user
+
+	
+			
+
 			profile = Profile.objects.get(user=user)
 		else:
 			user = None
@@ -159,13 +194,16 @@ class SearchRecipeView(ListView):
 		if (profile and default_filter == 'true'):
 			diet_filter = profile.dietpreference_set.all()
 	
-		if (query == None):
-			return Recipe.objects.filter(is_public=True)
+
+		if query == None or query == '':
+			return Recipe.objects.filter( Q(user=user) | Q(is_public=True) )
 		else:
 			object_list = Recipe.objects.filter(
 				Q(name__icontains=query),
+			
+
 				Q(user=user) | Q(is_public=True),
-			)
+			).order_by(Length('name'))
 			# don't include recipes with filtered allergies
 			if allergy_filter:
 				object_list = object_list.exclude(allergies__in=allergy_filter)

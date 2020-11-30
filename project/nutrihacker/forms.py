@@ -248,6 +248,12 @@ class RecipeForm(forms.Form):
 	def clean(self):
 		cleaned_data = super(RecipeForm, self).clean()
 		
+		
+		for i in range(int(cleaned_data['extra_field_count'])+1):
+			for j in range(int(cleaned_data['extra_field_count'])+1):
+				if (i != j):
+					if ('food'+str(i+1)) in cleaned_data and ('food'+str(j+1)) in cleaned_data and cleaned_data['food'+str(i+1)] == cleaned_data['food'+str(j+1)]:
+						self.add_error('food'+str(j+1), forms.ValidationError(_('More than one of same food'), code='duplicate food'))
 
 		for i in range(int(cleaned_data['extra_field_count'])+1):
 			if ('portions'+str(i+1)) in cleaned_data and cleaned_data['portions'+str(i+1)] == 0:

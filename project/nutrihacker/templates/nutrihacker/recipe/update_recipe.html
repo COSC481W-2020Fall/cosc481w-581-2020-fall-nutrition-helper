@@ -2,43 +2,222 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-    <title>UpdateView</title>
-    <style>
-            body {
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-				background-size: cover;
-			}
-			.update{
-			    text-align: center;
-				font-family:"Times New Roman", Times, serif;
+	<head>
+		<meta charset="UTF-8">
+		<title>Edit Log</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+		<style>
+			h1, h2 {
 				color: white;
-                margin-left: 400px;
-                margin-right: 400px;
+				text-align: center;
 			}
-			.sub{
-                font-size: 20px;
-                border-radius: 13%;
-                background-color:GREEN;
+			
+			
+			
+			label {
+				color: white;
+				text-align: right;
+				margin-right: 10px;
 			}
-			.sub:hover{
-			    background-color: BLUE;
-				cursor:pointer;
+			input, select {
+				width: revert;
+				padding: revert;
+				margin: revert;
 			}
-    </style>
-</head>
-<body>
-        {% include "nutrihacker/navigation_bar.html" %}
-<br><br>
-        <h2 style="color:white" >Update your Recipe!</h2>
-<form class="update" method="POST">
-    {% csrf_token %}
-         {{ form.as_p }}
-        <!-- form variable -->
-    <input class="sub" type="submit" name="Submit" />
-</form>
-</body>
+			th {
+				text-align: right;
+			}
+			td {
+				color: black;
+				text-align: left;
+			}
+			li {
+				color: black;
+				text-align: left;
+				font-size: 13px;
+				font-family: sans-serif;
+			}
+			span {
+				font-size: 13px;
+				font-family: sans-serif;
+			}
+			.addbtn{
+				border-radius:90%;
+				cursor: pointer;
+				font-weight: 800;
+			}
+			.addbtn:hover{
+				 background-color: green;
+			}
+			.rmvbtn{
+				border-radius:90%;
+				cursor: pointer;
+				font-weight: 800;
+			}
+			.rmvbtn:hover{
+				 background-color: red;
+			}
+			.row1{
+				font-size: 40px;
+			}
+			.row2{
+				text-decoration-line: underline;
+				text-decoration-style: double;
+			}
+			.portionbtn{
+				cursor: pointer;
+				padding: 0px 5px;
+			}
+			.sbmtbtn{
+				font-size: 22px;
+				cursor: pointer;
+			}
+			.sbmtbtn:hover{
+				background-color: green;
+			}
+			.cancel {
+				margin-left: 2%;
+				color: white;
+			}
+			.error {
+				display: inline;
+				color: #ff3e30;
+				font-family: sans-serif;
+				margin-left: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		{% include "nutrihacker/navigation_bar.html" %}
+		<h1>Edit Log</h1>
+		<form method="POST" action="{% url 'nutrihacker:update_recipe' recipe_id %}">
+			{% csrf_token %}
+			<table id="formtable" align="center">
+				{% for field in form.visible_fields %}
+					<tr id="row{{ forloop.counter }}">
+						<th>{{ field.label_tag }}</th>
+						<td>
+							{{ field }}
+							{% if field.errors %}
+								<li class="error">&bull; {{ field.errors.0 }}</li>
+							{% endif %}
+						</td>
+						{% if forloop.counter > 5 and not forloop.counter|divisibleby:2 %}
+							<td>
+								<button id={{ forloop.counter }} class="rmvbtn" type="button">&#8722;</button>
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+				{% for field in form.hidden_fields %}
+					<tr hidden><td>{{ field }}</td></tr>
+				{% endfor %}
+			</table>
+			<br>
+			<table align="center">
+				<tr>
+					<td style="text-align: left"><input id="add" class="addbtn" type="button" value="&#43"></td>
+					<td style="text-align: right; color: white">Add another food</td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" value="Save"/>
+			<a class="cancel" href="{% url 'nutrihacker:detail_recipe' recipe_id %}">Cancel</a>
+		</form>
+		<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+		{{ form.media }}
+		<script type="text/javascript">
+			var extra_count = Number(document.getElementById("id_extra_field_count").value);
+			var food_number = extra_count + 2;
 
+			// add event listeners to all initial remove buttons
+			var r_btns = document.getElementsByClassName("rmvbtn");
+			for (var i = 0; i < r_btns.length; i++) {
+				r_btns[i].addEventListener("click", function(){ remove(this.id); });
+			}
+			
+			// adds another food and portions field to the form
+			document.getElementById("add").onclick = function() {
+				// get the table
+				var table = document.getElementById("formtable");
+				// get all table rows
+				var rows = table.getElementsByTagName("tr");
+				
+				// select rows 3 and 4 (original food and portions field)
+				var f_row = rows[6];
+				var p_row = rows[7];
+				
+				// clone the rows
+				var f_clone = f_row.cloneNode(true);
+				var p_clone = p_row.cloneNode(true);
+
+				// remove the cloned span (dal will add a new one automatically)
+				f_clone.getElementsByTagName("span")[0].remove();
+
+				// get the label, select, and button elements from the food row
+				var f_label = f_clone.getElementsByTagName("label")[0];
+				var f_select = f_clone.getElementsByTagName("select")[0];
+				var f_button = f_clone.getElementsByTagName("button")[0];
+
+				// get the label and input elements from the portions row
+				var p_label = p_clone.getElementsByTagName("label")[0];
+				var p_input = p_clone.getElementsByTagName("input")[0];
+
+				// set attributes of elements within the food row, initialize value to blank
+				var row_number = 2 * food_number + 1;
+				f_clone.style.display = "";
+				f_clone.id = "row" + row_number;
+				f_label.setAttribute("for", "id_food" + food_number);
+				f_select.setAttribute("name", "food" + food_number);
+				f_select.setAttribute("data-select2-id", "id_food" + food_number);
+				f_select.id = "id_food" + food_number;
+				f_select.value = "";
+				f_select.disabled = false;
+				f_button.id = row_number;
+
+				// repeat for portions, initialize value to 1
+				p_clone.style.display = "";
+				p_clone.id = "row" + (row_number + 1);
+				p_label.setAttribute("for", "id_portions" + food_number);
+				p_input.setAttribute("name", "portions" + food_number);
+				p_input.id = "id_portions" + food_number;
+				p_input.value = 1;
+				p_input.disabled = false;
+
+				// add event listener to remove button
+				f_button.addEventListener("click", function(){ remove(this.id); });
+
+				// append rows to the table
+				table.append(f_clone);
+				table.append(p_clone);
+
+				// increment counters
+				food_number++;
+				extra_count++;
+
+				// update hidden value
+				document.getElementById("id_extra_field_count").value = extra_count;
+			}
+
+			// removes indicated food and portions field from form
+			function remove(clicked_id) {
+				// get rows
+				var f_row = document.getElementById("row" + clicked_id);
+				var p_row = document.getElementById("row" + (Number(clicked_id) + 1));
+
+				// get select and input elements
+				var f_select = f_row.getElementsByTagName("select")[0];
+				var p_input = p_row.getElementsByTagName("input")[0];
+
+				// disable them
+				f_select.disabled = true;
+				p_input.disabled = true;
+				
+				// hide them
+				f_row.style.display = "none";
+				p_row.style.display = "none";
+			}
+		</script>
+	</body>
 </html>

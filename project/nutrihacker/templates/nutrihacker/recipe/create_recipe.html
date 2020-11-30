@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Create Recipe</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <style>
             h1, h2 {
@@ -84,7 +85,10 @@
             </table>
             <br>
             <input type="submit" value="Submit" />
+			<a class="cancel" href="{% url 'nutrihacker:list_recipe' %}">Cancel</a>
         </form>
+		<br>
+		<br>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
         {{ recipe_form.media }}
         <script type="text/javascript">
