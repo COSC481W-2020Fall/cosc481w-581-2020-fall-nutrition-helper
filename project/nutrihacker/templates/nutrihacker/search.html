@@ -89,12 +89,8 @@
 			</tbody>
 			{% endfor %}
 		</table>
-		{% else %}
-		<p>No search results</p>
-		{% endif %}
 		<br>
 		<div class="page_bar">
-        {% if search %}
             <div class="left">
             {% if page_obj.has_previous %}
                 <a href="?search={{ search }}&page=1">&laquo; first</a>
@@ -110,8 +106,10 @@
             </div>
             
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        {% endif %}
-        </div>
+		</div>
+        {% else %}
+		<p>No search results</p>
+		{% endif %}
 		<br>
 	</body>
 </html>

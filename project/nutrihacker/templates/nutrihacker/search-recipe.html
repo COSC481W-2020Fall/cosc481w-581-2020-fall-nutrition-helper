@@ -14,7 +14,7 @@
 				font-size: 30px;
 				text-align: center;
 				color: green;
-				background-color: black;
+				background-color: white;
 			}
 			.right
 			{
@@ -91,12 +91,8 @@
 				</tbody>
 				{% endfor %}
 		</table>
-		{% else %}
-		<p>Searched recipe not found</p>
-		{% endif %}
         <br>
         <div class="page_bar">
-        {% if search %}
             <div class="left">
             {% if page_obj.has_previous %}
                 <a href="?term={{ search }}&page=1">&laquo; first</a>
@@ -112,6 +108,9 @@
             </div>
             
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+		
+		{% else %}
+			<p>Searched recipe not found</p>
         {% endif %}
         </div>
         <br>
