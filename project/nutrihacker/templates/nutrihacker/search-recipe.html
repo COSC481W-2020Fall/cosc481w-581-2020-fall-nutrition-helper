@@ -7,6 +7,15 @@
 		<title>Nutrition Helper</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+		<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+			<link href="{% static 'admin/css/vendor/select2/select2.css' %}" type="text/css" media="screen" rel="stylesheet">
+			<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+			<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+			<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+			<script src="/static/autocomplete_light/autocomplete_light.js"></script>
+			<script src="/static/autocomplete_light/select2.js"></script>
+			<script src="/static/autocomplete_light/i18n/en.js"></script>	
+		<script type="text/javascript" src="{% static 'nutrihacker/log_build.js' %}"></script>
         <style>
 			.page_bar
 			{
@@ -15,7 +24,7 @@
 				font-size: 30px;
 				text-align: center;
 				color: green;
-				background-color: black;
+				background-color: white;
 			}
 			.right
 			{
@@ -51,32 +60,47 @@
 			.B:hover{
 			background-color: green;
 			color: white;
+			#id_calories_max,
+			#id_calories_min{
+			width : 5%;
 			}
         </style>
+		<script type="text/javascript">
+			function order_by(field)
+			{
+				document.getElementById('order_by').value = field;
+				document.getElementById('search_form').submit();
+			}
+		</script>
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
 		<br>
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
-		<th><form action="{% url 'nutrihacker:search-recipe' %}" method="get">
+		<th><form id="search_form" action="{% url 'nutrihacker:search-recipe' %}" method="get">
                 <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
+				<input id="order_by" type="hidden" name="order_by" />
                 <button type="submit" name="search">&#128269;</button>
-				{{ filter_form.allergy_filter.label_tag }}
-				{{ filter_form.allergy_filter }}
-				{{ filter_form.diet_filter.label_tag }}
-				{{ filter_form.diet_filter }}
+				<div>
+					{{ filter_form.allergy_filter.label_tag }}
+					{{ filter_form.allergy_filter }}
+					{{ filter_form.diet_filter.label_tag }}
+					{{ filter_form.diet_filter }}
+					{{ filter_form.food_filter.label_tag }}
+					{{ filter_form.food_filter }}
+				</div>
             </form>
 		</th>
 		<table class="t02" width="70%" align="center" style="padding:10px" >
 			<thead>
 			<tr>
 				{% if object_list %}
-				<th><h2 style="color:white;">Recipe Results</h2></th>
-                <th>Calories</th>
+				<th onclick="order_by('name');"><h2 style="color:white;">Recipe Results</h2></th>
+                <th onclick="order_by('calories');">Calories</th>
 				<th>Allergy</th>
 				<th>Diet</th>
-				<th>Created by</th>
-				<th>Date created</th>
+				<th onclick="order_by('user');">Created by</th>
+				<th onclick="order_by('date');">Date created</th>
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
@@ -96,12 +120,8 @@
 				</tbody>
 				{% endfor %}
 		</table>
-		{% else %}
-		<p>Searched recipe not found</p>
-		{% endif %}
         <br>
         <div class="page_bar">
-        {% if search %}
             <div class="left">
             {% if page_obj.has_previous %}
                 <a href="?term={{ search }}&page=1">&laquo; first</a>
@@ -117,6 +137,9 @@
             </div>
             
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+		
+		{% else %}
+			<p>Searched recipe not found</p>
         {% endif %}
         </div>
         <br>
