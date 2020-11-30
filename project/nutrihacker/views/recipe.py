@@ -6,6 +6,7 @@ from django.views.generic.edit import FormView, DeleteView
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from nutrihacker.models import Food, Recipe, RecipeFood
 from nutrihacker.models import Allergy, DietPreference
@@ -236,7 +237,7 @@ class DeleteRecipe(UserPassesTestMixin, DeleteView):
 		return dl
 
 # saves submitted info to database
-class RecordRecipeView(FormView):
+class RecordRecipeView(LoginRequiredMixin, FormView):
 	form_class = RecipeForm
 	template_name = 'nutrihacker/recipe/create_recipe.html'
 	success_url = reverse_lazy('nutrihacker:list_recipe')

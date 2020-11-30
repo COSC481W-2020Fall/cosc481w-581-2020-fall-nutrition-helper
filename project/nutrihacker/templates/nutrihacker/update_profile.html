@@ -6,6 +6,7 @@
 		<meta charset="UTF-8">
 		<title>Nutrition Facts</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 		<style>
 			table, td {
 				border: 3px solid black;
@@ -150,6 +151,11 @@
                     <td id="weight_label">{{ profile_form.weight.label_tag }}</td>
                     <td>{{ profile_form.weight }}</td>
                 </tr>
+                <tr>
+                    <td>Calorie Goal</td>
+                    <td>{{ profile_form.caloriegoal }}</td>
+                </tr>
+
                 <tr width="80%">
                     <td>Use metric:</td>
                     <td>{{ profile_form.showmetric }}<br></td>
