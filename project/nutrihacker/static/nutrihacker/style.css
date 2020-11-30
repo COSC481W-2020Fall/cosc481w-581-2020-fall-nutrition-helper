@@ -34,10 +34,11 @@ a:visited {
 a:hover {
 	color: blue;
 }
-
-.B:hover {
-	background-color: blue;
+.B:hover{
+			background-color: green;
+			color: white;
 }
+
 .button{
 	padding: 15px 30px;
 	border: none;

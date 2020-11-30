@@ -4,7 +4,9 @@
 
 {% block header %}
 	<h1>Daily Log</h1>
+<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 	<h2>Record what you ate!</h2>
+
 {% endblock %}
 
 {% block actionurl %}{% url 'nutrihacker:log_create' %}{% endblock %}
