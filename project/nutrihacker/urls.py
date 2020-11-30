@@ -25,6 +25,8 @@ urlpatterns = [
     path('search/', views.SearchFoodView.as_view(), name='search'),
     # /nutrihacker/search-recipe/
     path('search-recipe/', views.SearchRecipeView.as_view(), name='search-recipe'),
+    # /nutrihacker/get_log_data/
+    path('get_log_data/', views.get_log_data, name='get_log_data'),
     
     #----------------------   LOG STUFF   -----------------------------------------------
 

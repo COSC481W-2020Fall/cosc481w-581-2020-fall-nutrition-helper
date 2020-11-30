@@ -11,6 +11,9 @@
 				color: white;
 				text-align: center;
 			}
+			.logform table {
+				margin-bottom: 0;
+			}
 			.formlabel label {
 				color: white;
 				text-align: right;
@@ -34,9 +37,15 @@
 				font-size: 13px;
 				font-family: sans-serif;
 			}
+			.select2-container {
+				max-width: 20em;
+			}
 			span {
 				font-size: 13px;
 				font-family: sans-serif;
+			}
+			.select2-container--default .select2-selection--single .select2-selection__rendered {
+				color: black !important;
 			}
 			.addbtn{
 				border-radius:90%;
@@ -61,17 +70,6 @@
 				text-decoration-line: underline;
 				text-decoration-style: double;
 			}
-			.portionbtn{
-				cursor: pointer;
-				padding: 0px 5px;
-			}
-			.sbmtbtn{
-				font-size: 22px;
-				cursor: pointer;
-			}
-			.sbmtbtn:hover{
-				background-color: green;
-			}
 			.cancel {
 				margin-left: 2%;
 				color: white;
@@ -83,12 +81,15 @@
 				margin-left: 5px;
 				font-size: 14px;
 			}
+			.footer {
+				margin-bottom: 25px;
+			}
 		</style>
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
 		{% block header %}{% endblock %}
-		<form method="POST" action="{% block actionurl %}{% endblock %}">
+		<form class="logform" method="POST" action="{% block actionurl %}{% endblock %}">
 			{% csrf_token %}
 			<table id="formtable" align="center">
 				{% for field in form.visible_fields %}
@@ -128,8 +129,12 @@
 				</tr>
 			</table>
 			<br>
-			<input type="submit" value="{% block btntxt %}{% endblock %}"/><a class="cancel" href="{% block cancelurl %}{% endblock %}">Cancel</a>
+			<div>
+				<input type="submit" value="{% block btntxt %}{% endblock %}"/>
+				<a class="cancel" href="{% block cancelurl %}{% endblock %}">Cancel</a>
+			</div>
 		</form>
+		<div class="footer"></div>
 		<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 		{% comment %}{{ form.media }}{% endcomment %}
 
