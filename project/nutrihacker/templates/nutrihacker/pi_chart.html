@@ -8,26 +8,26 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script>
  //piechart configuration detail
- //Note: the value of cholesterol and sodium are divided by 1000 to convert the unit to gram
+// to calculate the number of calories of cholesterol (i substructed the totalcalorie by the summation of other nutriets calorie
     totalFatVal = {{food.totalFat}} *9; //multiplied by 9 to convert 1g of fat = 9cal
     totalCarbohydrate = {{food.totalCarb}}*4 ; //multiplied by 4 to convert 1g of fat = 4cal
     protein = {{food.protein}}*4; //multiplied by 4 to convert 1g of fat = 4cal
     totalNumOfCalories = {{food.calories}};
     calorieOfSome = totalFatVal + totalCarbohydrate + protein;
-    cholesterol_sodium = (totalNumOfCalories - calorieOfSome).toFixed(2); // round the value to the 2 decimal places
+    cholesterol = (totalNumOfCalories - calorieOfSome).toFixed(2); // round the value to the 2 decimal places
 
     var config = {
       type: 'pie', //type of chart
       data: {
         datasets: [{ // the dataset contains the nutrifact data that are going to be used, labels and colors of piechart
-          data: [totalFatVal, cholesterol_sodium, totalCarbohydrate, protein],
+          data: [totalFatVal, cholesterol, totalCarbohydrate, protein],
           backgroundColor: [
             '#E74C3C', '#F1C40F', '#7D3C98', '#3498DB' // colors of the piechart
           ],
           label: 'foodData'
         }],
         //
-        labels: ["totalFat","cholesterol & sodium","totalCarb","protein"] //labels that are going to be displayed
+        labels: ["totalFat","cholesterol","totalCarb","protein"] //labels that are going to be displayed
       },
       options: {
         responsive: true
