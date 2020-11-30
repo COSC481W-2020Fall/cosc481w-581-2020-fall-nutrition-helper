@@ -162,10 +162,11 @@
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Details</h1>
-		{% if user == recipe.user %}
+		
 		<!-- Buttons to update or delete recipe -->
 		<div style="text-align:center">
 		<br>
+			{% if user == recipe.user %}
 			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}" style="text-align:center" ><button class="B" style="text-align:center">Update Recipe</button></a>
 			<div class="popup" id={{ recipe.id }} onclick="confirm(this.id)">
 				<span class="popuptext" id="popup{{ recipe.id }}">Are you sure you want to delete?<br>
@@ -178,8 +179,9 @@
 				</span>
 				<button class="B" type="submit" style="text-align:center">Delete Recipe</button>
 			</div>
+				{% endif %}
+				<a href="{% url 'nutrihacker:copy_recipe' recipe.id %}"><button class="B">Clone Recipe</button></a>
 		</div>
-		{% endif %}
 		<br>
         <h2>Here is your recipe!</h2>
 	<div class="boxcolumn-1">

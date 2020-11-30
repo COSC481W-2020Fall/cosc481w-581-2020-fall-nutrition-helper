@@ -253,6 +253,7 @@ class RecordRecipeView(FormView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['recipe_form'] = RecipeForm()
+		print(context['recipe_form'])
 		return context
 		
 	
@@ -314,7 +315,7 @@ class CopyRecipe(FormView):
 	# override get_context_data to include form html
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		context['recipe_form'] = RecipeForm()
+		#context['recipe_form'] = RecipeForm()
 		
 		recipe_source = Recipe.objects.get(id=self.kwargs['pk'])
 		context['recipe_id'] = recipe_source.id
@@ -332,8 +333,12 @@ class CopyRecipe(FormView):
 
 		initial['name'] = ml.name
 		initial['servingsProduced'] = ml.servingsProduced
-		initial['allergies'] = ml.allergies
-		initial['diets'] = ml.diets
+		# --------------------------- TODO: return the allergies and diets to the initialized values of the copy view
+		#initial['allergies'] = ml.allergies
+		#initial['diets'] = ml.diets
+		#for diet in ml.diets:
+		#	print("hahaha")
+		#initial['diets'] = ml.diets
 		initial['instruction'] = ml.instruction
 		initial['is_public'] = ml.is_public
 
@@ -367,8 +372,8 @@ class CopyRecipe(FormView):
 		
 		recipe = Recipe.create(self.request.user, name, servingsProduced, instruction, is_public)
 		recipe.save()
-		recipe.allergies = allergies
-		recipe.diets = diets
+		recipe.allergies.set(allergies)
+		recipe.diets.set(diets)
 		recipe.save()
 
 		# creates a recipe food for each food for this recipe

@@ -148,14 +148,33 @@
 		{% include "nutrihacker/navigation_bar.html" %}
 
 		<br>
+		<div class="center-div">
+			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
+		</div>
 		<br>
+		<br>
+		{% if object_list %}
 			<table class="center">
+					<tr>
+					<th>Name</th>
+					<th>Calories</th>
+					<th>Allergy</th>
+					<th>Diet</th>
+					<th>Created by</th>
+					<th>Date created</th>
+					</tr>
 				{% for recipe in object_list %}
 					<tr>
 					<th>
 						<!-- Button of the recipe in question -->
 						<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
 					</th>
+					<th>{{ recipe.get_total.calories|floatformat }}</th>
+					<th>{{ recipe.allergies_string }}</th>
+					<th>{{ recipe.diets_string }}</th>
+					<th>{{ recipe.user }}</th>
+					<th>{{ recipe.created_at|date:"m/d/y" }}</th>
+					
 					<th>
 						<!-- Button to update recipe -->
 						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
@@ -181,11 +200,10 @@
 					</tr>
 				{% endfor %}
 			</table>
+			{% endif %}
+			
 		<br>
-		<div class="center-div">
-			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
-		</div>
-		<br>
+		
 	</body>
 	<script>
 		// When the user clicks on <div>, open the popup

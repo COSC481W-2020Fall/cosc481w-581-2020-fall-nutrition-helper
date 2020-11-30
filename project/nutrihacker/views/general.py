@@ -6,7 +6,7 @@ from django.db.models import Q
 
 
 
-
+from django.shortcuts import get_object_or_404
 from nutrihacker.models import Food, Recipe, RecipeFood, Profile
 from nutrihacker.functions import chop_zeros
 from nutrihacker.forms import FilterRecipeForm
@@ -81,37 +81,35 @@ class FactsView(DetailView):
 		context['food'].sodium = chop_zeros(query * context['food'].sodium)
 		context['food'].totalCarb = chop_zeros(query * context['food'].totalCarb)
 		context['food'].protein = chop_zeros(query * context['food'].protein)
+		
+		
+		if self.request.user.is_authenticated:
+			user = self.request.user
+			profile = Profile.objects.get(user=user)
+		else:
+			user = None
+			profile = None
+		
+		# stuff for the recipe list
+			
+		foodpk = self.kwargs['pk']
+		object_list = []
+		idList = RecipeFood.objects.filter(food=foodpk).values('recipe').values('id')
+		
+		for idEntry in idList:
+		
+			hat = Recipe.objects.filter(id=idEntry['id'])
+			if (len(hat) > 0):
+				if (hat[0].is_public or hat[0].user == user):
+					object_list.append(hat[0])
+		
+		context['object_list'] = object_list
+		
+		
 
 		return context
 		
 	
-	# # overrides ListView get_queryset to find names containing search term and pass them to template recipefood_list = RecipeFood.objects.filter(food=food, is_public=True).values('
-	# def get_queryset(self):
-		# if self.request.user.is_authenticated:
-			# user = self.request.user
-		# else:
-			# user = None
-		
-		# try:
-			# food = Food.objects.get(id=self.kwargs['pk'])
-		# except Food.DoesNotExist:
-			# raise PermissionDenied
-		
-		# if (user == None):
-			
-			# recipe_list = Recipe.objects.filter(Q(recipefood__food=food), Q(is_public=True))
-		# else:
-			# recipe_list = Recipe.objects.filter(
-					# Q(recipefood__food=food),
-					# Q(user=user) | Q(is_public=True)
-				# )
-			
-		# object_list = []
-		# # build a list of each recipe
-		# for recipe in recipe_list:
-			# object_list.append(recipe)
-		
-		# return object_list
 
 # displays the foods that match a search, passed to the template as a paginated list
 class SearchFoodView(ListView):
