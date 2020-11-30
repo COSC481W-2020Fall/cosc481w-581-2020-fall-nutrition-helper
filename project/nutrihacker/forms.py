@@ -17,7 +17,7 @@ class UserForm(ModelForm):
 class ProfileForm(ModelForm):
 	class Meta:
 		model = Profile
-		fields = ['gender', 'birthdate', 'height', 'weight', 'showmetric']
+		fields = ['gender', 'birthdate', 'height', 'weight', 'caloriegoal','showmetric']
 
 class FilterRecipeForm(forms.Form):
 	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False)
