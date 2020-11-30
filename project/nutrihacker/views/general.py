@@ -89,18 +89,13 @@ class FactsView(DetailView):
 			user = None
 			profile = None
 		
+		
+		object_list = Recipe.objects.filter(Q(user=user) | Q(is_public = True))
 		# stuff for the recipe list
-			
-		foodpk = self.kwargs['pk']
-		object_list = []
-		idList = RecipeFood.objects.filter(food=foodpk).values('recipe').values('id')
-		
-		for idEntry in idList:
-		
-			hat = Recipe.objects.filter(id=idEntry['id'])
-			if (len(hat) > 0):
-				if (hat[0].is_public or hat[0].user == user):
-					object_list.append(hat[0])
+		RecipeFood.objects.filter(food=self.kwargs['pk'])
+		recipe_food_list = RecipeFood.objects.filter(food=self.kwargs['pk'])
+		recipe_ids = recipe_food_list.distinct().values_list('recipe')
+		object_list = object_list.filter(pk__in=recipe_ids)
 		
 		context['object_list'] = object_list
 		
