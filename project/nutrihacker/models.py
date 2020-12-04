@@ -56,7 +56,7 @@ class Profile(models.Model):
 	birthdate = models.DateField(null=True)
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-	caloriegoal = models.DecimalField(max_digits=7, decimal_places=2)
+	caloriegoal = models.DecimalField(max_digits=7, decimal_places=2, null=True)
 	showmetric = models.BooleanField(default=True)
 	
 	LBS_IN_KG = Decimal(2.20462)
