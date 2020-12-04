@@ -15,8 +15,7 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
 	# /nutrihacker/nutrifacts/
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
-	# /nutrihacker/description/
-    path('description/', views.DescriptionView.as_view(), name='description'),
+
     # /nutrihacker/food_autocomplete/
     path('food_autocomplete/', views.FoodAutocomplete.as_view(), name='food_autocomplete'),
     # /nutrihacker/recipe_autocomplete/
