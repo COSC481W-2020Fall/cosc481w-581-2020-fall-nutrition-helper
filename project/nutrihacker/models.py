@@ -164,6 +164,7 @@ class Recipe(models.Model):
 	servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
 	allergies = models.ManyToManyField(Allergy, blank=True)
 	diets = models.ManyToManyField(DietPreference, blank=True)
+	foods = models.ManyToManyField(Food, through='RecipeFood')
 	
 	@classmethod
 	def create(cls, user, name, servingsProduced, instruction, is_public):
