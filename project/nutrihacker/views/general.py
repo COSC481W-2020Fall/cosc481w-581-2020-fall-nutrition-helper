@@ -10,11 +10,11 @@ from nutrihacker.models import Food, Recipe, RecipeFood, Profile, DietPreference
 from nutrihacker.functions import chop_zeros
 from nutrihacker.forms import FilterRecipeForm, FilterFoodForm
 
-class IndexView(TemplateView):
-	template_name = 'nutrihacker/index.html'
+#class IndexView(TemplateView):
+	#template_name = 'nutrihacker/index.html'
 
-class DescriptionView(TemplateView):
-	template_name = 'nutrihacker/description.html'
+#class DescriptionView(TemplateView):
+	#template_name = 'nutrihacker/description.html'
 
 # autocomplete search for foods
 class FoodAutocomplete(autocomplete.Select2QuerySetView):
