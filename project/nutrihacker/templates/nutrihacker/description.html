@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Nutrihacker Description</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+	</head>
+		<style>
+			body{
+				background-image: url("images/background.jpg");
+				height: 100%;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+			}
+			p{
+				color: white;
+				text-align: center;
+				font-size: 30px;
+			}
+			body{
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
+			li{
+				color: white;
+				font-size: 30px;
+			}
+			ul{
+				overflow:hidden;
+			}
+			.list{
+				margin-left: 450px;
+			}
+		</style>
+			 </head>
+	<body style="background-size:cover">
+		{% include "nutrihacker/navigation_bar.html" %}
+        
+		<h1 style="color: green;"><center><u>How It Works</u></center></h1>
+		<p>A simple webpage that can access the USDA nutrition facts database<br> through two buttons: "Egg" and "Broccoli".<br>
+		The buttons will be basic buttons with text on them.<br>
+			Clicking on either button will retrieve the information </p>
+		<div class="list">
+			<ul>
+				<li>Serving size</li>
+				<li>Calories</li>
+				<li>Total fat</li>
+				<li>Cholesterol</li>
+				<li>Sodium</li>
+				<li>Total Carb and </li>
+				<li>Protein</li>
+			</ul>
+		</div>
+
+		<p>of that food and display it on the screen in a table. <br>
+		This page will be dynamically populated with that food's data <br> that we will store on the server.
+		The website will have a back button<br> for users to return to the previous page to select a different meal<br> if they would like to.
+		</p>
+	</body>
+</html>
