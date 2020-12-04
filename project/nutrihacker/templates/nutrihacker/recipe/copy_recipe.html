@@ -73,7 +73,7 @@
         <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
-                {{ recipe_form.as_table }}
+                {{ form.as_table }}
             </table>
             <br>
             <table align="center">

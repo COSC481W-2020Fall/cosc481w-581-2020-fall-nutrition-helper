@@ -2,6 +2,7 @@ from decimal import Decimal
 from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
+
 from django.db.models import Q, Count
 from django.db.models.functions import Length, Lower
 
@@ -79,37 +80,30 @@ class FactsView(DetailView):
 		context['food'].sodium = chop_zeros(query * context['food'].sodium)
 		context['food'].totalCarb = chop_zeros(query * context['food'].totalCarb)
 		context['food'].protein = chop_zeros(query * context['food'].protein)
+		
+		
+		if self.request.user.is_authenticated:
+			user = self.request.user
+			profile = Profile.objects.get(user=user)
+		else:
+			user = None
+			profile = None
+		
+		
+		object_list = Recipe.objects.filter(Q(user=user) | Q(is_public = True))
+		# stuff for the recipe list
+		RecipeFood.objects.filter(food=self.kwargs['pk'])
+		recipe_food_list = RecipeFood.objects.filter(food=self.kwargs['pk'])
+		recipe_ids = recipe_food_list.distinct().values_list('recipe')
+		object_list = object_list.filter(pk__in=recipe_ids)
+		
+		context['object_list'] = object_list
+		
+		
 
 		return context
 		
 	
-	# # overrides ListView get_queryset to find names containing search term and pass them to template recipefood_list = RecipeFood.objects.filter(food=food, is_public=True).values('
-	# def get_queryset(self):
-		# if self.request.user.is_authenticated:
-			# user = self.request.user
-		# else:
-			# user = None
-		
-		# try:
-			# food = Food.objects.get(id=self.kwargs['pk'])
-		# except Food.DoesNotExist:
-			# raise PermissionDenied
-		
-		# if (user == None):
-			
-			# recipe_list = Recipe.objects.filter(Q(recipefood__food=food), Q(is_public=True))
-		# else:
-			# recipe_list = Recipe.objects.filter(
-					# Q(recipefood__food=food),
-					# Q(user=user) | Q(is_public=True)
-				# )
-			
-		# object_list = []
-		# # build a list of each recipe
-		# for recipe in recipe_list:
-			# object_list.append(recipe)
-		
-		# return object_list
 
 # displays the foods that match a search, passed to the template as a paginated list
 class SearchFoodView(ListView):
@@ -121,6 +115,7 @@ class SearchFoodView(ListView):
 		context = super(SearchFoodView, self).get_context_data(**kwargs)
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('search')
+			context['order_by'] = self.request.GET.get('order_by')
 			context['filter_form'] = FilterFoodForm(self.request.GET)
 		else:
 			context['filter_form'] = FilterRecipeForm()
@@ -149,12 +144,11 @@ class SearchFoodView(ListView):
 			Q(name__icontains = query)
 		).order_by(Length('name'))
 		
-		print(calories_min)
 		# filter results on given filters
 		if calories_min:
-			object_list = object_list.filter(calories__gt=calories_min)
+			object_list = object_list.filter(calories__gt=calories_min-1)
 		if calories_max:
-			object_list = object_list.filter(calories__lt=calories_max)
+			object_list = object_list.filter(calories__lt=calories_max+1)
 		
 		# allow for user to order the search results on a certain field
 		if order_by:

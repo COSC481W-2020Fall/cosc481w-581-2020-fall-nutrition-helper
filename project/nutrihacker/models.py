@@ -56,7 +56,7 @@ class Profile(models.Model):
 	birthdate = models.DateField(null=True)
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-	caloriegoal = models.DecimalField(max_digits=7, decimal_places=2)
+	caloriegoal = models.DecimalField(max_digits=7, decimal_places=2, null=True)
 	showmetric = models.BooleanField(default=True)
 	
 	LBS_IN_KG = Decimal(2.20462)
@@ -164,6 +164,7 @@ class Recipe(models.Model):
 	servingsProduced = models.DecimalField(max_digits=5, decimal_places=2, default=1)
 	allergies = models.ManyToManyField(Allergy, blank=True)
 	diets = models.ManyToManyField(DietPreference, blank=True)
+	foods = models.ManyToManyField(Food, through='RecipeFood')
 	
 	@classmethod
 	def create(cls, user, name, servingsProduced, instruction, is_public):
