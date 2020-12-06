@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
-from nutrihacker.models import DailyLog, MealLog, MealItem
+from nutrihacker.models import DailyLog, MealLog, MealItem, Profile
 from nutrihacker.forms import LogForm
 from nutrihacker.functions import chop_zeros
 
@@ -14,10 +14,70 @@ from nutrihacker.functions import chop_zeros
 class LogListView(LoginRequiredMixin, ListView):
 	template_name = 'nutrihacker/log/log_list.html'
 	model = DailyLog
+	today = datetime.now()
+	selected_month = False
+
+	def get_context_data(self, **kwargs):
+		context = super(LogListView, self).get_context_data(**kwargs)
+
+		# get the calorie goal from user's profile
+		cal_goal = Profile.objects.get(user=self.request.user).caloriegoal
+		if not cal_goal:
+			cal_goal = 'false' # assign false if no calorie goal
+
+		context['calorie_goal'] = cal_goal
+		context['current_month'] = self.today.strftime('%Y-%m')
+
+		if self.selected_month:
+			context['selected_month'] = self.selected_month[0] + '-' + self.selected_month[1]
+		else:
+			context['selected_month'] = context['current_month']
+
+		return context
+
+	# helper function to determind if date passed is valid
+	def month_valid(self, value):
+		if len(value) != 7:
+			return False
+
+		if value[4] != '-':
+			return False
+		
+		try:
+			y = int(value[:4])
+			if y < 1920:
+				return False
+		except:
+			return False
+
+		try:
+			m = int(value[-2:])
+			if m > 12 and m < 1:
+				return False
+		except:
+			return False
+
+		return True
 
 	# override get_queryset to get only logged in user's DailyLogs
 	def get_queryset(self):
-		object_list = DailyLog.objects.filter(user=self.request.user).order_by('-date')
+		if self.request.method == 'GET' and self.request.GET.get('month'):
+			value = self.request.GET.get('month')
+
+			if self.month_valid(value):
+				yr = value[:4]
+				mnth = value[-2:]
+				self.selected_month = [yr, mnth]
+			else:
+				yr = self.today.year
+				mnth = self.today.month
+		else:
+			yr = self.today.year
+			mnth = self.today.month
+		
+		object_list = DailyLog.objects.filter(user=self.request.user,
+											  date__year=yr,
+											  date__month=mnth).order_by('-date')
 		return object_list
 
 # page for creating a log, saves submitted data to database

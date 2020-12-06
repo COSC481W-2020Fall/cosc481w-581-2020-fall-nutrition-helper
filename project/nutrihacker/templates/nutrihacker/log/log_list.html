@@ -13,7 +13,7 @@
 			table, td {
 				border-collapse: collapse;
 				border-right: 0px;
-				padding: 100px;
+				padding: 0px;
 			}
 			.facts {
 				width: 35%;
@@ -24,9 +24,6 @@
 				text-align: right;
 				border-left: 0px;
 				border-right: 3px solid black;
-			}
-			body {
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
 			a {
 				text-decoration: none;
@@ -41,8 +38,38 @@
 				display: inline-block;
 				margin: 4px 2px;
 			}
-			input {
-				width: 48px;
+			table.layout {
+				padding: 0;
+				width: 100%;
+				margin-bottom: 20px;
+			}
+			table.layout td {
+				padding: 0;
+				vertical-align: top;
+			}
+			div.topdiv {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			input.month {
+				width: revert;
+				padding: revert;
+				margin: revert;
+				margin-top: 3px;
+				font-family: sans-serif;
+			}
+			div.listdiv {
+				overflow-y: auto;
+				height: 74%;
+			}
+			table.listtable {
+				margin-bottom: 0;
+				height: revert;
+			}
+			table.listtable td {
+				text-align: left;
+				vertical-align: top;
+				padding: 2px;
 			}
 			label {
 				color: white;
@@ -55,7 +82,6 @@
 			}
 			.delbtn {
 				font-size: 20px;
-				text-align: right;
 			}
 			/* Popup container */
 			.popup {
@@ -115,8 +141,8 @@
 				margin-right: 380px;
 			}
 			.B:hover{
-			background-color: green;
-			color: white;
+				background-color: green;
+				color: white;
 			}
 		</style>
 	</head>
@@ -124,45 +150,65 @@
 		{% include "nutrihacker/navigation_bar.html" %}
 		
 		<br>
-		<div class="title"><p>Daily Logs</p></div>
-		{% include "nutrihacker/log/log_chart.html" %}
-		<script type="text/javascript" src="{% static 'nutrihacker/log_chart.js' %}"></script>
-		<p><a href="{% url 'nutrihacker:log_create' %}"><button class="B"><b>+</b>&nbsp;&nbsp;Add a Log&nbsp;</button></a></p>
-		<table style=" padding:100px" align="center">
-		{% if object_list %}
-			{% for dailylog in object_list %}
-				<tr>
-					<th>
-						<!-- button to daily log detail page -->
-						<a href="{% url 'nutrihacker:log_detail' dailylog.id %}"><button class="B">{{ dailylog.date }}</button></a>
-					</th>
-					<th class="delbtn">
-						<!-- button to prompt deletion of daily log -->
-						<div class="popup" id={{ dailylog.id }} onclick="confirm(this.id)">
-							<span class="popuptext" id="popup{{ dailylog.id }}">Are you sure you want to delete?<br>
-								<form action="{% url 'nutrihacker:dailylog_delete' %}" method="POST">
-									{% csrf_token %}
-									<input type="hidden" name="id" value={{ dailylog.id }}>
-									<button type="submit">Yes</button>
-								</form><button>No</button>
-							</span>
-							<button class="delbtn"><i class="fa fa-trash"></i></button> <!-- fa fa-trash is a trash sign -->
-						</div>
-					</th>
-				</tr>
-			{% endfor %}
-		{% else %}
+		<div class="title"><p>My Logs</p></div>
+		<table class="layout">
 			<tr>
-				<th>You have no daily logs</th>
+				<td id="chartcell">
+					{% include "nutrihacker/log/log_chart.html" %}
+					<script type="text/javascript" src="{% static 'nutrihacker/log_chart.js' %}"></script>
+				</td>
+				<td style="width: 25%">
+					<div class="topdiv">
+						<p style="margin-top: 0">
+							<a href="{% url 'nutrihacker:log_create' %}"><button class="B"><b>+</b>&nbsp;&nbsp;Add a Log&nbsp;</button></a>
+						</p>
+						<form action="{% url 'nutrihacker:log_list' %}" method="GET">
+							<label>View logs for:</label>
+							<br>
+							<input class="month" type="month" name="month" min="1920-01" max="{{ current_month }}" value="{{ selected_month }}">
+							<button type="submit">Go</button>
+						</form>
+					</div>
+					<div class="listdiv">
+						<table class="listtable" align="center">
+						{% if object_list %}
+							{% for dailylog in object_list %}
+							<tr>
+								<td>
+									<!-- button to daily log detail page -->
+									<a href="{% url 'nutrihacker:log_detail' dailylog.id %}"><button class="B">{{ dailylog.date }}</button></a>
+								</td>
+								<td>
+									<!-- button to prompt deletion of daily log -->
+									<div class="popup" id={{ dailylog.id }} onclick="confirm(this.id)">
+										<span class="popuptext" id="popup{{ dailylog.id }}">Are you sure you want to delete?<br>
+											<form action="{% url 'nutrihacker:dailylog_delete' %}" method="POST">
+												{% csrf_token %}
+												<input type="hidden" name="id" value={{ dailylog.id }}>
+												<button type="submit">Yes</button>
+											</form><button>No</button>
+										</span>
+										<button class="delbtn"><i class="fa fa-trash"></i></button> <!-- fa fa-trash is a trash sign -->
+									</div>
+								</td>
+							</tr>
+							{% endfor %}
+						{% else %}
+							<tr>
+								<th style="color: white; text-align: center;">You have no logs for this month</th>
+							</tr>
+						{% endif %}
+						</table>
+					</div>
+				</td>
 			</tr>
-		{% endif %}
 		</table>
 		<script>
-		// When the user clicks on <div>, open the popup
-		function confirm(clicked_id) {
-		  	var popup = document.getElementById("popup"+clicked_id);
-		  	popup.classList.toggle("show");
-		}
+			// When the user clicks on <div>, open the popup
+			function confirm(clicked_id) {
+			  	var popup = document.getElementById("popup"+clicked_id);
+			  	popup.classList.toggle("show");
+			}
 		</script>
 	</body>
 </html>
