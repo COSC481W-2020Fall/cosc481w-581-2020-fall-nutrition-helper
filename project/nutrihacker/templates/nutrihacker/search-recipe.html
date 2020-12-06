@@ -65,11 +65,19 @@
 			#id_calories_min{
 			width : 5%;
 			}
+			a, .sort {
+				cursor: pointer;
+			}
         </style>
 		<script type="text/javascript">
 			function order_by(field)
 			{
 				document.getElementById('order_by').value = field;
+				document.getElementById('search_form').submit();
+			}
+			function change_page(page)
+			{
+				document.getElementById('page_num').value = page;
 				document.getElementById('search_form').submit();
 			}
 		</script>
@@ -80,7 +88,8 @@
 		<!--  Form that fills with all relevant foods, each with a button that takes the user to a particular food item  -->
 		<th><form id="search_form" action="{% url 'nutrihacker:search-recipe' %}" method="get">
                 <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
-				<input id="order_by" type="hidden" name="order_by" />
+				<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
+				<input id="page_num" type="hidden" name="page" value="1" />
                 <button type="submit" name="search">&#128269;</button>
 				<div>
 					{{ filter_form.allergy_filter.label_tag }}
@@ -96,12 +105,12 @@
 			<thead>
 			<tr>
 				{% if object_list %}
-				<th onclick="order_by('name');"><h2 style="color:white;">Recipe Results</h2></th>
-                <th onclick="order_by('calories');">Calories</th>
+				<th class="sort" onclick="order_by('name');"><h2 style="color:white;">Recipe Results</h2></th>
+                <th class="sort" onclick="order_by('calories');">Calories</th>
 				<th>Allergy</th>
 				<th>Diet</th>
-				<th onclick="order_by('user');">Created by</th>
-				<th onclick="order_by('date');">Date created</th>
+				<th class="sort" onclick="order_by('user');">Created by</th>
+				<th class="sort" onclick="order_by('date');">Date created</th>
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
@@ -125,24 +134,23 @@
         <div class="page_bar">
             <div class="left">
             {% if page_obj.has_previous %}
-                <a href="?term={{ search }}&page=1">&laquo; first</a>
-                <a href="?term={{ search }}&page={{ page_obj.previous_page_number }}">previous</a>
+                <a onclick="change_page(1);">&laquo; first</a>
+                <a onclick="change_page({{ page_obj.previous_page_number }});">previous</a>
             {% endif %}
             </div>
             
             <div class="right">
             {% if page_obj.has_next %}
-                <a href="?term={{ search }}&page={{ page_obj.next_page_number }}">next</a>
-                <a href="?term={{ search }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a onclick="change_page({{ page_obj.next_page_number }})">next</a>
+                <a onclick="change_page({{ page_obj.paginator.num_pages }})">last &raquo;</a>
             {% endif %}
             </div>
             
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-		
+		</div>
 		{% else %}
 			<p>Searched recipe not found</p>
         {% endif %}
-        </div>
         <br>
 		{% if user.id is not None %}
 		<br>

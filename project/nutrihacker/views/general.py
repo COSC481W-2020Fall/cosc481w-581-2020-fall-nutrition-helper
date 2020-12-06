@@ -171,6 +171,7 @@ class SearchRecipeView(ListView):
 				
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
+			context['order_by'] = self.request.GET.get('order_by')
 			default_filter = self.request.GET.get('filter')
 			
 			# set search filter form values to profile defaults if searched from the nav bar, otherwise create the form from the request
