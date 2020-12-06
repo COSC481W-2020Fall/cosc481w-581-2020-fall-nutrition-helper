@@ -1,15 +1,27 @@
 <style>
-	.chart-header {
+	.chart-select {
 		text-align: center;
-		margin-bottom: 10px;
+		margin: auto;
+		width: 95%;
+		background-color: white;
+		border: 1px solid black;
+		border-bottom: 0;
+		padding-top: 10px;
+		padding-bottom: 5px;
+	}
+	.chart-select label {
+		color: #666;
+		font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+		font-size: 14px;
 	}
 	.chart {
 		text-align: center;
 		position: relative;
 		margin: 0 auto;
-		width: 70%;
+		width: 95%;
 		background-color: white;
 		border: 1px solid black;
+		border-top: 0;
 	}
 	.chart canvas {
 		margin: 0 auto;
@@ -17,33 +29,37 @@
 	}
 </style>
 
-<div class="chart-header">
-	<label>Time period:</label>
-	<select id="timerange">
-		<option value="past7">Past 7 Days</option>
-		<option value="past30">Past 30 Days</option>
-		<option value="week">This Week</option>
-		<option value="month">This Month</option>
-		<option value="year">This Year</option>
-	</select>
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<label>Nutrient:</label>
-	<select id="nutrient">
-		<option value="calories">Calories</option>
-		<option value="totalFat">Total Fat</option>
-		<option value="cholesterol">Cholesterol</option>
-		<option value="sodium">Sodium</option>
-		<option value="totalCarb">Total Carbs</option>
-		<option value="protein">Protein</option>
-	</select>
-</div>
-<div class="chart">
-	<canvas id="myChart"></canvas>
+<div class="chart-div">
+	<div class="chart-select">
+		<label>Time period:</label>
+		<select id="timerange">
+			<option value="past7">Past 7 Days</option>
+			<option value="past30">Past 30 Days</option>
+			<option value="week">This Week</option>
+			<option value="month">This Month</option>
+			<option value="year">This Year</option>
+		</select>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>Nutrient:</label>
+		<select id="nutrient">
+			<option value="calories">Calories</option>
+			<option value="totalFat">Total Fat</option>
+			<option value="cholesterol">Cholesterol</option>
+			<option value="sodium">Sodium</option>
+			<option value="totalCarb">Total Carbs</option>
+			<option value="protein">Protein</option>
+		</select>
+	</div>
+	<div class="chart">
+		<canvas id="myChart"></canvas>
+	</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
 <script type="text/javascript">
 	var url = "{% url 'nutrihacker:get_log_data' %}";
 	var user = {{ request.user.id }};
+	var goal = {{ calorie_goal }};
 </script>
