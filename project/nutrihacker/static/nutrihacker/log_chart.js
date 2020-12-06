@@ -22,8 +22,7 @@ var chart = new Chart(ctx, {
 			pointRadius: 4,
 			pointHoverRadius: 5,
 			fill: false,
-			lineTension: 0
-			
+			lineTension: 0,
 		}, {
 			label: 'Daily average: ',
 			data: null,
@@ -280,6 +279,7 @@ function update_average() {
 		chart.data.datasets[1].data = straight_line(timerange, avg);
 	} else {
 		chart.data.datasets[1].label = "Daily average: N/A";
+		chart.data.datasets[1].data = null;
 	}
 }
 
