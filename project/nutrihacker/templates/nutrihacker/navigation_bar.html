@@ -26,14 +26,30 @@
             </li>
         </div>
         <div class="menu-items">
-            <li><a href="{% url 'nutrihacker:description' %}">How it works</a></li>
             {% if user.is_authenticated %}
             <li>
-                <a href="{% url 'nutrihacker:profile' %}">My Profile</a>
+                <a href="{% url 'nutrihacker:log_list' %}">My Logs</a>
                 <div class="sub-menu-1">
                     <ul>
-                        <li><a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Personal Recipes</a></li>
-                        <li><a href="{% url 'nutrihacker:log_list' %}">My Logs</a></li>
+                        <li><a href="{% url 'nutrihacker:log_create' %}" alt="List Recipe">New Log</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="{% url 'nutrihacker:list_recipe' %}">My Recipes</a>
+                <div class="sub-menu-1">
+                    <ul>
+                        <li><a href="{% url 'nutrihacker:create_recipe' %}" alt="List Recipe">New Recipe</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="{% url 'nutrihacker:profile' %}">Profile</a>
+                <div class="sub-menu-1">
+                    <ul>
+                        <li><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="List Recipe">Diet & Allergies</a></li>
+                        <li><a href="{% url 'nutrihacker:update_profile' %}">Update Profile</a></li>
+                        <li><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></li>
                     </ul>
                 </div>
             </li>
