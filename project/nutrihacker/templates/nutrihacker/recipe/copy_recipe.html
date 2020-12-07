@@ -73,8 +73,27 @@
         <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
-                {{ form.as_table }}
-            </table>
+				{% for field in form.visible_fields %}
+					<tr id="row{{ forloop.counter }}">
+						<th>{{ field.label_tag }}</th>
+						<th>{{ field.label_tag }}</th>
+						<td>
+							{{ field }}
+							{% if field.errors %}
+								<li class="error">&bull; {{ field.errors.0 }}</li>
+							{% endif %}
+						</td>
+						{% if forloop.counter > 5 and not forloop.counter|divisibleby:2 %}
+							<td>
+								<button id={{ forloop.counter }} class="rmvbtn" type="button">&#8722;</button>
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+				{% for field in form.hidden_fields %}
+					<tr hidden><td>{{ field }}</td></tr>
+				{% endfor %}
+			</table>
             <br>
             <table align="center">
                 <tr>
@@ -93,6 +112,13 @@
             var extra_count = Number(document.getElementById("id_extra_field_count").value);
             var food_number = 2;
             
+			
+			// add event listeners to all initial remove buttons
+			var r_btns = document.getElementsByClassName("rmvbtn");
+			for (var i = 0; i < r_btns.length; i++) {
+				r_btns[i].addEventListener("click", function(){ remove(this.id); });
+			}
+			
             // adds another food and portions field to the form
             function addAnotherFood() {
                 // get the table
@@ -100,9 +126,10 @@
                 // get all table rows
                 var rows = table.getElementsByTagName("tr");
                 
+				
                 // select rows 7 and 8 (original food and portions field)
-                var f_row = rows[6];
-                var p_row = rows[7];
+				var f_row = table.getElementById("id_food1").parentElement.parentElement;
+				var p_row = table.getElementById("id_portions1").parentElement.parentElement;
                 
                 // clone the rows
                 var f_clone = f_row.cloneNode(true);
@@ -145,6 +172,24 @@
                 // update hidden value
                 document.getElementById("id_extra_field_count").value = extra_count;
             }
+			// removes indicated food and portions field from form
+			function remove(clicked_id) {
+				// get rows
+				var f_row = document.getElementById("row" + clicked_id);
+				var p_row = document.getElementById("row" + (Number(clicked_id) + 1));
+
+				// get select and input elements
+				var f_select = f_row.getElementsByTagName("select")[0];
+				var p_input = p_row.getElementsByTagName("input")[0];
+
+				// disable them
+				f_select.disabled = true;
+				p_input.disabled = true;
+				
+				// hide them
+				f_row.style.display = "none";
+				p_row.style.display = "none";
+			}
         </script>
     </body>
 </html>

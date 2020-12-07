@@ -184,34 +184,36 @@
 				<a href="{% url 'nutrihacker:copy_recipe' recipe.id %}"><button class="B">Clone Recipe</button></a>
 		</div>
 		<br>
-        <h2>Here is your recipe!</h2>
 	<div class="boxcolumn-1">
 		<table class="facts-1" style="background-color: white;">
 			<tr>
-				<th style="text-align: center;"colspan="5">{{ recipe.name }}</th>
+				<th style="text-align: center; background-color:black;" colspan="99">{{ recipe.name }}</th>
 			</tr>
 			<tr>
 				<td>PRODUCES:</td>
-				<td colspan="4" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
+				<td colspan="99" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
 			</tr>
 			<tr>
 				<td>INSTRUCTIONS:</td>
-				<td colspan="4"style="text-align:center;">{{ recipe.instruction|linebreaksbr }}</td>
+				<td colspan="99"style="text-align:left;">{{ recipe.instruction|linebreaksbr }}</td>
 			</tr>
 			<tr>
 				<td>INGREDIENTS</td>
 
 			{% for recipe_food in ingredients %}
-				<td>
-				<!--{{ recipe_food.food.name }} -->
-				<br>{{ recipe_food.portions }} <a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a><br>
+				<td style="text-align:center;">
+				<br>
+				<a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a>
+				<br>
+				{{ recipe_food.portions }}
+				<br>
 				</td><br>
 				{% endfor %}
 			</tr>
 		</table>
 	</div>
 	<div class="boxcolumn-2">
-		<h1 style="color: white; margin-top: 150px;"><center>Nutrition Facts:</center></h1>
+		<h1 style="color: green; margin-top: 100px;"><center>Nutrition Facts:</center></h1>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
 			<center>
 				<label style="color: white">Number of portions: </label>
@@ -224,6 +226,7 @@
 			<tr>
 				<td>Calories</td>
 				<td class="right">{{ nutrition.calories|floatformat }}</td>
+				<td  rowspan="99" style = "width : 20% ; background-color:black">{% include "nutrihacker/recipe/recipe_pi_chart.html" %}</td>
 			</tr>
 			<tr>
 				<td>Total Fat</td>
@@ -247,18 +250,27 @@
 			</tr>
 
 		</table>
+				
 		<table style="background-color: white; margin-left: auto; margin-right: auto;">
 				<hr>
 			<tr>
-				<td colspan="3" style="text-align:center; font-weight: bold;">Additional Diet Information</td>
+				<td colspan="3" style="color: green; text-align:center; font-weight: bold; background-color:black">Additional Diet Information</td>
 			</tr>
 			<tr>
-				<td>Allergy Information  </td>
-				<td>{{ recipe.allergies_string }}</td>
+				<td>Allergy Information </td>
+				{% if recipe.allergies_string %}
+					<td>{{ recipe.allergies_string }}</td>
+				{% else %}
+					<td> None </td>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>Diet Information  </td>
-				<td>{{ recipe.diets_string }}</td>
+				{% if recipe.diets_string %}
+					<td>{{ recipe.diets_string }}</td>
+				{% else %}
+					<td> None </td>
+				{% endif %}
 			</tr>
 		</table>
 		<br>

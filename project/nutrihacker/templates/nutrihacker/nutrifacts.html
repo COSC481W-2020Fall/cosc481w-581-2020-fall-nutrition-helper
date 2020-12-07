@@ -100,25 +100,34 @@
         <!--  RECIPE LIST   -->
 		
 		<table class="t02" width="70%" align="center" style="padding:10px" >
-			<thead>
+			<thead style="color:green; background-color:black">
 			<tr>
 				{% if object_list %}
-				<th><h2 style="color:white;">Recipe Results</h2></th>
+				<th>Recipes</th>
+				
+				<th>Portions<br>Included</th>
                 <th>Calories</th>
 				<th>Allergy</th>
 				<th>Diet</th>
-				<th>Created by</th>
-				<th>Date created</th>
+				<th>Creator</th>
+				<th>Date<br>Created</th>
+				
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
 				{% for recipe in object_list %}
-			<tbody>
+			<tbody  style="background-color:white">
 				<tr>
 				<!-- Button of the food in question -->
 					<th><a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a></th>
 
-				<!-- Convenient food information at a glance -->
+				<!-- Convenient food information at a glance forloop.counter object_list[portions_list].forloop.counter-->
+				
+				{% for portion in portions_list %}
+					{% if forloop.counter == forloop.parentloop.counter %}
+						<th>{{ portion.portions|floatformat }}</th>
+					{% endif %}
+				{% endfor %}
 				<th>{{ recipe.get_total.calories|floatformat }}</th>
 				<th>{{ recipe.allergies_string }}</th>
 				<th>{{ recipe.diets_string }}</th>

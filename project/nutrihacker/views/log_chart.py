@@ -5,14 +5,41 @@ from django.http import JsonResponse
 
 from nutrihacker.models import DailyLog
 
-def fill_nutrients_ids(day_num, user, days, nutrients, ids):
+def process_dailylogs(day_num, user, days, nutrients, ids):
+	average = {
+		'servingSize':0,
+		'calories':0,
+		'totalFat':0,
+		'cholesterol':0,
+		'sodium':0,
+		'totalCarb':0,
+		'protein':0
+	}
+	days_logged = 0
+	
 	for i in range(day_num):
 		try: # try to get DailyLog for that day belonging to user
 			dl = DailyLog.objects.get(user=user, date=days[i])
 			nutrients[i] = dl.get_total() # get the nutrient information
 			ids[i] = dl.id
+
+			for key in nutrients[i]:
+				# add nutrients to average
+				average[key] += nutrients[i][key]
+				# round nutrient values to first 2 decimal places
+				nutrients[i][key] = round(nutrients[i][key], 2)
+			
+			days_logged += 1 # update counter
 		except DailyLog.DoesNotExist: # if no matching DailyLog, assign False
 			nutrients[i] = False
+
+	if days_logged != 0:
+		for key in average:
+			average[key] = round(average[key] / days_logged)
+	else:
+		average = False
+
+	return average
 
 def get_past_seven(user, today):
 	days = [None] * 7
@@ -31,13 +58,14 @@ def get_past_seven(user, today):
 		# get the day of the week from days array for each day, add it to date
 		labels[i] = days[i].strftime('%a') + ' ' + str(days[i].month) + '/' + str(days[i].day)
 
-	# fill nutrients and ids array
-	fill_nutrients_ids(7, user, days, nutrients, ids)
+	# fill nutrients and ids array and calculate daily average
+	avg = process_dailylogs(7, user, days, nutrients, ids)
 
 	data = {
 		'labels': labels,
 		'nutrients': nutrients,
-		'ids': ids
+		'ids': ids,
+		'average': avg
 	}
 
 	return JsonResponse(data)
@@ -64,13 +92,14 @@ def get_past_thirty(user, today):
 		if labels[i] == 1:
 			labels[i] = [labels[i], days[i].strftime('%b')]
 	
-	# fill nutrients and ids array
-	fill_nutrients_ids(30, user, days, nutrients, ids)
+	# fill nutrients and ids array and calculate daily average
+	avg = process_dailylogs(30, user, days, nutrients, ids)
 
 	data = {
 		'labels': labels,
 		'nutrients': nutrients,
-		'ids': ids
+		'ids': ids,
+		'average': avg
 	}
 	
 	return JsonResponse(data)
@@ -95,13 +124,14 @@ def get_week(user, today):
 	for i in range(7):
 		labels[i] = days[i].strftime('%a') + ' ' + str(days[i].month) + '/' + str(days[i].day)
 
-	# fill nutrients and ids array
-	fill_nutrients_ids(7, user, days, nutrients, ids)
+	# fill nutrients and ids array and calculate daily average
+	avg = process_dailylogs(7, user, days, nutrients, ids)
 
 	data = {
 		'labels': labels,
 		'nutrients': nutrients,
-		'ids': ids
+		'ids': ids,
+		'average': avg
 	}
 
 	return JsonResponse(data)
@@ -119,14 +149,15 @@ def get_month(user, today):
 	for i in range(1, month_days):
 		days[i] = days[i-1] + timedelta(days=1)
 
-	# fill nutrients and ids array
-	fill_nutrients_ids(month_days, user, days, nutrients, ids)
+	# fill nutrients and ids array and calculate daily average
+	avg = process_dailylogs(month_days, user, days, nutrients, ids)
 
 	data = {
 		'labels': labels,
 		'nutrients': nutrients,
 		'ids': ids,
-		'title': today.strftime('%B')
+		'title': today.strftime('%B'),
+		'average': avg
 	}
 	
 	return JsonResponse(data)
@@ -137,7 +168,18 @@ def get_year(user, today):
 	labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 	nutrients = [None] * 12
 
-	# fill nutrients array
+	total_average = {
+		'servingSize':0,
+		'calories':0,
+		'totalFat':0,
+		'cholesterol':0,
+		'sodium':0,
+		'totalCarb':0,
+		'protein':0
+	}
+	total_days_logged = 0
+	
+	# fill nutrients array and calculate overall daily average
 	for i in range(12):
 		month_days = monthrange(current_year, i+1)[1]
 		month_average = {
@@ -149,8 +191,8 @@ def get_year(user, today):
 			'totalCarb':0,
 			'protein':0
 		}
-		
 		days_logged = 0
+		
 		for j in range(month_days):
 			day = date(current_year, i+1, j+1) # create date
 			
@@ -166,18 +208,30 @@ def get_year(user, today):
 			except DailyLog.DoesNotExist: # if no matching DailyLog, do nothing
 				pass
 
+		# add values of month_average (before dividing to get average) to total_average
+		for key in month_average:
+			total_average[key] += month_average[key]
+		total_days_logged += days_logged # add days_logged to total_days_logged
+
 		if days_logged != 0:
 			for key in month_average:
-				month_average[key] = month_average[key] / days_logged
+				month_average[key] = round(month_average[key] / days_logged, 2)
 
 			nutrients[i] = month_average
 		else:
 			nutrients[i] = False
 
+	if total_days_logged != 0:
+		for key in total_average:
+			total_average[key] = round(total_average[key] / total_days_logged)
+	else:
+		total_average = False
+
 	data = {
 		'labels': labels,
 		'nutrients': nutrients,
-		'title': today.strftime('%Y')
+		'title': today.strftime('%Y'),
+		'average': total_average
 	}
 
 	return JsonResponse(data)

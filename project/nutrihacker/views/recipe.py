@@ -254,7 +254,6 @@ class RecordRecipeView(LoginRequiredMixin, FormView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		context['recipe_form'] = RecipeForm()
-		print(context['recipe_form'])
 		return context
 		
 	
@@ -327,19 +326,14 @@ class CopyRecipe(LoginRequiredMixin, FormView):
 	# override get_initial to provide initial form values
 	def get_initial(self):
 		initial = super(CopyRecipe, self).get_initial()
-		print(initial)
 		ml = Recipe.objects.get(id=self.kwargs['pk'])
 
 		self.recipe_id = ml.id
 
 		initial['name'] = ml.name
 		initial['servingsProduced'] = ml.servingsProduced
-		# --------------------------- TODO: return the allergies and diets to the initialized values of the copy view
-		#initial['allergies'] = ml.allergies
-		#initial['diets'] = ml.diets
-		#for diet in ml.diets:
-		#	print("hahaha")
-		#initial['diets'] = ml.diets
+		initial['allergies'] = ml.allergies.all()
+		initial['diets'] = ml.diets.all()
 		initial['instruction'] = ml.instruction
 		initial['is_public'] = ml.is_public
 

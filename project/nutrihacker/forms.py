@@ -20,12 +20,41 @@ class ProfileForm(ModelForm):
 		fields = ['gender', 'profilePic', 'birthdate', 'height', 'weight', 'caloriegoal','showmetric']
 		
 class FilterFoodForm(forms.Form):
-	calories_min = forms.IntegerField(label="Calorie range", min_value=0, max_value=10000, required=False)
-	calories_max = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
+	nutrient_choices = [
+		('calories', 'Calories'), 
+		('totalFat', 'Total Fat'), 
+		('cholesterol', 'Cholesterol'), 
+		('sodium', 'Sodium'), 
+		('totalCarb', 'Total Carb'), 
+		('protein', 'Protein'), 
+		('servingSize', 'Serving Size')
+	]
+	nutrient1 = forms.ChoiceField(choices=nutrient_choices, label="Nutrient")
+	nutrient_min1 = forms.IntegerField(label="Range", min_value=0, max_value=10000, required=False)
+	nutrient_max1 = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
+	
+	# override __init__ to create dynamic number of fields
+	def __init__(self, *args, **kwargs):
+		# get number of extra fields from kwargs
+		extra_fields = kwargs.pop('extra', 0)
+		
+		super(FilterFoodForm, self).__init__(*args, **kwargs)
+		
+		form_data = {}
+
+		# add extra fields
+		for i in range(int(extra_fields)):
+			nutrient_field = 'nutrient%s' % (i+2)
+			min_field = 'nutrient_min%s' % (i+2)
+			max_field = 'nutrient_max%s' % (i+2)
+			
+			self.fields[nutrient_field] = forms.ChoiceField(choices=self.nutrient_choices, label="Nutrient")
+			self.fields[min_field] = forms.IntegerField(label="Range", min_value=0, max_value=10000, required=False)
+			self.fields[max_field] = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
 
 class FilterRecipeForm(forms.Form):
-	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False)
-	diet_filter = forms.ModelMultipleChoiceField(label="Include diet",queryset=DietPreference.objects.all(), required=False)
+	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False, widget=autocomplete.ModelSelect2Multiple())
+	diet_filter = forms.ModelMultipleChoiceField(label="Include diet", queryset=DietPreference.objects.all(), required=False, widget=autocomplete.ModelSelect2Multiple())
 	calories_min = forms.IntegerField(label="Calorie range", min_value=0, max_value=10000, required=False)
 	calories_max = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
 	food_filter = forms.ModelChoiceField(

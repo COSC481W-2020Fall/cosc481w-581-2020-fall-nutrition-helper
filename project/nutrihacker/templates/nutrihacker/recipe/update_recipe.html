@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Edit Log</title>
+		<title>Edit Recipe</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 		<style>
@@ -90,7 +90,7 @@
 	</head>
 	<body>
 		{% include "nutrihacker/navigation_bar.html" %}
-		<h1>Edit Log</h1>
+		<h1>Edit Recipe</h1>
 		<form method="POST" action="{% url 'nutrihacker:update_recipe' recipe_id %}">
 			{% csrf_token %}
 			<table id="formtable" align="center">
@@ -144,9 +144,12 @@
 				// get all table rows
 				var rows = table.getElementsByTagName("tr");
 				
-				// select rows 3 and 4 (original food and portions field)
-				var f_row = rows[6];
-				var p_row = rows[7];
+				// select rows 7 and 8 (original food and portions field)
+				var f_row = table.getElementById("id_food1").parentElement.parentElement;
+				var p_row = table.getElementById("id_portions1").parentElement.parentElement;
+				
+				//var f_row = rows[6];
+				//var p_row = rows[7];
 				
 				// clone the rows
 				var f_clone = f_row.cloneNode(true);
