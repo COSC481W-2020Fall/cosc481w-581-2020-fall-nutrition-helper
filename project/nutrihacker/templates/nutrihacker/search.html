@@ -65,7 +65,19 @@
 		<script type="text/javascript">
 			function order_by(field)
 			{
-				document.getElementById('order_by').value = field;
+				// If results were already sorted by clicked field, swap the order
+				order_by = document.getElementById('order_by');
+				order = document.getElementById('order');
+				if (field == order_by.value)
+				{
+					if (order.value == 'asc')
+						order.value = 'desc';
+					else
+						order.value = 'asc';
+				}
+				else
+					order.value = 'asc';
+				order_by.value = field;
 				document.getElementById('search_form').submit();
 			}
 			function change_page(page)
@@ -80,6 +92,7 @@
         <form id="search_form" action="{% url 'nutrihacker:search' %}" method="get">
             <input type="search" name="search" placeholder="Search..." size="100%" value="{{ search }}" />
 			<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
+			<input id="order" type="hidden" name="order" value="{{ order }}" />
 			<input id="page_num" type="hidden" name="page" value="1" />
             <button type="submit">&#128269;</button>
 			<div>

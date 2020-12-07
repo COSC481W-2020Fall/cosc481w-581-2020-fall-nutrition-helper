@@ -116,6 +116,11 @@ class SearchFoodView(ListView):
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('search')
 			context['order_by'] = self.request.GET.get('order_by')
+			order = self.request.GET.get('order')
+			if order:
+				context['order'] = order
+			else:
+				context['order'] = 'asc'
 			context['filter_form'] = FilterFoodForm(self.request.GET)
 		else:
 			context['filter_form'] = FilterRecipeForm()
@@ -128,6 +133,7 @@ class SearchFoodView(ListView):
 		if self.request.method == 'GET':
 			query = self.request.GET.get('search')
 			order_by = self.request.GET.get('order_by')
+			order = self.request.GET.get('order')
 			filter_form = FilterFoodForm(self.request.GET)
 			if filter_form.is_valid():
 				calories_min = filter_form.cleaned_data.get('calories_min')
@@ -154,9 +160,14 @@ class SearchFoodView(ListView):
 		if order_by:
 			# calories doesn't like Lower() because it's an int field?
 			if order_by == 'calories':
-				object_list = object_list.order_by('calories')
+				if order == 'desc':
+					order_by = '-calories'
+				object_list = object_list.order_by(order_by)
 			elif order_by in [field.name for field in Food._meta.get_fields()]:
-				object_list = object_list.order_by(Lower(order_by))
+				if order == 'desc':
+					object_list = object_list.order_by(Lower(order_by).desc())
+				else:
+					object_list = object_list.order_by(Lower(order_by))
 		
 		return object_list
 		
@@ -172,6 +183,11 @@ class SearchRecipeView(ListView):
 		if self.request.method == 'GET':
 			context['search'] = self.request.GET.get('term')
 			context['order_by'] = self.request.GET.get('order_by')
+			order = self.request.GET.get('order')
+			if order:
+				context['order'] = order
+			else:
+				context['order'] = 'asc'
 			default_filter = self.request.GET.get('filter')
 			
 			# set search filter form values to profile defaults if searched from the nav bar, otherwise create the form from the request
@@ -204,6 +220,7 @@ class SearchRecipeView(ListView):
 			query = self.request.GET.get('term')
 			default_filter = self.request.GET.get('filter')
 			order_by = self.request.GET.get('order_by')
+			order = self.request.GET.get('order')
 			
 			filter_form = FilterRecipeForm(self.request.GET)
 			if filter_form.is_valid():
@@ -255,12 +272,17 @@ class SearchRecipeView(ListView):
 		# allow for user to order the search results on a certain field
 		if order_by:
 			if order_by in ['name', 'user', 'created_at']:
-				object_list = object_list.order_by(Lower(order_by))
+				if order == 'desc':
+					object_list = object_list.order_by(Lower(order_by).desc())
+				else:
+					object_list = object_list.order_by(Lower(order_by))
 			elif order_by == 'calories':
+				if order == 'desc':
+					order_by = '-calories'
 				# calories hasn't been annotated yet
 				if not calories_min and not calories_max:
 					object_list = object_list.annotate(calories=ExpressionWrapper(Sum(F('foods__calories') * F('recipefood__portions')) 
 						/ F('servingsProduced'), output_field=IntegerField()))
-				object_list = object_list.order_by('calories')
+				object_list = object_list.order_by(order_by)
 			
 		return object_list

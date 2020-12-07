@@ -72,7 +72,19 @@
 		<script type="text/javascript">
 			function order_by(field)
 			{
-				document.getElementById('order_by').value = field;
+				// If results were already sorted by clicked field, swap the order
+				order_by = document.getElementById('order_by');
+				order = document.getElementById('order');
+				if (field == order_by.value)
+				{
+					if (order.value == 'asc')
+						order.value = 'desc';
+					else
+						order.value = 'asc';
+				}
+				else
+					order.value = 'asc';
+				order_by.value = field;
 				document.getElementById('search_form').submit();
 			}
 			function change_page(page)
@@ -89,6 +101,7 @@
 		<th><form id="search_form" action="{% url 'nutrihacker:search-recipe' %}" method="get">
                 <input name="term" type="search" placeholder="Search Recipe's" size="100%" />
 				<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
+				<input id="order" type="hidden" name="order" value="{{ order }}" />
 				<input id="page_num" type="hidden" name="page" value="1" />
                 <button type="submit" name="search">&#128269;</button>
 				<div>
@@ -114,7 +127,7 @@
 				<th>Allergy</th>
 				<th>Diet</th>
 				<th class="sort" onclick="order_by('user');">Created by</th>
-				<th class="sort" onclick="order_by('date');">Date created</th>
+				<th class="sort" onclick="order_by('created_at');">Date created</th>
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
