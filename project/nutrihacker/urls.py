@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+from django.conf.urls.static import static
 from django import forms 
 
 from . import views
@@ -89,4 +90,9 @@ urlpatterns = [
 
     path('pi_chart/', views.FactsView.as_view() , name='pi_chart')
     #----------------------------------------------------------------------------------
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    #-------------------------Profile pic stuff --------------------------------------
+    #if the setting is in debug mode
+    #if not settings.DEBUG:
+
+

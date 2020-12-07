@@ -71,8 +71,11 @@
 		<table class="facts" style="background-color: white; text-align:center;">
 			<thead>
 			<tr>
+				{% load static %}
 				<td>Username</td>
-				<td class="right">{{ user.username }}</td>
+				<td class="right">{{ user.username }} </td>
+			<!--	<td><img src="{{ MEDIA_URL }}{{ user.profilePic.url}}" alt="profile pic" ></td> -->
+
 			</tr>
 			</thead>
 			<tbody>

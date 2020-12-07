@@ -17,7 +17,7 @@ class UserForm(ModelForm):
 class ProfileForm(ModelForm):
 	class Meta:
 		model = Profile
-		fields = ['gender', 'birthdate', 'height', 'weight', 'caloriegoal','showmetric']
+		fields = ['gender', 'profilePic', 'birthdate', 'height', 'weight', 'caloriegoal','showmetric']
 		
 class FilterFoodForm(forms.Form):
 	calories_min = forms.IntegerField(label="Calorie range", min_value=0, max_value=10000, required=False)

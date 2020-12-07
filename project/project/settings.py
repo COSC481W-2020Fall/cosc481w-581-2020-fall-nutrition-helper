@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -121,6 +121,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#path directory where uploaded pics will be saved
+#It'll store the uploaded pic in file system not in the database
+MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_pics')
+
+MEDIA_URL = '/nutrihacker/profile_pics/'
 
 LOGIN_URL = '/nutrihacker/login/'
 
