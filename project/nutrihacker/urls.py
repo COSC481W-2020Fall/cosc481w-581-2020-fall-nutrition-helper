@@ -93,6 +93,7 @@ urlpatterns = [
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     #-------------------------Profile pic stuff --------------------------------------
     #if the setting is in debug mode
-    #if not settings.DEBUG:
+
+
 
 

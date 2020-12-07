@@ -28,7 +28,8 @@
         <div class="menu-items">
             {% if user.is_authenticated %}
             <li>
-                <a href="{% url 'nutrihacker:profile' %}">My Profile</a>
+                <a href="{% url 'nutrihacker:profile' %}">{{user.username}}</a>
+                <img src="{{ user.profile.profilePic.url }}" width="100"/>
                 <div class="sub-menu-1">
                     <ul>
                         <li><a href="{% url 'nutrihacker:list_recipe' %}" alt="List Recipe">Personal Recipes</a></li>

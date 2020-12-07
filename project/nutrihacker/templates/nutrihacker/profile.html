@@ -74,8 +74,7 @@
 				{% load static %}
 				<td>Username</td>
 				<td class="right">{{ user.username }} </td>
-			<!--	<td><img src="{{ MEDIA_URL }}{{ user.profilePic.url}}" alt="profile pic" ></td> -->
-
+				<td><img src="{{ user.profile.profilePic.url }}" width="240"/></td>
 			</tr>
 			</thead>
 			<tbody>

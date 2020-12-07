@@ -29,14 +29,112 @@
   			text-align: center;
 			float: right;
 		}
+		.Top{
+			background: white;
+			height: 25%;
+			width:100%;
+		}
+		.bottomLeft{
+			background: red;
+			height: 200px;
+			width: 33%;
+			left:0;
+		}
+		.BottomMiddle{
+			background: yellow;
+			height: 200px;
+			width: 33%;
+			float: center;
+		}
+		.BottomRight{
+			background: green;
+			height: 200px;
+			width: 33%;
+			right: 0;
+		}
+		.collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 50%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+         }
+		.active, .collapsible:hover {
+            background-color: white;
+        }
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: gray;
+         }
 	</style>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+
 	<body style="background-size:cover">
 		{% include "nutrihacker/navigation_bar.html" %}
-	<div>
-        <img src="{% static 'nutrihacker/images/Homepage.png' %}" alt="Homepage"/>
-    </div>
-        
 
+    -->
+    <form method="post" action="{% url 'nutrihacker:login' %}" style="text-align:right;">
+        {% csrf_token %}
+            <input type="submit" value="Login"><br>
+                <input type="button" value="Create Account" onclick="registerRedirect();">
+
+        <input type="hidden" name="next" value="{{ next }}">
+        </form>
+Our website is aim to help you improve their nutrition habit by providing<br>
+        nutrition information and meal recording system.<br>
+        <hr>
+        <button type="collapsible">Search</button>
+        <div class="content">
+            <p>Search allow users to search fo food and recipe</p>
+        </div>
+        <button type="collapsible">Log</button>
+        <div class="content">
+            <p>Allow users to log their daily food or meal intake</p>
+        </div>
+<hr>
+<p style="color: white; text-align:left">Group Members</p>
+<ul style="color: white; font-size:20px;">
+    <li>Bryce VanAsselt</li>
+    <li>Michael Neet</li>
+    <li>John Owens</li>
+    <li>Athena Xia</li>
+    <li>Jalen Hudson</li>
+    <li>Tsion Tadesse</li>
+</ul>
 
 	</body>
 </html>
+ <!--  <div class="Top">
+
+   			 </div>
+			<div class="bottomLeft">
+
+			</div>
+			<div class="BottomMiddle">
+
+			</div>
+			<div class="BottomRight">
+
+			</div>
