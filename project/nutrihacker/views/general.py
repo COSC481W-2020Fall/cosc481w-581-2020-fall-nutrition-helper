@@ -92,10 +92,18 @@ class FactsView(DetailView):
 		
 		object_list = Recipe.objects.filter(Q(user=user) | Q(is_public = True))
 		# stuff for the recipe list
-		RecipeFood.objects.filter(food=self.kwargs['pk'])
+		#RecipeFood.objects.filter(food=self.kwargs['pk'])
 		recipe_food_list = RecipeFood.objects.filter(food=self.kwargs['pk'])
 		recipe_ids = recipe_food_list.distinct().values_list('recipe')
 		object_list = object_list.filter(pk__in=recipe_ids)
+		
+		
+		portions_list = RecipeFood.objects.none()
+		for recipe in object_list:
+		
+			portions_list = portions_list | RecipeFood.objects.filter(food=self.kwargs['pk'], recipe=recipe)
+		
+		context['portions_list'] = portions_list
 		
 		context['object_list'] = object_list
 		

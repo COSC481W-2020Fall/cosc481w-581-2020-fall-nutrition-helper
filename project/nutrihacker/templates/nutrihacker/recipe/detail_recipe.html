@@ -187,23 +187,26 @@
 	<div class="boxcolumn-1">
 		<table class="facts-1" style="background-color: white;">
 			<tr>
-				<th style="text-align: center; background-color:black;" colspan="2">{{ recipe.name }}</th>
+				<th style="text-align: center; background-color:black;" colspan="99">{{ recipe.name }}</th>
 			</tr>
 			<tr>
 				<td>PRODUCES:</td>
-				<td colspan="4" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
+				<td colspan="99" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
 			</tr>
 			<tr>
 				<td>INSTRUCTIONS:</td>
-				<td colspan="4"style="text-align:center;">{{ recipe.instruction|linebreaksbr }}</td>
+				<td colspan="99"style="text-align:left;">{{ recipe.instruction|linebreaksbr }}</td>
 			</tr>
 			<tr>
 				<td>INGREDIENTS</td>
 
 			{% for recipe_food in ingredients %}
-				<td>
-				<!--{{ recipe_food.food.name }} -->
-				<br>{{ recipe_food.portions }} <a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a><br>
+				<td style="text-align:center;">
+				<br>
+				<a href="{% url 'nutrihacker:nutrifacts' recipe_food.food.id %}"><button class="B">{{ recipe_food.food.name }}</button></a>
+				<br>
+				{{ recipe_food.portions }}
+				<br>
 				</td><br>
 				{% endfor %}
 			</tr>
