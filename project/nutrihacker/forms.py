@@ -24,8 +24,8 @@ class FilterFoodForm(forms.Form):
 	calories_max = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
 
 class FilterRecipeForm(forms.Form):
-	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False)
-	diet_filter = forms.ModelMultipleChoiceField(label="Include diet",queryset=DietPreference.objects.all(), required=False)
+	allergy_filter = forms.ModelMultipleChoiceField(label="Exclude allergy", queryset=Allergy.objects.all(), required=False, widget=autocomplete.ModelSelect2Multiple())
+	diet_filter = forms.ModelMultipleChoiceField(label="Include diet", queryset=DietPreference.objects.all(), required=False, widget=autocomplete.ModelSelect2Multiple())
 	calories_min = forms.IntegerField(label="Calorie range", min_value=0, max_value=10000, required=False)
 	calories_max = forms.IntegerField(label="to", min_value=0, max_value=10000, required=False)
 	food_filter = forms.ModelChoiceField(

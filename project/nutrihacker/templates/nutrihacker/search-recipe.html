@@ -68,6 +68,12 @@
 			a, .sort {
 				cursor: pointer;
 			}
+			.filter {
+				margin: 10px;
+			}
+			.filter_form {
+				margin-top: 10px;
+			}
         </style>
 		<script type="text/javascript">
 			function order_by(field)
@@ -104,17 +110,26 @@
 				<input id="order" type="hidden" name="order" value="{{ order }}" />
 				<input id="page_num" type="hidden" name="page" value="1" />
                 <button type="submit" name="search">&#128269;</button>
-				<div>
-					{{ filter_form.allergy_filter.label_tag }}
-					{{ filter_form.allergy_filter }}
-					{{ filter_form.diet_filter.label_tag }}
-					{{ filter_form.diet_filter }}
-					{{ filter_form.food_filter.label_tag }}
-					{{ filter_form.food_filter }}
-					{{ filter_form.calories_min.label_tag }}
-					{{ filter_form.calories_min }}
-					{{ filter_form.calories_max.label_tag }}
-					{{ filter_form.calories_max }}
+				<div class="filter_form">
+					<span class='filter'>
+						{{ filter_form.allergy_filter.label_tag }}
+						{{ filter_form.allergy_filter }}
+					</span>
+					<span class='filter'>
+						{{ filter_form.diet_filter.label_tag }}
+						{{ filter_form.diet_filter }}
+					</span>
+					</br>
+					<span class='filter'>
+						{{ filter_form.food_filter.label_tag }}
+						{{ filter_form.food_filter }}
+					</span>
+					<span class='filter'>
+						{{ filter_form.calories_min.label_tag }}
+						{{ filter_form.calories_min }}
+						{{ filter_form.calories_max.label_tag }}
+						{{ filter_form.calories_max }}
+					</span>
 				</div>
             </form>
 		</th>
