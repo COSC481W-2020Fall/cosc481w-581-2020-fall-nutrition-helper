@@ -58,7 +58,7 @@
 				color: white;
 
 			}
-			a {
+			a, .sort {
 				cursor: pointer;
 			}
         </style>
@@ -96,14 +96,14 @@
 		<table class="t02" width="70%" align="center"  >
 			<thead>
 			<tr>
-				<th style="width: 150px;" onclick="order_by('name');">Foods Results </th>
-				<th style="width: 150px;" onclick="order_by('servingSize');">Serving Size </th>
-				<th style="width: 150px;" onclick="order_by('calories');">Calories </th>
-				<th style="width: 150px;" onclick="order_by('totalFat');">Total Fat </th>
-				<th style="width: 150px;" onclick="order_by('cholesterol');">Cholesterol </th>
-				<th style="width: 150px;" onclick="order_by('sodium');">Sodium </th>
-				<th style="width: 150px;" onclick="order_by('totalCarb');">Total Carb </th>
-				<th style="width: 150px;" onclick="order_by('protein');">Protein </th>
+				<th style="width: 150px;" onclick="order_by('name');" class="sort">Foods Results </th>
+				<th style="width: 150px;" onclick="order_by('servingSize');" class="sort">Serving Size </th>
+				<th style="width: 150px;" onclick="order_by('calories');" class="sort">Calories </th>
+				<th style="width: 150px;" onclick="order_by('totalFat');" class="sort">Total Fat </th>
+				<th style="width: 150px;" onclick="order_by('cholesterol');" class="sort">Cholesterol </th>
+				<th style="width: 150px;" onclick="order_by('sodium');" class="sort">Sodium </th>
+				<th style="width: 150px;" onclick="order_by('totalCarb');" class="sort">Total Carb </th>
+				<th style="width: 150px;" onclick="order_by('protein');" class="sort">Protein </th>
 			</tr>
 			</thead>
 			<!-- For loop that loops for each food that the query returned -->
