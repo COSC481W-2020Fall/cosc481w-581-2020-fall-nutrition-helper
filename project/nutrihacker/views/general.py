@@ -3,7 +3,7 @@ from dal import autocomplete
 
 from django.views.generic import TemplateView, ListView, DetailView
 
-from django.db.models import Q, Count
+from django.db.models import Q, F, Count, Sum, ExpressionWrapper, IntegerField
 from django.db.models.functions import Length, Lower
 
 from nutrihacker.models import Food, Recipe, RecipeFood, Profile, DietPreference
@@ -210,6 +210,8 @@ class SearchRecipeView(ListView):
 				allergy_filter = filter_form.cleaned_data.get('allergy_filter')
 				diet_filter = filter_form.cleaned_data.get('diet_filter')
 				food_filter = filter_form.cleaned_data.get('food_filter')
+				calories_min = filter_form.cleaned_data.get('calories_min')
+				calories_max = filter_form.cleaned_data.get('calories_max')
 		
 		# show all recipes if there's no search query
 		# (if you really want this to return here make sure you filter allergies and diets)
@@ -241,6 +243,14 @@ class SearchRecipeView(ListView):
 			recipe_food_list = RecipeFood.objects.filter(food=food_filter)
 			recipe_ids = recipe_food_list.values_list('recipe')
 			object_list = object_list.filter(pk__in=recipe_ids)
+		# filter results on given filters
+		if calories_min or calories_max:
+			object_list = object_list.annotate(calories=ExpressionWrapper(Sum(F('foods__calories') * F('recipefood__portions')) / F('servingsProduced'),
+				output_field=IntegerField()))
+			if calories_min:
+				object_list = object_list.filter(calories__gt=calories_min-1)
+			if calories_max:
+				object_list = object_list.filter(calories__lt=calories_max+1)
 			
 		# allow for user to order the search results on a certain field
 		if order_by:
