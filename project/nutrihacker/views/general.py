@@ -239,7 +239,7 @@ class SearchRecipeView(ListView):
 		# only include recipes containing the filtered food
 		if food_filter:
 			recipe_food_list = RecipeFood.objects.filter(food=food_filter)
-			recipe_ids = recipe_food_list.distinct().values_list('recipe')
+			recipe_ids = recipe_food_list.values_list('recipe')
 			object_list = object_list.filter(pk__in=recipe_ids)
 			
 		# allow for user to order the search results on a certain field
