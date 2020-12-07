@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 #It'll store the uploaded pic in file system not in the database
 MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_pics')
 
-MEDIA_URL = '/nutrihacker/profile_pics/'
+MEDIA_URL = '/profile_pics/'
 
 LOGIN_URL = '/nutrihacker/login/'
 
