@@ -79,8 +79,8 @@
 			function order_by(field)
 			{
 				// If results were already sorted by clicked field, swap the order
-				order_by = document.getElementById('order_by');
-				order = document.getElementById('order');
+				var order_by = document.getElementById('order_by');
+				var order = document.getElementById('order');
 				if (field == order_by.value)
 				{
 					if (order.value == 'asc')

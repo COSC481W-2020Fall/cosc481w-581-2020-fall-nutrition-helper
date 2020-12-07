@@ -50,8 +50,10 @@
 			background-color: green;
 			color: white;
 			}
-			#id_calories_max,
-			#id_calories_min{
+			#id_nutrient_max1,
+			#id_nutrient_min1,
+			.nutrient_range,
+			.addbtn{
 			width : 5%;
 			}
 			label {
@@ -63,11 +65,13 @@
 			}
         </style>
 		<script type="text/javascript">
+			var filter_number = 2;
+		
 			function order_by(field)
 			{
 				// If results were already sorted by clicked field, swap the order
-				order_by = document.getElementById('order_by');
-				order = document.getElementById('order');
+				var order_by = document.getElementById('order_by');
+				var order = document.getElementById('order');
 				if (field == order_by.value)
 				{
 					if (order.value == 'asc')
@@ -80,11 +84,63 @@
 				order_by.value = field;
 				document.getElementById('search_form').submit();
 			}
+			
 			function change_page(page)
 			{
 				document.getElementById('page_num').value = page;
 				document.getElementById('search_form').submit();
 			}
+            
+            // adds another nutrient filter
+            function addFilter() {
+			
+				// no need for more than 7 filters
+				if (filter_number > 7)
+					return;
+				
+                var filters = document.getElementById('filters');
+				var nutrient_filter = document.getElementById('nutrient_filter');
+                
+                var filter_clone = nutrient_filter.cloneNode(true);
+
+                // get the label and select elements from the nutrient field
+                var nutr_label = filter_clone.getElementsByTagName("label")[0];
+                var nutr_select = filter_clone.getElementsByTagName("select")[0];
+                
+                // get the label and input elements from the min field
+                var min_label = filter_clone.getElementsByTagName("label")[1];
+                var min_input = filter_clone.getElementsByTagName("input")[0];
+				
+				// get the label and input elements from the max field
+                var max_label = filter_clone.getElementsByTagName("label")[2];
+                var max_input = filter_clone.getElementsByTagName("input")[1];
+
+                // set the for, name, and id
+                nutr_label.setAttribute("for", "id_nutrient" + filter_number);
+                nutr_select.setAttribute("name", "nutrient" + filter_number);
+                nutr_select.id = "id_nutrient" + filter_number;
+
+                min_label.setAttribute("for", "id_nutrient_min" + filter_number);
+                min_input.setAttribute("name", "nutrient_min" + filter_number);
+                min_input.id = "id_nutrient_min" + filter_number;
+				min_input.className = "nutrient_range"
+				
+				max_label.setAttribute("for", "id_nutrient_max" + filter_number);
+                max_input.setAttribute("name", "nutrient_max" + filter_number);
+                max_input.id = "id_nutrient_max" + filter_number;
+				max_input.className = "nutrient_range"
+
+                // append filter to the div
+                filters.appendChild(filter_clone);
+
+                // increment counter
+                filter_number++;
+
+                // update hidden value
+				var filter_count = document.getElementById("filter_count");
+				var count = parseInt(filter_count.value, 10) + 1;
+                filter_count.value = count;
+            }
 		</script>
 	</head>
 	<body>
@@ -94,12 +150,18 @@
 			<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
 			<input id="order" type="hidden" name="order" value="{{ order }}" />
 			<input id="page_num" type="hidden" name="page" value="1" />
+			<input id="filter_count" type="hidden" name="filter_count" value="1">
             <button type="submit">&#128269;</button>
-			<div>
-				{{ filter_form.calories_min.label_tag }}
-				{{ filter_form.calories_min }}
-				{{ filter_form.calories_max.label_tag }}
-				{{ filter_form.calories_max }}
+			<div id="filters">
+				<input class="addbtn" type="button" value="Add Filter" onclick="addFilter()">
+				<div id="nutrient_filter">
+					{{ filter_form.nutrient1.label_tag }}
+					{{ filter_form.nutrient1 }}
+					{{ filter_form.nutrient_min1.label_tag }}
+					{{ filter_form.nutrient_min1 }}
+					{{ filter_form.nutrient_max1.label_tag }}
+					{{ filter_form.nutrient_max1 }}
+				</div>
 			</div>
         </form>
         {% if object_list %}

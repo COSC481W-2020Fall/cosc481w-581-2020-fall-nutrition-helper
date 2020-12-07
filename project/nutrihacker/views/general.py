@@ -134,10 +134,23 @@ class SearchFoodView(ListView):
 			query = self.request.GET.get('search')
 			order_by = self.request.GET.get('order_by')
 			order = self.request.GET.get('order')
-			filter_form = FilterFoodForm(self.request.GET)
+			filter_count = self.request.GET.get('filter_count')
+			if filter_count and filter_count.isnumeric():
+				filter_count = int(filter_count)
+			else:
+				filter_count = 0
+			filter_form = FilterFoodForm(self.request.GET, extra=filter_count-1)
+			nutrients = [ ]
+			nutrient_mins = [ ]
+			nutrient_maxs = [ ]
 			if filter_form.is_valid():
-				calories_min = filter_form.cleaned_data.get('calories_min')
-				calories_max = filter_form.cleaned_data.get('calories_max')
+				# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
+				for i in range(1, filter_count+1):
+					nutrients.append(filter_form.cleaned_data.get('nutrient'+str(i)))
+					nutrient_mins.append(filter_form.cleaned_data.get('nutrient_min'+str(i)))
+					nutrient_maxs.append(filter_form.cleaned_data.get('nutrient_max'+str(i)))
+			else:
+				filter_count = 0
 		else:
 			query = None
 		
@@ -149,13 +162,42 @@ class SearchFoodView(ListView):
 		object_list = Food.objects.filter(
 			Q(name__icontains = query)
 		).order_by(Length('name'))
-		
+			
 		# filter results on given filters
-		if calories_min:
-			object_list = object_list.filter(calories__gt=calories_min-1)
-		if calories_max:
-			object_list = object_list.filter(calories__lt=calories_max+1)
-		
+		for i in range(0, filter_count):
+			nutrient_min = nutrient_mins[i]
+			nutrient_max = nutrient_maxs[i]
+			if nutrient_min:
+				if nutrients[i] == 'calories':
+					object_list = object_list.filter(calories__gte=nutrient_min)
+				elif nutrients[i] == 'totalFat':
+					object_list = object_list.filter(totalFat__gte=nutrient_min)
+				elif nutrients[i] == 'cholesterol':
+					object_list = object_list.filter(cholesterol__gte=nutrient_min)
+				elif nutrients[i] == 'sodium':
+					object_list = object_list.filter(sodium__gte=nutrient_min)
+				elif nutrients[i] == 'totalCarb':
+					object_list = object_list.filter(totalCarb__gte=nutrient_min)
+				elif nutrients[i] == 'protein':
+					object_list = object_list.filter(protein__gte=nutrient_min)
+				elif nutrients[i] == 'servingSize':
+					object_list = object_list.filter(servingSize__gte=nutrient_min)
+			if nutrient_max:
+				if nutrients[i] == 'calories':
+					object_list = object_list.filter(calories__lte=nutrient_max)
+				elif nutrients[i] == 'totalFat':
+					object_list = object_list.filter(totalFat__lte=nutrient_max)
+				elif nutrients[i] == 'cholesterol':
+					object_list = object_list.filter(cholesterol__lte=nutrient_max)
+				elif nutrients[i] == 'sodium':
+					object_list = object_list.filter(sodium__lte=nutrient_max)
+				elif nutrients[i] == 'totalCarb':
+					object_list = object_list.filter(totalCarb__lte=nutrient_max)
+				elif nutrients[i] == 'protein':
+					object_list = object_list.filter(protein__lte=nutrient_max)
+				elif nutrients[i] == 'servingSize':
+					object_list = object_list.filter(servingSize__lte=nutrient_max)
+				
 		# allow for user to order the search results on a certain field
 		if order_by:
 			# calories doesn't like Lower() because it's an int field?
@@ -229,6 +271,12 @@ class SearchRecipeView(ListView):
 				food_filter = filter_form.cleaned_data.get('food_filter')
 				calories_min = filter_form.cleaned_data.get('calories_min')
 				calories_max = filter_form.cleaned_data.get('calories_max')
+			else:
+				calories_min = None
+				calories_max = None
+				allergy_filter = None
+				diet_filter = None
+				food_filter = None
 		
 		# show all recipes if there's no search query
 		# (if you really want this to return here make sure you filter allergies and diets)
