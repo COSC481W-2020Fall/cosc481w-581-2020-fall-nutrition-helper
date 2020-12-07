@@ -243,7 +243,7 @@ class SearchRecipeView(ListView):
 			recipe_food_list = RecipeFood.objects.filter(food=food_filter)
 			recipe_ids = recipe_food_list.values_list('recipe')
 			object_list = object_list.filter(pk__in=recipe_ids)
-		# filter results on given filters
+		# filter results on calories, annotate queryset with sum of recipefood's (calories * portions) / recipe servings produced
 		if calories_min or calories_max:
 			object_list = object_list.annotate(calories=ExpressionWrapper(Sum(F('foods__calories') * F('recipefood__portions')) / F('servingsProduced'),
 				output_field=IntegerField()))
@@ -256,7 +256,11 @@ class SearchRecipeView(ListView):
 		if order_by:
 			if order_by in ['name', 'user', 'created_at']:
 				object_list = object_list.order_by(Lower(order_by))
-			# elif order_by == 'calories':
-			# order by calories can't be done with this approach... if recipe model used manytomany field maybe
+			elif order_by == 'calories':
+				# calories hasn't been annotated yet
+				if not calories_min and not calories_max:
+					object_list = object_list.annotate(calories=ExpressionWrapper(Sum(F('foods__calories') * F('recipefood__portions')) 
+						/ F('servingsProduced'), output_field=IntegerField()))
+				object_list = object_list.order_by('calories')
 			
 		return object_list
