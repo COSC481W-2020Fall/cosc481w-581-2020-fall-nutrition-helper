@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Nutrition Helper</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}"> -->
 </head>
 <style>
          #nav{
@@ -17,6 +17,7 @@
             padding: 10px;
             height: 800px;
             color:white;
+            font-size: 20px;
          }
          #nav ul li {
             list-style-type: none;
@@ -28,7 +29,8 @@
             float:left;
             width: 60%;
             text-align: center;
-            padding: 5px;
+            color:white;
+            padding: 10px;
          }
          #Test{
             float: right;
@@ -62,6 +64,9 @@
         body{
             background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
         }
+        p{
+            padding: 10px;
+        }
 	</style>
 
 
@@ -82,9 +87,9 @@
         <form method="post" action="{% url 'nutrihacker:login' %}">
         {% csrf_token %}
         <ul>
-            <li><input type="text" placeholder="User name">{{ form.username }}</li>
-            <li><input type="text" placeholder="password" >{{ form.password }}</li>
-            <li><center><input type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
+            <li><input class="ph" type="text" placeholder="User name">{{ form.username }}</li>
+            <li><input class="ph" type="text" placeholder="password" >{{ form.password }}</li>
+            <li><center><input class="ph" type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
 
             <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
         </ul>
