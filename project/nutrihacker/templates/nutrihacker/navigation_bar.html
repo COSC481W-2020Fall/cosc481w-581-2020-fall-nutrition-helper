@@ -28,15 +28,7 @@
         <div class="menu-items">
             {% if user.is_authenticated %}
             <li>
-
-                <a href="{% url 'nutrihacker:profile' %}">{{user.username}}</a>
-                <img id="NavPPic"src="{% static 'nutrihacker/media/default.jpg' %}" width="200">
-                 <!-- <img src="{{ user.profile.profile_pic.url }}" width="100"/> -->
-                <div>
-                     <a href="{% url 'nutrihacker:log_list' %}">My Logs</a>
-                </div>
-
-
+                <a href="{% url 'nutrihacker:log_list' %}">My Logs</a>
                 <div class="sub-menu-1">
                     <ul>
                         <li><a href="{% url 'nutrihacker:log_create' %}" alt="List Recipe">New Log</a></li>
@@ -70,15 +62,19 @@
 </div>
 <style>
     body {
+
         padding: 0;
         margin: 0;
     }
-
+    .nav-bar * {
+        padding: 0;
+        margin: 0;
+    }
     .nav-bar {
         background: black;
         text-align: justify;
-        //overflow: hidden;
-
+        position: relative;
+        z-index: 999;
     }
 
     .logo{
@@ -158,11 +154,6 @@
         display: block;
         margin: 10px;
     }
-    #NavPPic{
-        border-radius:50%;
-        width: 40px ;
-        height: 40px;
-    }
 </style>
 <script>
     document.getElementById("food").addEventListener('click', function(){
@@ -188,7 +179,3 @@
     });
 </script>
 
-<!-- .nav-bar * {
-        padding: 0;
-        margin: 0;
-    } -->
