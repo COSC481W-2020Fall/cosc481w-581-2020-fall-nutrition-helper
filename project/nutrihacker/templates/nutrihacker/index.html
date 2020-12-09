@@ -92,12 +92,14 @@
     <article>
         <h1>Nutrihacker</h1>
         <p id="Description">Our website is aim to help you improve your nutrition habit by providing
-            nutrition information and meal recording system. It is designed to allow you <a href="{% url 'nutrihacker:search' %}">search for foods</a>
+            nutrition information and meal recording system. The nutrition information that is used in this website are from
+            USDA nutrition facts database. It is designed to allow you <a href="{% url 'nutrihacker:search' %}">search for foods</a>
             and display the nutrition fact of the food.
             Similarly, you can <a href="{% url 'nutrihacker:search-recipe' %}">search for recipe</a> discover new public recipe with their nutrition information.
             Also, you can log your daily food/meal intake via log page. In order to access the log system, you need to login to your account.
-            You can log here and access the log system. If you don't an account click here to register.
-            If you like to specify the diet preference and allergy information, you can do it HERE. <br></p>
+            You can <a href="{% url 'nutrihacker:log_list' %}" >log here</a>  and access the log system. If you don't an account click here to
+            <a href="{% url 'nutrihacker:register_account' %}">register</a>.
+            If you like to specify the diet preference and allergy information, you can do it <a href="{% url 'nutrihacker:diet_and_allergies' %}">HERE</a>. <br></p>
     </article>
 </section>
 
