@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+THIRD_PARTY_APPS = [
+    'django_cleanup',
 
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,11 +125,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+#bug setting up the right directory
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'nutrihacker/static/nutrihacker/media/')
+
+MEDIA_URL = 'nutrihacker/static/nutrihacker/media/'
 #path directory where uploaded pics will be saved
 #It'll store the uploaded pic in file system not in the database
-MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_pics')
 
-MEDIA_URL = '/profile_pics/'
+
 
 LOGIN_URL = '/nutrihacker/login/'
 

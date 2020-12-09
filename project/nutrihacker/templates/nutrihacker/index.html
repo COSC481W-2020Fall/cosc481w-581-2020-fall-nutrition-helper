@@ -2,111 +2,111 @@
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Nutrition Helper</title>
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-	</head>
-	<style>
-		.foodBtn{
-			width: 30%;
-			border-radius: 90px;
-  			color: white;
-  			padding: 55px 88px;
-  			font-size: 16px;
-  			cursor: pointer;
-  			text-align: center;
-			float: left;
-		}
-		.recipeBtn{
-			width: 30%;
-			border-radius: 90px;
-  			color: white;
-  			padding: 55px 88px;
-  			font-size: 16px;
-  			cursor: pointer;
-  			text-align: center;
-			float: right;
-		}
-		.Top{
-			background: white;
-			height: 25%;
-			width:100%;
-		}
-		.bottomLeft{
-			background: red;
-			height: 200px;
-			width: 33%;
-			left:0;
-		}
-		.BottomMiddle{
-			background: yellow;
-			height: 200px;
-			width: 33%;
-			float: center;
-		}
-		.BottomRight{
-			background: green;
-			height: 200px;
-			width: 33%;
-			right: 0;
-		}
-
-        #header {
-            position: relative;
-            min-height: 150px;
+<head>
+    <meta charset="UTF-8">
+    <title>Nutrition Helper</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+</head>
+<style>
+         #nav{
+            margin: 0px;
+            padding: 0px;
+            float:left;
+            width: 20%;
+            padding: 10px;
+            height: 800px;
+            color:white;
+         }
+         #nav ul li {
+            list-style-type: none;
+            padding: 15px 10px;
+			border-bottom: 1px solid green;
+            margin: 0px;
+         }
+         article{
+            float:left;
+            width: 60%;
+            text-align: center;
+            padding: 5px;
+         }
+         #Test{
+            float: right;
+            padding: 10px;
+         }
+         #Test ul li {
+            list-style-type: none;
+            padding: 3px;
+         }
+         h1{
+            font-family: "Lucida Console", "Courier New", monospace;
+            font-size: 40px;
+         }
+         #Description{
+            font-size: 20px;
+            padding: 0px;
+        article{
+            float: left;
+            padding: 20px;
+            width: 70%;
+            background-color: #f1f1f1;
+            height: 300px;
         }
-
-        #header-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-           }
+         }
+         footer {
+            background-color: #777;
+            padding: 10px;
+            text-align: center;
+            color: white;
+        }
+        body{
+            background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+        }
 	</style>
 
 
-	<body style="background-size:cover">
-		{% include "nutrihacker/navigation_bar.html" %}
-        <div>
-            <div>
-                <form method="post" action="{% url 'nutrihacker:login' %}" style="text-align:right;">
-                {% csrf_token %}
-            <input type="submit" value="Login"><br>
-                <input type="button" value="Create Account" onclick="registerRedirect();">
+<body style="background-size:cover">
+{% include "nutrihacker/navigation_bar.html" %}
 
-        <input type="hidden" name="next" value="{{ next }}">
-        </form>
-
-<h2>Our website is aim to help you improve their nutrition habit by providing<br>
-    nutrition information and meal recording system.<br></h2>
-      <p style="text-align: left">Our website allow you to</p>
-        <ul style="color: white; font-size:20px;">
-            <li style="list-style-type: none;">
-                <a style="color: white;" href="{% url 'nutrihacker:log_create' %}" >log</a> their meal if you're logged in. <br>
-            </li>
-            <li style="list-style-type: none;">
-                 <a style="color: white;"href="{% url 'nutrihacker:search' %}" >Search</a> for food and recipe. <br>
-            </li>
-            <li style="list-style-type: none;">
-                View public <a style="color: white;" href="{% url 'nutrihacker:list_recipe' %}">recipe</a>.
-            </li>
+<section>
+    <div id="nav">
+        <ul>
+            <li>Option1</li>
+            <li>option2</li>
+            <li><a href="{% url 'nutrihacker:aboutus' %}" target="_self">About Us</a></li>
+            <li><a href="" target="_parent">Help</a></li>
+            <li>Option5</li>
         </ul>
-<hr><br>
-        <div id="header">
-            <div id="header-content">
-                <ul style="color: white; font-size:20px;">
-                    <li style="list-style-type: none; font-size: 38; color: white;"><u>Group Members</u></li>
-                    <li>Bryce VanAsselt</li>
-                    <li>Michael Neet</li>
-                    <li>John Owens</li>
-                    <li>Athena Xia</li>
-                    <li>Jalen Hudson</li>
-                    <li>Tsion Tadesse</li>
-                </ul>
-            </div>
-        </div>
+    </div>
+    <div id="Test">
+        <form method="post" action="{% url 'nutrihacker:login' %}">
+        {% csrf_token %}
+        <ul>
+            <li><input type="text" placeholder="User name">{{ form.username }}</li>
+            <li><input type="text" placeholder="password" >{{ form.password }}</li>
+            <li><center><input type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
+
+            <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
+        </ul>
+    </div>
+    <article>
+        <h1>Nutrihacker</h1>
+        <p id="Description">Our website is aim to help you improve your nutrition habit by providing
+            nutrition information and meal recording system. It is designed to allow you <a href="{% url 'nutrihacker:search' %}">search for foods</a>
+            and display the nutrition fact of the food.
+            Similarly, you can <a href="{% url 'nutrihacker:search-recipe' %}">search for recipe</a> discover new public recipe with their nutrition information.
+            Also, you can log your daily food/meal intake via log page. In order to access the log system, you need to login to your account.
+            You can log here and access the log system. If you don't an account click here to register.
+            If you like to specify the diet preference and allergy information, you can do it HERE. <br></p>
+    </article>
+</section>
+
+<!--<footer>
+    <p>Footer</p>
+</footer> -->
 
 
-	</body>
+
+</body>
 </html>
+

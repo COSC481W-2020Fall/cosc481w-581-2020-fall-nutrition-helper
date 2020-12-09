@@ -52,7 +52,7 @@ class Food(models.Model):
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
 	user = models.OneToOneField(User, on_delete = models.CASCADE)
-	profilePic = models.ImageField(default='default.jpg', upload_to='profile_picture') #profile_picture is under profile_pics
+	profilePic = models.ImageField(default='default.jpg', upload_to='profile_picture/') #profile_picture is under profile_pics
 	gender = models.CharField(max_length=1, null=True)
 	birthdate = models.DateField(null=True)
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -65,7 +65,7 @@ class Profile(models.Model):
 	
 	#currently just gets the associated user
 	def __str__(self):
-		return f' {self.user.username} Profile'
+		return self.user.username
 	
 	def get_imperial_weight(self):
 		return round(self.weight * Profile.LBS_IN_KG, 2)

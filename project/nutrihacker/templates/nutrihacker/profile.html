@@ -7,138 +7,118 @@
 		<title>Nutrition Facts</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<style>
-			.facts th, td {
-				padding: 12px 15px;
+			#sideNavBar{
+				margin: 0px;
+				padding: 0px;
+				width: 24%;
+				height: 100%;
+				position: absolute; //may need to change it
+				color: black;
+				font-family: sans-serif;
+				// background: #CCD1D1;
+				float: left;
 			}
-			.facts {
-				border-collapse: collapse;
-				width: 35%;
-				margin: 25px 0;
-				font-size: 24px;
-				font-family:"Times New Roman", Times, serif;
-				min-width: 400px;
-				box-shadow: 0 0 20px rgba(0,0, 0, 0.15);
-				margin-left: auto;
-				margin-right: auto;
+			#sideNavBar li{
+				list-style-type: none;
+				padding: 15px 10px;
+				border-bottom: 1px solid black;
 			}
-			.facts thead tr{
-				background-color: #009879;
-				color: #ffffff;
-    			text-align: left;
-			}
-			.facts tbody tr{
-				background-color: #f3f3f3;
-				text-align: left;
-			}
-			body {
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-			}
-			a {
+			a{
 				text-decoration: none;
-				align: center;
 			}
-			a:hover {
+			a:hover{
 				color: blue;
 			}
-			.buttonn {
-				padding: 15px 30px;
-				border: none;
-				display: inline-block;
-				margin: 4px 2px;
-				color: white;
-				font-size: 18px;
-				border-radius:12px;
-				font-family:"Times New Roman", Times, serif;
+			.rightBar{
+				height: 100%;
 			}
-			.buttonn:hover {
-				background-color: blue;
-				cursor: pointer;
+			#RightProfInfo{
+				float: right;
+				background-color: none;
+				height: 10%;
+				width: 74%;
 			}
-			input {
-				width: 48px;
+			#RBottomProfInfo{
+				background-color: none;
+				bottom: 0;
+				width: 74%;
+				height: 60%;
 			}
-			label {
-				color: white;
+			#RBottomProfInfo ul li{
+				list-style-type: none;
 			}
+			#profileTable{
+				width: 100%;
+				height: 50px;
+			}
+			body{
+            background-image: url("{% static 'nutrihacker/images/test2.jpeg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #username{
+        	font-size: 35px;
+        }
 		</style>
 	</head>
-	<body style="background-size: cover">
+	<body>
+
+	<!--	background: #CCD1D1; -->
 		{% include "nutrihacker/navigation_bar.html" %}
-        
-		<br>
-		<br>
-		<table class="facts" style="background-color: white; text-align:center;">
-			<thead>
-			<tr>
-				{% load static %}
-				<td>Username</td>
-				<td class="right">{{ user.username }} <img src="{{ user.profile.profilePic.url }}" width="240"/> </td>
-				<td class="right">{{ user.username }}<img src="{{ user.profile.profilePic.url }}" width="240px"/> </td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Email Address</td>
-				<td class="right">{{ user.email }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>First Name</td>
-				<td class="right">{{ user.first_name }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Last Name</td>
-				<td class="right">{{ user.last_name }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Gender</td>
-				<td class="right">{{ user.profile.gender }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Birthdate</td>
-				<td class="right">{{ user.profile.birthdate }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Height</td>
-				<td class="right">{{ user.profile.get_height_str }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Weight</td>
-				<td class="right">{{ user.profile.get_weight_str }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Daily Calorie Goal</td>
-				<td class="right">{{ user.profile.caloriegoal }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Are metric units preferred?</td>
-				<td class="right">{{ user.profile.showmetric }}</td>
-			</tr>
-			</tbody>
-		</table>
-		<br><br>
-		<div style="text-align: center">
-			<button class="buttonn"><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="Diet Preferences and Allergies">Diet Preferences and Allergies</a></button>
-			<br><br>
-			<button class="buttonn"><a href="{% url 'nutrihacker:update_profile' %}" alt="Update Profile">Update Profile</a></button>
-			<button class="buttonn"><a href="{% url 'nutrihacker:change_password' %}" alt="Change Password">Change Password</a></button>
-            <br><br>
+		<div id ="sideNavBar">
+				<li><a href = "{% url 'nutrihacker:index' %}"><i class ="fa fa-home"></i> Home</a></li>
+				<li><a href="{% url 'nutrihacker:update_profile' %}" > Update Profile</a></li>
+				<li><a href="{% url 'nutrihacker:diet_and_allergies' %}" >Add Diet and Allergy Preferences</a></li>
+				<li><a href="{% url 'nutrihacker:change_password' %}"> Change Password</a></li>
+		</div>
+		<div class="rightBar">
+
+			<div id="RightProfInfo">
+
+						<div>
+							<img src="{% static 'nutrihacker/media/default.jpg' %}" width="200">
+							<!-- currently have trouble getting the right path
+							<img src="{{ user.profile.profilePic.url }}" width="200"> -->
+							<!--<img src="{{ user.profile.profilePic.url }}">-->
+							<b id="username"> {{ user.username }}</b>
+						</div>
+						<div id="Edit">
+										<a style="text-align: center;" href="{% url 'nutrihacker:update_profile' %}">Edit Profile</a
+						</div>
+				<div id="RBottomProfInfo">
+					<ul>
+						<hr><li><b>Email Address</b></li>
+						<li>{{ user.email }}</li><hr>
+
+						<li><b>First Name</b></li>
+						<li>{{ user.first_name }}</li><hr>
+
+						<li><b>Last Name</b></li>
+						<li>{{ user.last_name }}</li><hr>
+
+						<li><b>Gender</b></li>
+						<li>{{ user.profile.gender }}</li><hr>
+
+						<li><b>Birthdate</b></li>
+						<li>{{ user.profile.birthdate }}</li><hr>
+
+						<li><b>Height</b></li>
+						<li>{{ user.profile.get_height_str }}</li><hr>
+
+						<li><b>Weight</b></li>
+						<li>{{ user.profile.get_weight_str }}</li><hr>
+
+						<li><b>Daily Calorie Goal</b></li>
+						<li>{{ user.profile.caloriegoal }}</li><hr>
+
+						<li><b>Are metric units preferred?</b></li>
+						<li>{{ user.profile.showmetric }}</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 
+	</body>
 </html>

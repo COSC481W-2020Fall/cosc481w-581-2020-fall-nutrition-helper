@@ -13,6 +13,9 @@
 				border-collapse: collapse;
 				border-right: 0px;
 				padding: 10px;
+				margin-left: auto;
+				margin-right:auto;
+				background-color: white;
 			}
 			.facts {
 				width: 35%;
@@ -23,9 +26,6 @@
 				text-align: right;
 				border-left: 0px;
 				border-right: 3px solid black;
-			}
-			body {
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
 			a {
 				text-decoration: none;
@@ -120,9 +120,11 @@
         <br>
         <p>{{ user_form.errors }}</p>
 		<p>{{ profile_form.errors }}</p>
-        <form method="POST" action="{% url 'nutrihacker:update_profile' %}">
+        <!-- the enctype attriute helps to view the file data(image) otherwise the image won't display -->
+        <form method="POST" action="{% url 'nutrihacker:update_profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <table class="facts" style="background-color: white" style="width:50%">
+
+            <table >
 				<tr>
                     <td>{{ user_form.email.label_tag }}</td>
                     <td>{{ user_form.email }}<br></td>
@@ -134,6 +136,10 @@
 				<tr>
                     <td>{{ user_form.last_name.label_tag }}</td>
                     <td>{{ user_form.last_name }}<br></td>
+                </tr>
+                <tr>
+                    <td>Upload profile picture</td>
+                    <td>{{profile_form.profilePic}}</td>
                 </tr>
 				<tr>
                     <td>{{ profile_form.gender.label_tag }}</td>

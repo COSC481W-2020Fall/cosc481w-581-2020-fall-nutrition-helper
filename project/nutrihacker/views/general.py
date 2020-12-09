@@ -13,8 +13,10 @@ from nutrihacker.forms import FilterRecipeForm, FilterFoodForm
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
 
-class DescriptionView(TemplateView):
-	template_name = 'nutrihacker/description.html'
+class AboutUsView(TemplateView):
+	template_name = 'nutrihacker/about_us.html'
+class HelpView(TemplateView):
+	template_name = 'nutrihacker/help.html'
 
 # autocomplete search for foods
 class FoodAutocomplete(autocomplete.Select2QuerySetView):
