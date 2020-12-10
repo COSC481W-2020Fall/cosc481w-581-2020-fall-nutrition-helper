@@ -36,6 +36,7 @@
          #Test{
             float: right;
             padding: 10px;
+            margin-right: 10px;
          }
          #Test ul li {
             list-style-type: none;
@@ -51,7 +52,7 @@
         article{
             float: left;
             padding: 20px;
-            width: 70%;
+            width: 60%;
             background-color: #f1f1f1;
             height: 300px;
         }
@@ -81,7 +82,7 @@
 <body style="background-size:cover">
 {% include "nutrihacker/navigation_bar.html" %}
 
-<section>
+<form>
     <!--
     <div id="nav">
         <ul>
@@ -98,23 +99,35 @@
              <!-- appears only if they're not already logged in
              Add conditional statement HERE-->
         <ul>
-            <li><inpclaut class="ph" type="text" placeholder="User name">{{ form.username }}</li>
+            <li><input class="ph" type="text" placeholder="User name">{{ form.username }}</li>
             <li><input class="ph" type="text" placeholder="password" >{{ form.password }}</li>
             <li><center><input class="ph" type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
 
             <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
         </ul>
+        </form>
     </div>
+
+
     <article>
         <h1>Nutrihacker</h1>
-        <p id="Description">Our website is aim to help you improve your nutrition habit by providing
+        <p id="Description"> Hello! Test Hello!Our website is aim to help you improve your nutrition habit by providing
             nutrition information and meal recording system. The nutrition information that is used in this website are from
             USDA nutrition facts database. <br><br>
+        <div>
+            <button><a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a></button>
 
+             <button> <a href="{% url 'nutrihacker:log_list' %}" >Log</a></button>
+
+
+
+    </div>
+    </article>
             <!-- allow user to access this button if they're logged in
              Add conditional statement HERE-->
-            <button><a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a></button>
-            <button> <a href="{% url 'nutrihacker:log_list' %}" >Log</a></button>
+
+</section>
+
             <!--It is designed to allow you <a href="{% url 'nutrihacker:search' %}">search for foods</a>
             and display the nutrition fact of the food.
             Similarly, you can <a href="{% url 'nutrihacker:search-recipe' %}">search for recipe</a> discover new public recipe with their nutrition information.
@@ -122,8 +135,7 @@
             You can <a href="{% url 'nutrihacker:log_list' %}" >log here</a>  and access the log system. If you don't an account click here to
             <a href="{% url 'nutrihacker:register_account' %}">register</a>.
             If you like to specify the diet preference and allergy information, you can do it <a href="{% url 'nutrihacker:diet_and_allergies' %}">HERE</a>. <br></p> -->
-    </article>
-</section>
+
 
 <!--<footer>
     <p>Footer</p>

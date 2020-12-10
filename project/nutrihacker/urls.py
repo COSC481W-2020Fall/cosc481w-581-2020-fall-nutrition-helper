@@ -95,12 +95,6 @@ urlpatterns = [
     path('pi_chart/', views.FactsView.as_view() , name='pi_chart'),
     #----------------------------------------------------------------------------------
 ]
-# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#-------------------------Profile pic stuff --------------------------------------
-if settings.DEBUG:
-          urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
 
 
 
