@@ -40,22 +40,7 @@
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         
-        {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-        {% endif %}
-
-        {% if next %}
-            {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed,
-            please login with an account that has access.</p>
-            {% else %}
-            <p>Please login to see this page.</p>
-            {% endif %}
-        {% endif %}
-        
-        {% if user.is_authenticated %}
-        <p>You are already logged in.</p>
-        {% else %}
+    
         <form method="post" action="{% url 'nutrihacker:login' %}">
         {% csrf_token %}
         <table align="center" width="90%">
@@ -71,6 +56,21 @@
                 <td></td>
             <td style="text-align:left;"><input type="submit" value="Login"></td>
         </tr>
+        {% if user.is_authenticated %}
+        <p>You are already logged in.</p>
+        {% else %}
+        {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
         <tr>
             <td></td>
             <td style="text-align:left;" >

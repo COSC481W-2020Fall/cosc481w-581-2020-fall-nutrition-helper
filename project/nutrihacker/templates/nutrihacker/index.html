@@ -1,148 +1,102 @@
-{% load static %}
+    {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Nutrition Helper</title>
-    <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-</head>
-<style>
-         #nav{
-            margin: 0px;
-            padding: 0px;
-            float:left;
-            width: 20%;
-            padding: 10px;
-            height: 800px;
-            color:white;
-            font-size: 20px;
-         }
-         #nav ul li {
-            list-style-type: none;
-            padding: 15px 10px;
-			border-bottom: 1px solid green;
-            margin: 0px;
-         }
-         article{
-            float:left;
-            width: 60%;
-            text-align: center;
-            color:white;
-            padding: 40px;
-            margin: 40px;
-         }
-         #Test{
-            float: right;
-            padding: 10px;
-            margin-right: 50px;
-         }
-         #Test ul li {
-            list-style-type: none;
-            padding: 3px;
-         }
-         h1{
-            font-family: "Lucida Console", "Courier New", monospace;
-            font-size: 40px;
-         }
-         #Description{
-            font-size: 20px;
-            padding: 0px;
-        article{
-            float: left;
-            padding: 20px;
-            width: 60%;
-            background-color: #f1f1f1;
-            height: 300px;
-        }
-         }
-         footer {
-            background-color: #777;
-            padding: 10px;
-            text-align: center;
-            color: white;
-        }
-        body{
-            background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-        }
-        p{
-            padding: 10px;
-        }
-        button{
-            padding: 50px;
-            border-radius: 50px;
-            margin: 30px;
-            font-size: 30px;
-        }
-
-	</style>
-
-
-<body style="background-size:cover">
-{% include "nutrihacker/navigation_bar.html" %}
-    <article>
-        <h1>Nutrihacker</h1>
-        <p id="Description">Our website is aim to help you improve your nutrition habit by providing
-            nutrition information and meal recording system. The nutrition information that is used in this website are from
-            USDA nutrition facts database. <br><br>
-    </article>
-    <div id="Test">
-        <form method="post" action="{% url 'nutrihacker:login' %}">
-        {% csrf_token %}
-        <!-- if the user is logged in and is authenticated user;
-        has an access to the log and recipe page from the homepage -->
-            {% if user.is_authenticated %}
-             <button><a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a></button>
-
-             <button> <a href="{% url 'nutrihacker:log_list' %}" >Log</a></button>
-             <!-- appears only if they're not already logged in -->
-             {% else %}
-        <form method="post" action="{% url 'nutrihacker:login' %}">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>User Name </td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td>{{ form.password }}</td>
-            </tr>
-            <tr>
-                <td><input type="submit" value="Login"></td>
-            </tr>
-        </table>
-
-
-        <input type="hidden" name="next" value="{{ next }}">
-        </form>
-             <!-- <form method="post" action="{% url 'nutrihacker:login' %}">
-                {% csrf_token %}
-            <ul>
-                <li><input class="ph" type="text" placeholder="User name">{{ form.username }}</li>
-                <li><input class="ph" type="text" placeholder="password" >{{ form.password }}</li>
-                <li><center><input class="ph" type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
-
-                <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
-            </ul>
-        </form> -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>HomePage</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    </head>
+    <style>
              
-             {% endif%}
-        
-        </form>
-        </div>
-    
-           
-</section>
+            .homepage h1{
+                font-family: "Lucida Console", "Courier New", monospace;
+                font-size: 40px;
+                text-align: center;
+             }
+             .homepage .login{
 
+             }
+            .homepage .login .btnsLIN{
+                margin-top: 10px;
+                margin-right: 100px;
+                margin-bottom: 10px;
+                margin-left:150px;
+
+            }
+            body{
+                background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+            }
+            p{
+                padding: 10px;
+            }
+            button{
+                padding: 50px;
+                border-radius: 50px;
+                margin: 30px;
+                font-size: 30px;
+            }
+            .btnsLIN a{
+                text-decoration: none;
+                color:white;
+                font-weight: bold;
+                background-color: #4CAF50;
+                text-align: center;
+                padding: 50px;
+                margin: 100px;
+                float: left;
+                display: flex;
+                font-size: 30px;
+                border-radius: 5px;
+            }
+
+    	</style>
+
+
+    <body style="background-size:cover">
+    {% include "nutrihacker/navigation_bar.html" %}
+        <div class="homepage">
+            <div class="homepageMsg">
+                <h1>NutriHacker</h1>
+                <p id="Description">Our website is aim to help you improve your nutrition habit by providing
+                nutrition information and meal recording system. The nutrition information that is used in this website are from
+                USDA nutrition facts database.
+            </div>
+            <div class="login">
+                 <form method="post" action="{% url 'nutrihacker:login' %}">
+            {% csrf_token %}
             
-<!--<footer>
-    <p>Footer</p>
-</footer> -->
+                {% if user.is_authenticated %}
+                <div class="btnsLIN">
+                <a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a>
+                <a href="{% url 'nutrihacker:log_list' %}" >Log</a>
+                </div>
+                         <!-- appears only if they're not already logged in -->
+                 {% else %}
+            <form method="post" action="{% url 'nutrihacker:login' %}">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>User Name </td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td>{{ form.password }}</td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Login"></td>
+                </tr>
+            </table>
 
 
-
-</body>
-</html>
-
+            <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            </form>
+            </div>
+            
+            </div>
+        </div>
+        </body>
+    </html>
