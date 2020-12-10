@@ -36,7 +36,7 @@
          #Test{
             float: right;
             padding: 10px;
-            margin-right: 10px;
+            margin-right: 50px;
          }
          #Test ul li {
             list-style-type: none;
@@ -81,62 +81,62 @@
 
 <body style="background-size:cover">
 {% include "nutrihacker/navigation_bar.html" %}
-
-<form>
-    <!--
-    <div id="nav">
-        <ul>
-            <li>Option1</li>
-            <li>option2</li>
-            <li><a href="{% url 'nutrihacker:aboutus' %}" target="_self">About Us</a></li>
-            <li><a href="" target="_parent">Help</a></li>
-            <li>Option5</li>
-        </ul>
-    </div> -->
+    <article>
+        <h1>Nutrihacker</h1>
+        <p id="Description">Our website is aim to help you improve your nutrition habit by providing
+            nutrition information and meal recording system. The nutrition information that is used in this website are from
+            USDA nutrition facts database. <br><br>
+    </article>
     <div id="Test">
         <form method="post" action="{% url 'nutrihacker:login' %}">
         {% csrf_token %}
-             <!-- appears only if they're not already logged in
-             Add conditional statement HERE-->
-        <ul>
-            <li><input class="ph" type="text" placeholder="User name">{{ form.username }}</li>
-            <li><input class="ph" type="text" placeholder="password" >{{ form.password }}</li>
-            <li><center><input class="ph" type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
-
-            <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
-        </ul>
-        </form>
-    </div>
-
-
-    <article>
-        <h1>Nutrihacker</h1>
-        <p id="Description"> Hello! Test Hello!Our website is aim to help you improve your nutrition habit by providing
-            nutrition information and meal recording system. The nutrition information that is used in this website are from
-            USDA nutrition facts database. <br><br>
-        <div>
-            <button><a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a></button>
+        <!-- if the user is logged in and is authenticated user;
+        has an access to the log and recipe page from the homepage -->
+            {% if user.is_authenticated %}
+             <button><a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a></button>
 
              <button> <a href="{% url 'nutrihacker:log_list' %}" >Log</a></button>
+             <!-- appears only if they're not already logged in -->
+             {% else %}
+        <form method="post" action="{% url 'nutrihacker:login' %}">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>User Name </td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>{{ form.password }}</td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Login"></td>
+            </tr>
+        </table>
 
 
+        <input type="hidden" name="next" value="{{ next }}">
+        </form>
+             <!-- <form method="post" action="{% url 'nutrihacker:login' %}">
+                {% csrf_token %}
+            <ul>
+                <li><input class="ph" type="text" placeholder="User name">{{ form.username }}</li>
+                <li><input class="ph" type="text" placeholder="password" >{{ form.password }}</li>
+                <li><center><input class="ph" type="submit" value="login"><a href="{% url 'nutrihacker:change_password' %}">Change Password</a></center></li>
 
-    </div>
-    </article>
-            <!-- allow user to access this button if they're logged in
-             Add conditional statement HERE-->
-
+                <li><center>Don't have an account?<a href="{% url 'nutrihacker:register_account' %}">Sign up</a></center></li>
+            </ul>
+        </form> -->
+             
+             {% endif%}
+        
+        </form>
+        </div>
+    
+           
 </section>
 
-            <!--It is designed to allow you <a href="{% url 'nutrihacker:search' %}">search for foods</a>
-            and display the nutrition fact of the food.
-            Similarly, you can <a href="{% url 'nutrihacker:search-recipe' %}">search for recipe</a> discover new public recipe with their nutrition information.
-            Also, you can log your daily food/meal intake via log page. In order to access the log system, you need to login to your account.
-            You can <a href="{% url 'nutrihacker:log_list' %}" >log here</a>  and access the log system. If you don't an account click here to
-            <a href="{% url 'nutrihacker:register_account' %}">register</a>.
-            If you like to specify the diet preference and allergy information, you can do it <a href="{% url 'nutrihacker:diet_and_allergies' %}">HERE</a>. <br></p> -->
-
-
+            
 <!--<footer>
     <p>Footer</p>
 </footer> -->

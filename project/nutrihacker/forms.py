@@ -237,6 +237,7 @@ class RecipeForm(forms.Form):
 		required=True
 	)
 	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
+	recipe_image = forms.ImageField(label='Upload Recipe Image', required=False)
 	# hidden field that keeps track of how many extra fields have been added
 	extra_field_count = forms.CharField(widget=forms.HiddenInput())
 
