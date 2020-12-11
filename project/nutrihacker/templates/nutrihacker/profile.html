@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Nutrition Facts</title>
-<<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}"> 
+<title>Profile Page</title>
+<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}"> 
 <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -90,7 +90,6 @@
 </head>
 <body>
 
-<!--	background: #CCD1D1; -->
 {% include "nutrihacker/navigation_bar.html" %}
 
 <div class="profile">
@@ -101,9 +100,10 @@
 		<img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200"/>
 		{% endif %}
 		<h2>{{ user.username }}</h2>
+		<a href="{% url 'nutrihacker:update_profile' %}" style="text-align: center;"> Update Profile</a><br>
 		<a href="{% url 'nutrihacker:diet_and_allergies' %}" target="_blank">Add Diet and Allergy Preferences</a><br>
 		<a href="{% url 'nutrihacker:change_password' %}" target="_blank"> Change Password</a><br>
-		<a href="{% url 'nutrihacker:update_profile' %}" style="text-align: center;"> Update Profile</a>
+		
 	</div>
 	<div class="profileDetailInfo">
 		<div class="detailInfo">
@@ -124,13 +124,8 @@
 			<h4>{{ user.profile.gender }}</h4>
 		</div>
 		<div class="detailInfo">
-		<h3>Are metric units preferred?</h3>
-		<h4>{{ user.profile.showmetric }}</h4>
-	</div>
-	<div class="profileInfoRight">
-		<div class="detailInfo">
 			<h3>Birthdate</h3>
-			<h4>{{ user.profile.birthdate }}</>
+			<h4>{{ user.profile.birthdate }}</h4>
 		</div>
 		<div class="detailInfo">
 			<h3>Height</h3>
@@ -142,7 +137,11 @@
 		</div>
 		<div class="detailInfo">
 			<h3>Daily Calorie Goal</h3>
-			<h4 >{{ user.profile.caloriegoal }}</h4>
+			<h4>{{ user.profile.caloriegoal }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Are metric units preferred?</h3>
+			<h4>{{ user.profile.showmetric }}</h4>
 		</div>
 	</div>
 </div>

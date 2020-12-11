@@ -9,11 +9,19 @@
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
     </head>
     <style>
+            *{
+                margin:0;
+                padding: 0;
+                list-style: none;
+                box-sizing: border-box;
+            }
              
             .homepage h1{
                 font-family: "Lucida Console", "Courier New", monospace;
                 font-size: 40px;
+                padding: 10px;
                 text-align: center;
+                color: white;
              }
              .homepage .login{
 
@@ -25,6 +33,10 @@
                 margin-left:150px;
 
             }
+            .homepage .login .login_out_box{
+                text-align: center;
+                margin: 30px;
+            } 
             body{
                 background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
             }
@@ -50,6 +62,9 @@
                 font-size: 30px;
                 border-radius: 5px;
             }
+            .homepage .team .list{
+                display: inline-flex;
+            }
 
     	</style>
 
@@ -58,44 +73,50 @@
     {% include "nutrihacker/navigation_bar.html" %}
         <div class="homepage">
             <div class="homepageMsg">
-                <h1>NutriHacker</h1>
+                <h1>Welcome to NutriHacker!</h1>
                 <p id="Description">Our website is aim to help you improve your nutrition habit by providing
                 nutrition information and meal recording system. The nutrition information that is used in this website are from
                 USDA nutrition facts database.
             </div>
             <div class="login">
-                 <form method="post" action="{% url 'nutrihacker:login' %}">
+                 <form method="post" >
             {% csrf_token %}
             
                 {% if user.is_authenticated %}
                 <div class="btnsLIN">
-                <a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a>
-                <a href="{% url 'nutrihacker:log_list' %}" >Log</a>
+                    <a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a>
+                    <a href="{% url 'nutrihacker:log_list' %}" >Log</a>
                 </div>
                          <!-- appears only if they're not already logged in -->
                  {% else %}
-            <form method="post" action="{% url 'nutrihacker:login' %}">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <td>User Name </td>
-                    <td>{{ form.username }}</td>
-                </tr>
-                <tr>
-                    <td>Password</td>
-                    <td>{{ form.password }}</td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Login"></td>
-                </tr>
-            </table>
 
+                    <div class="login_out_box">
+                        <lable for= "{{form.username.id_for_label }}">Username</lable>
+                   {{ form.username }}
+                    </div>
+                    <div  class="login_out_box">
+                         <lable for= "{{form.username.id_for_label }}">Password</lable>
+                         {{ form.password }}
+                    </div>
+               
+                    <input type="submit" value="Login">         
 
             <input type="hidden" name="next" value="{{ next }}">
+        </div>
             {% endif %}
             </form>
             </div>
-            
+            <div class="Team">
+                <ul class="list">
+                    <li>Bryce VanAsselt</li>
+                        <li>Group leader</>
+                    <li>Michael Neet</li>
+                    <li>John Owens</li>
+                    <li>Athena Xia</li>
+                    <li>Jalen Hudson</li>
+                    <li>Tsion Tadesse</li>
+                </ul>
+            </div>
             </div>
         </div>
         </body>
