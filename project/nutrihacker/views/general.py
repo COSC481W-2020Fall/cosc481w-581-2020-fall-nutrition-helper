@@ -128,7 +128,12 @@ class SearchFoodView(ListView):
 				context['order'] = order
 			else:
 				context['order'] = 'asc'
-			context['filter_form'] = FilterFoodForm(self.request.GET)
+			filter_count = self.request.GET.get('filter_count')
+			if (filter_count == None):
+				filter_count = 1
+			context['filter_form'] = FilterFoodForm(self.request.GET, extra=int(filter_count)-1)
+			context['filter_count'] = filter_count
+			
 		else:
 			context['filter_form'] = FilterRecipeForm()
 			
@@ -151,7 +156,6 @@ class SearchFoodView(ListView):
 			nutrient_mins = [ ]
 			nutrient_maxs = [ ]
 			if filter_form.is_valid():
-				# stores data from form into food and portions dicts (ex: 'food1': <Food: Egg>)
 				for i in range(1, filter_count+1):
 					nutrients.append(filter_form.cleaned_data.get('nutrient'+str(i)))
 					nutrient_mins.append(filter_form.cleaned_data.get('nutrient_min'+str(i)))

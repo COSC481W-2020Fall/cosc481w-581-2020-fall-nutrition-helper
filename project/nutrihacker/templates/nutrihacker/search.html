@@ -48,13 +48,11 @@
 
 			.B:hover{
 			background-color: green;
-			color: white;
+				color: white;
 			}
-			#id_nutrient_max1,
-			#id_nutrient_min1,
 			.nutrient_range,
 			.addbtn{
-			width : 5%;
+				width : 5%;
 			}
 			label {
 				color: white;
@@ -65,7 +63,6 @@
 			}
         </style>
 		<script type="text/javascript">
-			var filter_number = 2;
 		
 			function order_by(field)
 			{
@@ -93,6 +90,8 @@
             
             // adds another nutrient filter
             function addFilter() {
+				var filter_count = document.getElementById("filter_count");
+				var filter_number = parseInt(filter_count.value, 10) + 1;
 			
 				// no need for more than 7 filters
 				if (filter_number > 7)
@@ -133,13 +132,8 @@
                 // append filter to the div
                 filters.appendChild(filter_clone);
 
-                // increment counter
-                filter_number++;
-
                 // update hidden value
-				var filter_count = document.getElementById("filter_count");
-				var count = parseInt(filter_count.value, 10) + 1;
-                filter_count.value = count;
+                filter_count.value = filter_number;
             }
 		</script>
 	</head>
@@ -150,7 +144,7 @@
 			<input id="order_by" type="hidden" name="order_by" value="{{ order_by }}" />
 			<input id="order" type="hidden" name="order" value="{{ order }}" />
 			<input id="page_num" type="hidden" name="page" value="1" />
-			<input id="filter_count" type="hidden" name="filter_count" value="1">
+			<input id="filter_count" type="hidden" name="filter_count" value="{{ filter_count }}">
             <button type="submit">&#128269;</button>
 			<div id="filters">
 				<input class="addbtn" type="button" value="Add Filter" onclick="addFilter()">
@@ -162,6 +156,15 @@
 					{{ filter_form.nutrient_max1.label_tag }}
 					{{ filter_form.nutrient_max1 }}
 				</div>
+				{% for field in filter_form %}
+					{% if forloop.counter > 3 %}
+						{{ field.label_tag }}
+						{{ field }}
+						{% if forloop.counter|divisibleby:"3" %}
+							</br>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
 			</div>
         </form>
         {% if object_list %}
