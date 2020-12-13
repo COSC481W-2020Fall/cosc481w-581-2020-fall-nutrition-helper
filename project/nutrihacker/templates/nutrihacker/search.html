@@ -52,7 +52,10 @@
 			}
 			.nutrient_range,
 			.addbtn{
-				width : 5%;
+				width : 100px;
+				text-align: center;
+				padding-left: 0px;
+				padding-right: 0px;
 			}
 			label {
 				color: white;
@@ -135,6 +138,16 @@
                 // update hidden value
                 filter_count.value = filter_number;
             }
+			
+			function clearFilters(){
+				var div = document.getElementById('filters');
+				while(div.firstChild) {
+					div.removeChild(div.firstChild);
+				}
+				document.getElementById("filter_count").value = 1;
+				document.getElementById("id_nutrient_min1").value = '';
+				document.getElementById("id_nutrient_max1").value = '';
+			}
 		</script>
 	</head>
 	<body>
@@ -146,8 +159,9 @@
 			<input id="page_num" type="hidden" name="page" value="1" />
 			<input id="filter_count" type="hidden" name="filter_count" value="{{ filter_count }}">
             <button type="submit">&#128269;</button>
-			<div id="filters">
+			<div>
 				<input class="addbtn" type="button" value="Add Filter" onclick="addFilter()">
+				<input class="addbtn" type="button" value="Clear Filters" onclick="clearFilters()">
 				<div id="nutrient_filter">
 					{{ filter_form.nutrient1.label_tag }}
 					{{ filter_form.nutrient1 }}
@@ -156,15 +170,17 @@
 					{{ filter_form.nutrient_max1.label_tag }}
 					{{ filter_form.nutrient_max1 }}
 				</div>
-				{% for field in filter_form %}
-					{% if forloop.counter > 3 %}
-						{{ field.label_tag }}
-						{{ field }}
-						{% if forloop.counter|divisibleby:"3" %}
-							</br>
+				<div id="filters">
+					{% for field in filter_form %}
+						{% if forloop.counter > 3 %}
+							{{ field.label_tag }}
+							{{ field }}
+							{% if forloop.counter|divisibleby:"3" %}
+								</br>
+							{% endif %}
 						{% endif %}
-					{% endif %}
-				{% endfor %}
+					{% endfor %}
+				</div>
 			</div>
         </form>
         {% if object_list %}
