@@ -118,11 +118,10 @@ def delete_diet_preference(request):
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
-	template_name = "nutrihacker/index.html"
 
 class LogoutView(auth_views.LogoutView):
 	template_name = "nutrihacker/logout.html"
-	template_name = "nutrihacker/index.html"
+	
 
 class PasswordChangeView(auth_views.PasswordChangeView):
 	template_name = "nutrihacker/change_password.html"

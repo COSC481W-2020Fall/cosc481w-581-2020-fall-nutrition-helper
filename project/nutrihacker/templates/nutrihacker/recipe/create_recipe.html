@@ -67,6 +67,9 @@
             .sbmtbtn:hover{
                 background-color: #008CBA;
             }
+            body{
+                background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+            }
         </style>
     </head>
     <body>
@@ -99,8 +102,7 @@
             <br>
             <table align="center">
                 <tr>
-                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
-                                                        onclick="addAnotherFood()"></td>
+                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010" onclick="addAnotherFood()"></td>
                     <td style="text-align: right; color: white">Add another food</td>
                 </tr>
             </table>

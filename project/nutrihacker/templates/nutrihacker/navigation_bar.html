@@ -53,7 +53,13 @@
                     </ul>
                 </div>
             </li>
-            <li><a href="{% url 'nutrihacker:logout' %}">Logout</a></li>
+            <li>
+                {% if user.profile.profilePic %}
+                <img src="{{ user.profile.profilePic.url }}" class="profile_pic" />       
+                {% else %}
+                <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" class="profile_pic"/>
+                {% endif %}
+                <a href="{% url 'nutrihacker:logout' %}">Logout</a></li>
             {% else %}
             <li><a href="{% url 'nutrihacker:login' %}">Login/Register</a></li>
             {% endif %}
@@ -146,18 +152,27 @@
     .nav-bar ul li:hover .sub-menu-1{
         display: block;
         position: absolute;
-        background: black;
+        background: #6AB187;
         margin-top: 15px;
         margin-left: -15;
     }
     .nav-bar ul li:hover .sub-menu-1 ul{
         display: block;
         margin: 10px;
+        color:blue;
     }
     #pic{
         border-radius: 50%;
         width:50px;
     }
+    .nav-bar .menu-items .profile_pic{
+        display: inline-block;
+        border-radius: 50%;
+        width: 50px;
+        height:50px;
+
+    }
+
 </style>
 <script>
     document.getElementById("food").addEventListener('click', function(){
@@ -181,5 +196,6 @@
 
 
     });
+   
 </script>
 
