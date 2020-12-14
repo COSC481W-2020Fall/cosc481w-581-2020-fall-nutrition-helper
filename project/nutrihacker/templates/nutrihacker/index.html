@@ -105,11 +105,86 @@
                 padding-top: 0;
                 margin: 10px;
             }
+            .featuresDesc{
+                margin:auto;
+                width:100%;
+            }
+            .featuresDesc .food {
+                float: left;
+                margin-right: auto;
+                margin-left: auto;
+                background-color:white;
+                width:20%;
+                height: 400px;
+            }
+            .featuresDesc .recipe_search{
+                float: left;
+                background-color:yellow; 
+                width:20%; 
+                height: 400px;
+            }
+            .featuresDesc .recipe{
+                float: left;
+                background-color:green;
+                width:20%;
+                height: 400px;
+            }
+            .featuresDesc .log{
+                float: left;
+                background-color:gray;
+                width:20%;
+                height: 400px;
+            }
+            .featuresDesc .profile{
+                float: left;
+                background-color:pink;
+                width:20%;
+                height: 400px;
+            }
+            .featuresDesc  p{
+                color:black;
+            }
+             .featuresDesc #detail{
+                font-size:20px;
+
+             }
+             .memberslist {
+                text-align: left;
+                display: inline-block;
+                margin: auto;
+             }
+             .memberslist #title{
+                font-weight: bold;
+                text-decoration: underline;
+                color:white;
+                font-size: 30px;
+                margin-bottom: 15px;
+             }
+             .memberslist li{
+                color:white;
+                font-size: 25px;
+                
+             }
+             .name{
+                list-style-type: circle;
+             }
+             #Gleader{
+                text-indent: 55px;
+                color:white;
+             }
+             .ul {
+                padding: 20px;
+            }
+             .ul .name {
+                background: green;
+                padding: 5px;
+                color: white;
+            }
     	</style> 
-
-
-    <body style="background-size:cover">
+    
+<body style="background-size:cover">
     {% include "nutrihacker/navigation_bar.html" %}
+    
         <div class="homepage">
             <div class="homepageMsg">
                 <h1>Good Nutrition is Our Mission!</h1>
@@ -120,7 +195,7 @@
             <div class="login">
                  <form class="log_in"method="post" action="{% url 'nutrihacker:login' %}">
                     
-            {% csrf_token %}
+                {% csrf_token %}
                 
                 {% if user.is_authenticated %}
                 <div class="btnsLIN">
@@ -128,6 +203,7 @@
                     <a  href="{% url 'nutrihacker:log_list' %}" >Log</a>
                 </div>
                          <!-- appears only if they're not already logged in -->
+                
                  {% else %}
                     {%comment%}
                     <div class="login_out_box">
@@ -144,11 +220,46 @@
                     <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p>     
 
                     <input type="hidden" name="next" value="{{ next }}">
-            </div>
-                {% endif %}
-                </form>                 
-            </div>
-        </div>
+                    <div class="featuresDesc">
+                        <div class="food">
+                            <p>Food Search</p>
+                            <p id="detail">The food search displays the nutrition information of each search result in a table.</p>
+                        </div>
+                        <div class="recipe_search">
+                            <p>Recipe Search</p>
+                            <p id="detail">The recipe search, the search results display the searched recipe name, the total calorie of the recipe, allergy information, diet information, recipe creator’s name, and the date when the recipe was created.</p>
+                        </div>
+                        <div class="log">
+                            <p>Log</p>
+                            <p id="detail">The Log allows the user to log meals, view the the logged meal, update log and display the log in graph so that the users can track the nutrition information logged over five different time ranges. In addition, it calculate and display the total number of nutritions that the users log per day. </p>
+                        </div>
+                        <div class="recipe">
+                            <p>Recipes</p>
+                            <p id="detail"> The Recipe page allows users to search/view public recipes and provide with nutrition fact and diet information like allergy and diet type.</p>
+                        </div>
+                        <div class="profile">
+                            <p>Profile</p>
+                            <p id="detail">Profile page displays the personal information of the logged-in user. Also, Users can update their profile, change their password, and indicate their diet preferences and allergy information</p>
+                        </div>
+                    </div><hr><br>
+                    <div class="memberslist">
+                            <ul class="ul">
+                                <li id="title">Group Members 
+                                <li class="name">Bryce VanAsselt</li>
+                                <li id="Gleader">Group leader</li>
+                                <li class="name">Michael Neet</li>
+                                <li class="name">John Owens</li>
+                                <li class="name">Athena Xia</li>
+                                <li class="name">Jalen Hudson</li>
+                                <li class="name">Tsion Tadesse</li>
+                            </li>
+                            </ul>
+                    </div>
 
-    </body>
+                    {% endif %}
+                </form>  
+            </div>   
+        </div>
+ 
+</body>
 </html>
