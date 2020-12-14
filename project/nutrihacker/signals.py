@@ -8,3 +8,8 @@ from .models import Profile
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
+# after a user is created, save a profile related to it
+@receiver(post_save, sender=User, dispatch_uid="save_profile")
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()

@@ -27,9 +27,14 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 		return context
 		
 	def post(self, request):
+
+#since our profile picture is in the file data not in database
+
+		file_data = request.FILES
+
 		profile = get_object_or_404(Profile, user=self.request.user)
 		user_form = UserForm(request.POST, instance=self.request.user)
-		profile_form = ProfileForm(request.POST, instance=profile)
+		profile_form = ProfileForm(request.POST, file_data, instance=profile) #the image field is in profile form so file_data will be in profileForm
 				
 		if user_form.is_valid() and profile_form.is_valid():
 			user = user_form.save()
@@ -39,7 +44,7 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 			profile.set_caloriegoal(profile_form.cleaned_data.get('caloriegoal'))
 			profile.save()
 			return HttpResponseRedirect(reverse('nutrihacker:profile'))
-		
+
 		context = {'user_form':user_form, 'profile_form':profile_form}
 		return self.render_to_response(context)
 
@@ -116,6 +121,7 @@ class LoginView(auth_views.LoginView):
 
 class LogoutView(auth_views.LogoutView):
 	template_name = "nutrihacker/logout.html"
+	
 
 class PasswordChangeView(auth_views.PasswordChangeView):
 	template_name = "nutrihacker/change_password.html"

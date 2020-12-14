@@ -2,7 +2,9 @@ from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+from django.conf.urls.static import static
 from django import forms 
+#from users import views as user_views
 
 from . import views
 
@@ -13,10 +15,13 @@ app_name = 'nutrihacker'
 urlpatterns = [
 	# /nutrihacker/
     path('', views.IndexView.as_view(), name='index'),
+    #/nutrihacker/aboutus
+    path('about_us/', views.AboutUsView.as_view(), name='aboutus'),
+    #/nutrihacker/help
+    path('help/', views.HelpView.as_view(), name='help'),
 	# /nutrihacker/nutrifacts/
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
-	# /nutrihacker/description/
-    path('description/', views.DescriptionView.as_view(), name='description'),
+
     # /nutrihacker/food_autocomplete/
     path('food_autocomplete/', views.FoodAutocomplete.as_view(), name='food_autocomplete'),
     # /nutrihacker/recipe_autocomplete/
@@ -91,3 +96,6 @@ urlpatterns = [
     path('pi_chart/', views.FactsView.as_view() , name='pi_chart'),
     #----------------------------------------------------------------------------------
 ]
+
+
+

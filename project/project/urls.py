@@ -15,8 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.contrib.auth import views as auth_views
+#this are used to import static files like images....
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('nutrihacker/', include('nutrihacker.urls')),
     path('admin/', admin.site.urls),
+    #to be able to work with template (will come back to it)
+    # path('login/', auth_views.LoginView.as_view(template_name='index.html'), name='login')
+    # path('logout/', auth_views.LogoutView.as_view(), name='logout')
 ]
+# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#-------------------------Profile pic stuff --------------------------------------
+if settings.DEBUG:
+          urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+          

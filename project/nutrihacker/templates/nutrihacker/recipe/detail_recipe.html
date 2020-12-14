@@ -10,6 +10,8 @@
         <style>
 			* {
 				box-sizing: border-box;
+				margin:0;
+                padding: 0;
 			}
             h1, h2 {
                 color: white;
@@ -155,6 +157,15 @@
 				font-size: 15px;
 				border-radius:12px;
 			}
+			.boxcolumn-1 .facts-1 .recipe_image{
+				margin-right: auto;
+				margin-left: auto;
+				text-align: center;
+				border-radius: 5px;
+			}
+			body{
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+			}
         </style>
         <script type="text/javascript">
 
@@ -186,6 +197,15 @@
 		<br>
 	<div class="boxcolumn-1">
 		<table class="facts-1" style="background-color: white;">
+			<!-- Recipe picture is here -->
+			<tr>
+				<td colspan="2">
+					{% if recipe.recipe_image %} <!-- if there is a recipe pic -->
+				<img class="recipe_image"src="{{ recipe.recipe_image.url }}" width="200px" />	
+				{% endif %} <!-- move on if there is no recipe picture -->
+				</td><td></td>
+				
+			</tr><
 			<tr>
 				<th style="text-align: center; background-color:black;" colspan="99">{{ recipe.name }}</th>
 			</tr>
@@ -211,7 +231,7 @@
 				{% endfor %}
 			</tr>
 		</table>
-	</div>
+	</div><br><br>
 	<div class="boxcolumn-2">
 		<h1 style="color: green; margin-top: 100px;"><center>Nutrition Facts:</center></h1>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">

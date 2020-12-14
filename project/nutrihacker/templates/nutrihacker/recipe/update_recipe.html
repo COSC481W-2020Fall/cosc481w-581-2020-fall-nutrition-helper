@@ -8,13 +8,13 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
 		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 		<style>
+			*{
+                box-sizing: border-box;
+            }
 			h1, h2 {
 				color: white;
 				text-align: center;
 			}
-			
-			
-			
 			label {
 				color: white;
 				text-align: right;
@@ -85,6 +85,9 @@
 				color: #ff3e30;
 				font-family: sans-serif;
 				margin-left: 5px;
+			}
+			body{
+				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
 		</style>
 	</head>
