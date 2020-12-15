@@ -1,220 +1,210 @@
+{% extends 'nutrihacker/log/layout.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Daily Log List</title>
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<!-- the above style sheet is imported her for the trash sign purpose only -->
-		<style>
-			*{
-                box-sizing: border-box;
-            }
-			table, td {
-				border-collapse: collapse;
-				border-right: 0px;
-				padding: 0px;
-			}
-			.facts {
-				width: 35%;
-				margin: auto;
-				font-size: 24px;
-			}
-			.right {
-				text-align: right;
-				border-left: 0px;
-				border-right: 3px solid black;
-			}
-			a {
-				text-decoration: none;
-				align: center;
-			}
-			a:hover {
-				color: blue;
-			}
-			.button {
-				padding: 15px 30px;
-				border: none;
-				display: inline-block;
-				margin: 4px 2px;
-			}
-			table.layout {
-				padding: 0;
-				width: 100%;
-				margin-bottom: 20px;
-			}
-			table.layout td {
-				padding: 0;
-				vertical-align: top;
-			}
-			div.topdiv {
-				text-align: center;
-				margin-bottom: 20px;
-			}
-			input.month {
-				width: revert;
-				padding: revert;
-				margin: revert;
-				margin-top: 3px;
-				font-family: sans-serif;
-			}
-			div.listdiv {
-				overflow-y: auto;
-				height: 74%;
-			}
-			table.listtable {
-				margin-bottom: 0;
-				height: revert;
-			}
-			table.listtable td {
-				text-align: left;
-				vertical-align: top;
-				padding: 2px;
-			}
-			label {
-				color: white;
-			}
-			form {
-				display: inline;
-			}
-			span {
-				font-size: 18px;
-			}
-			.delbtn {
-				font-size: 20px;
-			}
-			/* Popup container */
-			.popup {
-				position: relative;
-				display: inline-block;
-				cursor: pointer;
-			}
+{% block title %}Daily Logs{% endblock %}
 
-			/* The actual popup (appears on top) */
-			.popup .popuptext {
-				visibility: hidden;
-				width: 160px;
-				background-color: #555;
-				color: #fff;
-				text-align: center;
-				border-radius: 6px;
-				padding: 8px 0;
-				position: absolute;
-				z-index: 1;
-				bottom: 125%;
-				left: 50%;
-				margin-left: -80px;
-			}
+{% block links %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
 
-			/* Popup arrow *
-			.popup .popuptext::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -5px;
-				border-width: 5px;
-				border-style: solid;
-				border-color: #555 transparent transparent transparent;
-			}*/
+{% block style %}
+	<style>
+		table, td {
+			border-collapse: collapse;
+			border-right: 0px;
+			padding: 0px;
+		}
+		.facts {
+			width: 35%;
+			margin: auto;
+			font-size: 24px;
+		}
+		.right {
+			text-align: right;
+			border-left: 0px;
+			border-right: 3px solid black;
+		}
+		a {
+			text-decoration: none;
+			align: center;
+		}
+		a:hover {
+			color: blue;
+		}
+		.button {
+			padding: 15px 30px;
+			border: none;
+			display: inline-block;
+			margin: 4px 2px;
+		}
+		table.layout {
+			padding: 0;
+			width: 100%;
+			margin-bottom: 20px;
+		}
+		table.layout td {
+			padding: 0;
+			vertical-align: top;
+		}
+		div.topdiv {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		input.month {
+			width: revert;
+			padding: revert;
+			margin: revert;
+			margin-top: 3px;
+			font-family: sans-serif;
+		}
+		div.listdiv {
+			/*overflow-y: auto;*/
+			height: 74%;
+		}
+		table.listtable {
+			margin-bottom: 0;
+			height: revert;
+		}
+		table.listtable td {
+			text-align: left;
+			vertical-align: top;
+			padding: 2px;
+		}
+		label {
+			color: white;
+		}
+		form {
+			display: inline;
+		}
+		span {
+			font-size: 18px;
+		}
+		.delbtn {
+			font-size: 20px;
+		}
+		/* Popup container */
+		.popup {
+			position: relative;
+			display: inline-block;
+			cursor: pointer;
+		}
 
-			/* Toggle this class when clicking on the popup container (hide and show the popup) */
-			.popup .show {
-				visibility: visible;
-				-webkit-animation: fadeIn 0.5s;
-				animation: fadeIn 0.5s
-			}
+		/* The actual popup (appears on top) */
+		.popup .popuptext {
+			visibility: hidden;
+			width: 160px;
+			background-color: #555;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 8px 0;
+			position: absolute;
+			z-index: 1;
+			bottom: 125%;
+			left: 50%;
+			margin-left: -80px;
+		}
 
-			/* Add animation (fade in the popup) */
-			@-webkit-keyframes fadeIn {
-				from {opacity: 0;}
-				to {opacity: 1;}
-			}
+		/* Popup arrow *
+		.popup .popuptext::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #555 transparent transparent transparent;
+		}*/
 
-			@keyframes fadeIn {
-				from {opacity: 0;}
-				to {opacity:1 ;}
-			}
-			.title{
-				text-align: center;
-				margin-left: 380px;
-				margin-right: 380px;
-			}
-			.B:hover{
-				background-color: green;
-				color: white;
-			}
-			body{
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-			}
-		</style>
-	</head>
-	<body style="background-size: cover">
-		{% include "nutrihacker/navigation_bar.html" %}
-		
-		<br>
-		<div class="title"><p>My Logs</p></div>
-		<table class="layout">
-			<tr>
-				<td id="chartcell">
-					{% include "nutrihacker/log/log_chart.html" %}
-					<script type="text/javascript" src="{% static 'nutrihacker/log_chart.js' %}"></script>
-				</td>
-				<td style="width: 25%">
-					<div class="topdiv">
-						<p style="margin-top: 0">
-							<a href="{% url 'nutrihacker:log_create' %}"><button class="B"><b>+</b>&nbsp;&nbsp;Add a Log&nbsp;</button></a>
-						</p>
-						<form action="{% url 'nutrihacker:log_list' %}" method="GET">
-							<label>View logs for:</label>
-							<br>
-							<input class="month" type="month" name="month" min="1920-01" max="{{ current_month }}" value="{{ selected_month }}">
-							<button type="submit">Go</button>
-						</form>
-					</div>
-					<div class="listdiv">
-						<table class="listtable" align="center">
-						{% if object_list %}
-							{% for dailylog in object_list %}
-							<tr>
-								<td>
-									<!-- button to daily log detail page -->
-									<a href="{% url 'nutrihacker:log_detail' dailylog.id %}"><button class="B">{{ dailylog.date }}</button></a>
-								</td>
-								<td>
-									<!-- button to prompt deletion of daily log -->
-									<div class="popup" id={{ dailylog.id }} onclick="confirm(this.id)">
-										<span class="popuptext" id="popup{{ dailylog.id }}">Are you sure you want to delete?<br>
-											<form action="{% url 'nutrihacker:dailylog_delete' %}" method="POST">
-												{% csrf_token %}
-												<input type="hidden" name="id" value={{ dailylog.id }}>
-												<button type="submit">Yes</button>
-											</form><button>No</button>
-										</span>
-										<button class="delbtn"><i class="fa fa-trash"></i></button> <!-- fa fa-trash is a trash sign -->
-									</div>
-								</td>
-							</tr>
-							{% endfor %}
-						{% else %}
-							<tr>
-								<th style="color: white; text-align: center;">You have no logs for this month</th>
-							</tr>
-						{% endif %}
-						</table>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<script>
-			// When the user clicks on <div>, open the popup
-			function confirm(clicked_id) {
-			  	var popup = document.getElementById("popup"+clicked_id);
-			  	popup.classList.toggle("show");
-			}
-		</script>
-	</body>
-</html>
+		/* Toggle this class when clicking on the popup container (hide and show the popup) */
+		.popup .show {
+			visibility: visible;
+			-webkit-animation: fadeIn 0.5s;
+			animation: fadeIn 0.5s;
+		}
+
+		/* Add animation (fade in the popup) */
+		@-webkit-keyframes fadeIn {
+			from {opacity: 0;}
+			to {opacity: 1;}
+		}
+
+		@keyframes fadeIn {
+			from {opacity: 0;}
+			to {opacity:1 ;}
+		}
+		.title{
+			text-align: center;
+			margin-left: 380px;
+			margin-right: 380px;
+		}
+		.B:hover{
+			background-color: green;
+			color: white;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<br>
+	<div class="title"><p>My Logs</p></div>
+	<table class="layout">
+		<tr>
+			<td id="chartcell">
+				{% include "nutrihacker/log/log_chart.html" %}
+				<script type="text/javascript" src="{% static 'nutrihacker/log_chart.js' %}"></script>
+			</td>
+			<td style="width: 25%">
+				<div class="topdiv">
+					<p style="margin-top: 0">
+						<a href="{% url 'nutrihacker:log_create' %}"><button class="B"><b>+</b>&nbsp;&nbsp;Add a Log&nbsp;</button></a>
+					</p>
+					<form action="{% url 'nutrihacker:log_list' %}" method="GET">
+						<label>View logs for:</label>
+						<br>
+						<input class="month" type="month" name="month" min="1920-01" max="{{ current_month }}" value="{{ selected_month }}">
+						<button type="submit">Go</button>
+					</form>
+				</div>
+				<div class="listdiv">
+					<table class="listtable" align="center">
+					{% if object_list %}
+						{% for dailylog in object_list %}
+						<tr>
+							<td>
+								<a href="{% url 'nutrihacker:log_detail' dailylog.id %}"><button class="B">{{ dailylog.date }}</button></a>
+							</td>
+							<td>
+								<div class="popup" id={{ dailylog.id }} onclick="confirm(this.id)" title="Delete">
+									<span class="popuptext" id="popup{{ dailylog.id }}">Are you sure you want to delete?<br>
+										<form action="{% url 'nutrihacker:dailylog_delete' %}" method="POST">
+											{% csrf_token %}
+											<input type="hidden" name="id" value={{ dailylog.id }}>
+											<button type="submit">Yes</button>
+										</form><button>No</button>
+									</span>
+									<button class="delbtn"><i class="fa fa-trash"></i></button>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+					{% else %}
+						<tr>
+							<th style="color: white; text-align: center;">You have no logs for this month</th>
+						</tr>
+					{% endif %}
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<script>
+		// When the user clicks on <div>, open the popup
+		function confirm(clicked_id) {
+		  	var popup = document.getElementById("popup"+clicked_id);
+		  	popup.classList.toggle("show");
+		}
+	</script>
+{% endblock %}
