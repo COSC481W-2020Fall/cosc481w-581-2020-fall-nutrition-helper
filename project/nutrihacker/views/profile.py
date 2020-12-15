@@ -141,3 +141,15 @@ class RegisterAccountView(FormView):
 		user = authenticate(username=username, password=raw_password)
 		login(self.request, user)
 		return super().form_valid(form)
+# class PasswordResetView(auth_views.PasswordResetView):
+# 	template_name="nutrihacker/reset_password.html"
+
+# class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+# 	template_name="nutrihacker/password_email_sent.html"
+
+# class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+# 	template_name="nutrihacker/reset_pwd_form.html"
+
+# class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+# 	template_name="nutrihacker/reset_pwd_done.html"
+		

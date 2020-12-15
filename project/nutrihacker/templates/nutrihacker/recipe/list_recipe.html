@@ -66,18 +66,13 @@
 				font-size: 18px;
 				font-family:"Times New Roman", Times, serif;
 				border-radius:12px;
-				background-color: black;
+				background-color: #4CAF50;
+				color: white;
 
 			}
 			.btn:hover{
 				background-color: green;
 				cursor:pointer;
-			}
-			a {
-				color: white;
-			}
-			a:hover{
-				color: white;
 			}
 			input {
 				width: 48px;
@@ -166,7 +161,7 @@
 
 		<br>
 		<div class="center-div">
-			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
+			<a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe"><button class="btn">Create A Personal Recipe</button></a>
 		</div>
 		<br>
 		<br>

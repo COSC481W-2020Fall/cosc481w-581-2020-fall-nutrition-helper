@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django import forms 
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views 
 
 
 from . import views
@@ -16,11 +16,7 @@ app_name = 'nutrihacker'
 urlpatterns = [
 	# /nutrihacker/
     path('', views.IndexView.as_view(), name='index'),
-    #/nutrihacker/aboutus
-    path('about_us/', views.AboutUsView.as_view(), name='aboutus'),
-    #/nutrihacker/help
-    path('help/', views.HelpView.as_view(), name='help'),
-	# /nutrihacker/nutrifacts/
+    
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
 
     # /nutrihacker/food_autocomplete/
@@ -82,20 +78,6 @@ urlpatterns = [
     # /nutrihacker/register_account/
     path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
 
-    #password reset
-    path('reset_password/', auth_views.PasswordResetView.as_view(template_name="nutrihacker/reset_password.html"), 
-        name="password_reset"),
-    #email sent message
-    path('reset_email_sent/', auth_views.PasswordResetDoneView.as_view(template_name="nutrihacker/password_email_sent.html"),
-     name="password_reset_done"),
-    #<uidb64> is user id encoded in base 64. given by django to secure the user
-    #the token is to make sure the password is valid. (it's django built-in function)
-    #link to email reset form in email
-    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="nutrihacker/reset_pwd_form.html"), 
-        name="password_reset_confirm"),
-    #password has sucessfully reset message
-    path('reset_password_done/', auth_views.PasswordResetCompleteView.as_view(template_name="nutrihacker/reset_pwd_done.html"), 
-        name="password_reset_complete"),
     #----------------------   RECIPE STUFF   -----------------------------------------------
     
     path('recipe/', views.ListRecipe.as_view(), name='list_recipe'),

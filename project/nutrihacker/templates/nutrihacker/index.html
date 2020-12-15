@@ -185,7 +185,7 @@
                 display: inline-block;
                 margin:80px 5px;
                 text-align:left;
-                padding: 10px;
+                padding: px;
                 width: 25%;
                 background-color: #E4ECEC;
              }
@@ -247,7 +247,7 @@
                 
                  {% else %}
                   {% csrf_token %}
-                    {{form}}
+                    
                     {%comment%}
                     <div class="login_out_box">
                         <lable for= "{{form.username.id_for_label }}">Username </lable>
@@ -259,8 +259,10 @@
                     </div>
                     {%endcomment%}
                     
-                    <input class="loginbtn" type="submit" value="Login"> 
-                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a>  
+                    <input class="loginbtn" type="submit" value="Login">
+                   {%comment%}
+                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a> {%endcomment%}
+
                     <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p>     
 
                     <input type="hidden" name="next" value="{{ next }}">
