@@ -143,3 +143,12 @@ LOGIN_URL = '/nutrihacker/login/'
 LOGIN_REDIRECT_URL = '/nutrihacker/'
 
 LOGOUT_REDIRECT_URL = '/nutrihacker/'
+
+# Reset password SMTP configration(simple mail transfer protocol)
+# the gmail Email host port and TLS searched form web browser (GMAIL smtp configuration)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 #gmail port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nutrihackerfall2020@gmail.com' #djano uses this email account to login and send the reset form 
+EMAIL_HOST_PASSWORD = 'Nutrihacker'

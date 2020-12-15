@@ -185,8 +185,8 @@
                 display: inline-block;
                 margin:80px 5px;
                 text-align:left;
-                padding: 5px;
-                width: 30%;
+                padding: 10px;
+                width: 25%;
                 background-color: #E4ECEC;
              }
 
@@ -195,11 +195,12 @@
                 font-weight: bold;
                 text-decoration: underline;
                 color:green;
-                text-align:left;
+                text-align:center;
                 font-size: 30px;
                 padding-bottom: 5px;
                 margin-top: 15px;
                 margin-bottom: 15px;
+                margin-left: 0;
                 letter-spacing: 5px;
              }
              .memberslist .team {
@@ -220,7 +221,7 @@
             
     	</style> 
     
-<body style="background-size:cover">
+<body style="background-size:cover; font-size:20px;">
     {% include "nutrihacker/navigation_bar.html" %}
     
         <div class="homepage">
@@ -245,6 +246,8 @@
                          <!-- appears only if they're not already logged in -->
                 
                  {% else %}
+                  {% csrf_token %}
+                    {{form}}
                     {%comment%}
                     <div class="login_out_box">
                         <lable for= "{{form.username.id_for_label }}">Username </lable>
@@ -255,8 +258,10 @@
                          {{ form.password }}
                     </div>
                     {%endcomment%}
-               
-                    <input class="loginbtn" type="submit" value="Login">    <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p>     
+                    
+                    <input class="loginbtn" type="submit" value="Login"> 
+                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a>  
+                    <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p>     
 
                     <input type="hidden" name="next" value="{{ next }}">
                     <div class="featuresDesc">
@@ -281,7 +286,7 @@
                             <a href="{% url 'nutrihacker:profile' %}">Profile</a>
                             <p id="detail">Profile page displays the personal information of the logged-in user. Also, Users can update their profile, change their password, and indicate their diet preferences and allergy information</p>
                             User needs to <a class="links" href="{% url 'nutrihacker:login' %}">login</a> account inorder to access the log page.
-                               Click <a class="links" href="{% url 'nutrihacker:profile' %}"> HERE </a> to visit the log page.
+                               Click <a class="links" href="{% url 'nutrihacker:profile' %}"> HERE </a> to visit the profile page.
                         </div>
                     </div><br><br><br><br>
                     <div class="memberslist">

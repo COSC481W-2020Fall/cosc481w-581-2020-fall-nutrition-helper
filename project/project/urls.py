@@ -24,6 +24,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('nutrihacker/', include('nutrihacker.urls')),
     path('admin/', admin.site.urls),
+    #submit email form
+    
     #to be able to work with template (will come back to it)
     # path('login/', auth_views.LoginView.as_view(template_name='index.html'), name='login')
     # path('logout/', auth_views.LogoutView.as_view(), name='logout')
