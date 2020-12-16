@@ -12,8 +12,7 @@
             *{
         list-style: none;
         box-sizing: border-box;
-    }
-             
+    }        
             .homepage h1{
                 font-family: arial;
                 font-size: 40px;
@@ -21,10 +20,8 @@
                 text-align: center;
                 color: yellow;
                 font-style: italic;
-               
                 margin-right: 16%;
                 margin-left: 16%;
-
              }
              .homepage .homepageMsg #Description{
                 color: white;
@@ -47,9 +44,7 @@
             body{
                 background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
             }
-            p{
-                padding: 10px;
-            }
+            p{padding: 10px;}
             button{
                 padding: 50px;
                 border-radius: 50px;
@@ -82,17 +77,11 @@
                 color:white;
                 background-color: green;
             }
-            .homepage .login .btnsLIN a{
-                color:white;
-            }
-            .homepage .login .btnsLIN a:hover{
-                color:blue;
-            }
             .homepage .login #signup{
                 font-size: 25px;
             }
             .homepage .login #signup a{
-               color:green;
+                color:green;
             }
             .homepage .login #signup a:hover{
                color:blue;
@@ -108,7 +97,6 @@
                 font-size: 20px;
                 text-align:center;
                 color: black;
-
             }
              .team .title{
                 text-decoration-line: underline;
@@ -134,6 +122,7 @@
                 float: left;
                 margin-right: auto;
                 margin-left: auto;
+                text-align: center;
                 margin:8px;
                 background-color:#E4ECEC;
                 padding: 5px;
@@ -142,6 +131,7 @@
             }
             .featuresDesc .recipe_search{
                 float: left;
+                text-align: center;
                 background-color:#E4ECEC; 
                 padding: 5px;
                 margin:8px;
@@ -149,6 +139,7 @@
                 height: 400px;
             }
             .featuresDesc .log{
+                text-align: center;
                 float: left;
                 background-color:#E4ECEC;
                 padding: 5px;
@@ -157,6 +148,7 @@
                 height: 400px;
             }
             .featuresDesc .profile{
+                text-align: center;
                 float: left;
                 padding: 5px;
                 margin:8px;
@@ -220,9 +212,24 @@
                 font-weight: bold;
                 font-size:20px;
                 color:black;
-
              }
-            
+             .inform{
+                width:75%;
+                margin:auto;
+             }
+             .inform input{
+                border-radius: 40px;
+                font-size: 18px;
+             }
+            .LGIN{
+                background-color: #009879;
+                width:45%;margin:auto;padding: 0;
+            }
+            .LGIN input:hover{
+                background-color: #039C28;
+                color:white;
+                cursor: pointer;
+            }
     	</style> 
     
 <body style="background-size:cover; font-size:20px;">
@@ -246,26 +253,32 @@
                 </div>
                          <!-- appears only if they're not already logged in -->
                  {% else %}
-                    
-                    {%comment%}
-                    <div class="login_out_box">
-                        <lable for= "{{form.username.id_for_label }}">Username </lable>
-                            {{ form.username }}
-                    </div>
-                    <div  class="login_out_box">
-                         <lable for= "{{form.username.id_for_label }}">Password</lable>
-                         {{ form.password }}
-                    </div>
-                     
-                    {%endcomment%}
-                  <form method="post" action="{% url 'nutrihacker:login' %}">
-        {% csrf_token %}
-                   <input class="loginbtn" type="submit" value="Login">
+                 <div class=LGIN>
+                 <!-- still redirects to log page -->
+                  <form class="inform"method="post" action="{% url 'nutrihacker:login' %}">
+                     {% csrf_token %}
+                     <h2 style="color:white; font-weight: bold;letter-spacing: 2px; text-decoration: underline;"> Log in </h2>
+                     <table style="width:100%">
+                        <tr>
+                         <td style="color:white; font-size: 25px;">User Name</td>
+                         <td style="text-align: left;"> <input type="text" name="Username" placeholder="User name"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:white; font-size: 25px;">Password</td>
+                            <td style="text-align: left;"><input type="password" name="Password" placeholder="Password"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="margin:0;"><input  type="submit" value="Login"></td>
+                            <tr>
+                     </table>
                </form>
+               <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p> 
+           </div>
                    {%comment%}
-                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a> {%endcomment%}
+                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a> 
+                    {%endcomment%}
 
-                    <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p>     
+                        
 
                     <input type="hidden" name="next" value="{{ next }}">
                     <div class="featuresDesc">

@@ -118,6 +118,23 @@ def delete_diet_preference(request):
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
 
+	def login(request):
+		if request.method == 'POST':
+			username = request.POST['username']
+			password = request.POST['password']
+
+			user = auth.authenticate(username=username, password=password)
+
+			if user is not None:
+				auth.login(request, user)
+				return redirect("index.html")
+			else:
+				messages.info(request, 'invalid username or password')
+				return redirects("index.html")
+		else:
+			return render(request, 'index.html')
+
+
 class LogoutView(auth_views.LogoutView):
 	template_name = "nutrihacker/logout.html"
 	
