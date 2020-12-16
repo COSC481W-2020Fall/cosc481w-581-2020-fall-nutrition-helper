@@ -141,28 +141,9 @@
 				{% endfor %}
 		</table>
 		{% else %}
-		<p>Searched recipe not found</p>
+		<p>No recipes containing ingredient</p>
 		{% endif %}
         <br>
-        <div class="page_bar">
-        {% if search %}
-            <div class="left">
-            {% if page_obj.has_previous %}
-                <a href="?term={{ search }}&page=1">&laquo; first</a>
-                <a href="?term={{ search }}&page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-            </div>
-            
-            <div class="right">
-            {% if page_obj.has_next %}
-                <a href="?term={{ search }}&page={{ page_obj.next_page_number }}">next</a>
-                <a href="?term={{ search }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-            </div>
-            
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        {% endif %}
-        </div>
 
 	</body>
 </html>

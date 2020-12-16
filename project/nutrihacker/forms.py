@@ -232,12 +232,12 @@ class RecipeForm(forms.Form):
 	diets = forms.ModelMultipleChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)
 	instruction = forms.CharField(label="How it's made", widget=forms.Textarea, required=False)
 	is_public = forms.BooleanField(initial=True, required=False)
+	recipe_image = forms.ImageField(label='Upload Recipe Image', required=False)
 	food1 = forms.ModelChoiceField(
 		label="Choose a food", queryset=Food.objects.all(), widget=autocomplete.ModelSelect2(url='nutrihacker:food_autocomplete'),
 		required=True
 	)
 	portions1 = forms.DecimalField(label="Portions", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
-	recipe_image = forms.ImageField(label='Upload Recipe Image', required=False)
 	# hidden field that keeps track of how many extra fields have been added
 	extra_field_count = forms.CharField(widget=forms.HiddenInput())
 

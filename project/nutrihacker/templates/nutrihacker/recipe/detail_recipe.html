@@ -202,7 +202,7 @@
     </head>
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
-        <h1>Recipe Details</h1>
+        <h1>{% if recipe.is_public %} Public {% else %} Private {% endif %} Recipe Details</h1>
 		
 		<!-- Buttons to update or delete recipe -->
 		<div class="top_menu"style="text-align:center">

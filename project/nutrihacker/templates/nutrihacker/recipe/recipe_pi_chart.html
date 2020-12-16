@@ -14,20 +14,19 @@
     protein = {{nutrition.protein}}*4; //multiplied by 4 to convert 1g of fat = 4cal
     totalNumOfCalories = {{nutrition.calories}};
     calorieOfSome = totalFatVal + totalCarbohydrate + protein;
-    cholesterol = (totalNumOfCalories - calorieOfSome).toFixed(2); // round the value to the 2 decimal places
 
     var config = {
       type: 'pie', //type of chart
       data: {
         datasets: [{ // the dataset contains the nutrifact data that are going to be used, labels and colors of piechart
-          data: [totalFatVal, cholesterol, totalCarbohydrate, protein],
+          data: [totalFatVal, totalCarbohydrate, protein],
           backgroundColor: [
             '#E74C3C', '#F1C40F', '#7D3C98', '#3498DB' // colors of the piechart
           ],
           label: 'recipeData'
         }],
         //
-        labels: ["totalFat","cholesterol","totalCarb","protein"] //labels that are going to be displayed
+        labels: ["totalFat","totalCarb","protein"] //labels that are going to be displayed
       },
       options: {
         responsive: true
