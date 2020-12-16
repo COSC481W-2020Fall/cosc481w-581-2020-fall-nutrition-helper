@@ -9,41 +9,45 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
 		<style>
 			*{
-				margin:0;
-				padding:0;
+				
 				box-sizing: border-box;
 			}
 			table, td {
-				border: 3px solid black;
+				border: 1px solid #BFC9CA ;
 				border-collapse: collapse;
 				border-right: 0px;
-				padding: 10px;
+				padding: 5px;
 				margin-left: auto;
 				margin-right:auto;
 				background-color: white;
 			}
-			.facts {
-				width: 35%;
-				margin: auto;
-				font-size: 24px;
+			.titleP{
+				font-size: 30px;
+				color:white;
+				background-color: #009879;
 			}
-			.right {
-				text-align: right;
-				border-left: 0px;
-				border-right: 3px solid black;
+			.update{
+				background-color: #009879;
+				border-radius: 5px;
+				font-size: 18px;
+				width: 260px;
 			}
-			a {
-				text-decoration: none;
-				align: center;
+			.update:hover{
+				cursor: pointer;
+				background-color: #039C28;
+				color:blue;
 			}
-			a:hover {
-				color: blue;
+			.tp{
+				font-size: 20px;
+				font-weight: bold;
 			}
-			.button {
-				padding: 15px 30px;
-				border: none;
-				display: inline-block;
-				margin: 4px 2px;
+			#weight_label{
+				font-size: 20px;
+				font-weight: bold;
+			}
+			#height_label{
+				font-size: 20px;
+				font-weight: bold;
 			}
 			label {
 				color: green;
@@ -133,28 +137,31 @@
             {% csrf_token %}
 
             <table >
+            	<tr>
+            		<th class="titleP"colspan="2">Update Profile</th>
+            	</tr>
 				<tr>
-                    <td>{{ user_form.email.label_tag }}</td>
+                    <td class="tp">{{ user_form.email.label_tag }}</td>
                     <td>{{ user_form.email }}<br></td>
                 </tr>
 				<tr>
-                    <td>{{ user_form.first_name.label_tag }}</td>
+                    <td class="tp">{{ user_form.first_name.label_tag }}</td>
                     <td>{{ user_form.first_name }}<br></td>
                 </tr>
 				<tr>
-                    <td>{{ user_form.last_name.label_tag }}</td>
+                    <td class="tp">{{ user_form.last_name.label_tag }}</td>
                     <td>{{ user_form.last_name }}<br></td>
                 </tr>
                 <tr>
-                    <td>Upload profile picture</td>
+                    <td class="tp">Upload profile picture</td>
                     <td>{{profile_form.profilePic}}</td>
                 </tr>
 				<tr>
-                    <td>{{ profile_form.gender.label_tag }}</td>
+                    <td class="tp">{{ profile_form.gender.label_tag }}</td>
                     <td>{{ profile_form.gender }}<br></td>
                 </tr>
                 <tr>
-                    <td>{{ profile_form.birthdate.label_tag }}</td>
+                    <td class="tp">{{ profile_form.birthdate.label_tag }}</td>
                     <td>{{ profile_form.birthdate }}</td>
                 </tr>
                 <tr>
@@ -166,17 +173,17 @@
                     <td>{{ profile_form.weight }}</td>
                 </tr>
                 <tr>
-                    <td>Calorie Goal</td>
+                    <td class="tp">Calorie Goal</td>
                     <td>{{ profile_form.caloriegoal }}</td>
                 </tr>
 
                 <tr width="80%">
-                    <td>Use metric:</td>
+                    <td class="tp">Use metric:</td>
                     <td>{{ profile_form.showmetric }}<br></td>
                 </tr>
             </table>
             <br><br>
-            <input  type="submit" value="Update" style="padding: 15px 30px; border: none; display: inline-block;	margin: 4px 2px;"></button>
+            <input  class="update" type="submit" value="Update" style="padding: 15px 30px; border: none; display: inline-block;	margin: 4px 2px;"></button>
         </form>
 			<br><br>
 	</body>
