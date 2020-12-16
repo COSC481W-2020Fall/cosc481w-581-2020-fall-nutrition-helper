@@ -162,22 +162,23 @@
 
 		<br>
 		<div class="center-div">
-			<a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe"><button class="btn">Create A Personal Recipe</button></a>
+			<a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe"><button class="btn">Create a Personal Recipe</button></a>
 		</div>
 		<br>
 		<br>
 		{% if object_list %}
-			<table class="center">
+			<table class="center" style="background-color:black">
 					<tr>
-					<th class="title">Name</th>
+					<th class="title">Recipe name</th>
 					<th class="title">Calories</th>
+					<th class="title">Ingredient count</th>
 					<th class="title">Allergy</th>
 					<th class="title">Diet</th>
 					<th class="title">Servings</th>
 					<th class="title">Date created</th>
-					<th class="title">Update Recipe</th>
-					<th class="title">Clone Recipe</th>
-					<th class="title">Delete Recipe</th>
+					<th class="title">Update recipe</th>
+					<th class="title">Clone recipe</th>
+					<th class="title">Delete recipe</th>
 					</tr>
 				{% for recipe in object_list %}
 					<tr>
@@ -186,7 +187,7 @@
 						<a href="{% url 'nutrihacker:detail_recipe' recipe.id %}"><button class="B">{{ recipe.name }}</button></a>
 					</th>
 					<th>{{ recipe.get_total.calories|floatformat }}</th>
-					
+					<th>{{ recipe.foods.count }}</th>
 					
 					{% if recipe.allergies_string %}
 							<th>{{ recipe.allergies_string }}</th>
@@ -200,14 +201,13 @@
 					{% endif %}
 					<th>{{ recipe.servingsProduced }}</th>
 					<th>{{ recipe.created_at|date:"m/d/y" }}</th>
-					
 					<th>
 						<!-- Button to update recipe -->
-						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update Recipe</button></a>
+						<a href="{% url 'nutrihacker:update_recipe' recipe.id %}"><button class="B">Update</button></a>
 					</th>
 					<th>
 						<!-- Button to update recipe -->
-						<a href="{% url 'nutrihacker:copy_recipe' recipe.id %}"><button class="B">Clone Recipe</button></a>
+						<a href="{% url 'nutrihacker:copy_recipe' recipe.id %}"><button class="B">Clone</button></a>
 					</th>
 					<th>
 						<!-- Button to delete recipe -->
@@ -220,7 +220,7 @@
 								</form>
 								<button>No</button>
 							</span>
-							<button class="B" type="submit" style="text-align:center">Delete Recipe</button>
+							<button class="B" type="submit" style="text-align:center">Delete</button>
 						</div>
 					</th>
 					</tr>
