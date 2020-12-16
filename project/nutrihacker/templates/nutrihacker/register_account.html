@@ -12,6 +12,25 @@
         table {
             border-spacing: 15px;
         }
+        .user{
+            text-align: right;
+            color: white;
+            font-size: 22px;
+        }
+        .userbox{
+            text-align: left;
+        }
+        .btn1{
+            text-align: center;
+            font-size: 17px;
+            background-color: #009879;
+            border-radius: 5px;
+        }
+        .btn1:hover{
+            cursor: pointer;
+            background-color: #039C28;
+            color: blue;
+        }
         body{
             background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
         }
@@ -31,23 +50,23 @@
         <form method="post" action="{% url 'nutrihacker:register_account' %}">
         {% csrf_token %}
         
-        <table align="center" width="45%">
+        <table align="center" width="55%">
 
             <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
+                <td class="user">{{ form.username.label_tag }}</td>
+                <td class="userbox">{{ form.username }}</td>
             </tr>
             <tr>
-                <td>{{ form.password1.label_tag }}</td>
-                <td>{{ form.password1 }}</td>
+                <td class="user">{{ form.password1.label_tag }}</td>
+                <td class="userbox">{{ form.password1 }}</td>
             </tr>
             <tr>
-            <td>{{ form.password2.label_tag }}</td>
-            <td>{{ form.password2 }}</td>
+            <td class="user">{{ form.password2.label_tag }}</td>
+            <td class="userbox">{{ form.password2 }}</td>
         </tr>
         <tr>
             <td></td>
-            <td><input type="submit" value="Register Account"></td>
+            <td class="userbox"><input class="btn1"type="submit" value="Register Account"></td>
         </tr>
         </table>
         </form>
