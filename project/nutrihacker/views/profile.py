@@ -114,7 +114,6 @@ def delete_diet_preference(request):
 				diet.profiles.remove(profile)
 	
 	return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
-	
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"

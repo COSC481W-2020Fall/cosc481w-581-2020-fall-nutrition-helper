@@ -12,7 +12,7 @@ from nutrihacker.forms import FilterRecipeForm, FilterFoodForm
 
 class IndexView(TemplateView):
 	template_name = 'nutrihacker/index.html'
-	
+
 # autocomplete search for foods
 class FoodAutocomplete(autocomplete.Select2QuerySetView):
 	def get_queryset(self):

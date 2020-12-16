@@ -15,10 +15,8 @@ from . import views
 app_name = 'nutrihacker'
 urlpatterns = [
 	# /nutrihacker/
-    path('', views.IndexView.as_view(), name='index'),
-    
+    path('', views.IndexView.as_view(), name='index'),  
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
-
     # /nutrihacker/food_autocomplete/
     path('food_autocomplete/', views.FoodAutocomplete.as_view(), name='food_autocomplete'),
     # /nutrihacker/recipe_autocomplete/

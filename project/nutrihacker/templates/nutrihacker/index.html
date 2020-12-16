@@ -56,7 +56,7 @@
                 margin: 30px;
                 font-size: 30px;
             }
-            .homepage .login .btnsLIN a{
+            .homepage .login .btnsLIN button{
                 text-decoration: none;
                 color:black;
                 font-weight: bold;
@@ -68,6 +68,10 @@
                 display: flex;
                 font-size: 30px;
                 border-radius: 15px;
+            }
+            .homepage .login .btnsLIN button:hover{
+                background-color: green;
+                cursor: pointer;
             }
             .loginbtn{
                 width:160px;
@@ -234,19 +238,14 @@
 
             </div>
             <div class="login">
-                 <form class="log_in"method="post" action="{% url 'nutrihacker:login' %}">
-                    
-                {% csrf_token %}
                 
                 {% if user.is_authenticated %}
                 <div class="btnsLIN">
-                    <a href="{% url 'nutrihacker:search-recipe' %}" >Recipe</a>
-                    <a href="{% url 'nutrihacker:log_list' %}" >Log</a>
+                    <a href="{% url 'nutrihacker:search-recipe' %}" ><button>Recipe</button></a>
+                    <a href="{% url 'nutrihacker:log_list' %}" ><button>Log</button></a>
                 </div>
                          <!-- appears only if they're not already logged in -->
-                
                  {% else %}
-                  {% csrf_token %}
                     
                     {%comment%}
                     <div class="login_out_box">
@@ -257,9 +256,12 @@
                          <lable for= "{{form.username.id_for_label }}">Password</lable>
                          {{ form.password }}
                     </div>
+                     
                     {%endcomment%}
-                    
-                    <input class="loginbtn" type="submit" value="Login">
+                  <form method="post" action="{% url 'nutrihacker:login' %}">
+        {% csrf_token %}
+                   <input class="loginbtn" type="submit" value="Login">
+               </form>
                    {%comment%}
                     <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a> {%endcomment%}
 
@@ -305,7 +307,7 @@
                     </div>
                    
                     {% endif %}
-                </form>  
+                  
             </div>   
         </div>
 </body>
