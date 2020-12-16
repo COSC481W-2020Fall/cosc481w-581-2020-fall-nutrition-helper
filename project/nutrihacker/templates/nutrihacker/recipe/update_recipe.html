@@ -159,7 +159,7 @@
 				var p_clone = p_row.cloneNode(true);
 
 				// remove the cloned span (dal will add a new one automatically)
-			f_clone.getElementsByTagName("span")[0].remove();
+				f_clone.getElementsByTagName("span")[0].remove();
 
 				// get the label, select, and button elements from the food row
 				var f_label = f_clone.getElementsByTagName("label")[0];
@@ -175,12 +175,12 @@
 				f_clone.style.display = "";
 				f_clone.id = "row" + row_number;
 				f_label.setAttribute("for", "id_food" + food_number);
-			f_select.setAttribute("name", "food" + food_number);
-			f_select.setAttribute("data-select2-id", "id_food" + food_number);
-			f_select.id = "id_food" + food_number;
-			f_select.value = "";
-			f_select.disabled = false;
-			f_button.id = row_number;
+				f_select.setAttribute("name", "food" + food_number);
+				f_select.setAttribute("data-select2-id", "id_food" + food_number);
+				f_select.id = "id_food" + food_number;
+				f_select.value = "";
+				f_select.disabled = false;
+				f_button.id = row_number;
 
 				// repeat for portions, initialize value to 1
 				p_clone.style.display = "";

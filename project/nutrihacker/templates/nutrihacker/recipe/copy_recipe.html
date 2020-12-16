@@ -119,8 +119,6 @@
 			<a class="cancel" href="{% url 'nutrihacker:list_recipe' %}">Cancel</a>
         </form>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-        {{ recipe_form.media }}
-        <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 		{{ form.media }}
         <script type="text/javascript">
             var extra_count = Number(document.getElementById("id_extra_field_count").value);
@@ -184,6 +182,8 @@
 
 				// add event listener to remove button
 				f_button.addEventListener("click", function(){ remove(this.id); });
+				
+				
 				// append rows to the table
 				table.append(f_clone);
 				table.append(p_clone);
