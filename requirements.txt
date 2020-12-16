@@ -9,3 +9,6 @@ requests==2.24.0
 six==1.15.0
 sqlparse==0.3.1
 urllib3==1.25.10
+
+install pillow for profile picture(images...)
+pip install Pillow

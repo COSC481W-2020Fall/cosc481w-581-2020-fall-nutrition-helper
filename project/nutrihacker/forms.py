@@ -226,7 +226,7 @@ class LogForm(forms.Form):
 # form for users to log their recipes
 class RecipeForm(forms.Form):
 	# form fields
-	name = forms.CharField(label="Name the recipe", max_length=50, strip=True, required=True)
+	name = forms.CharField(label="Recipe Name", max_length=50, strip=True, required=True)
 	servingsProduced = forms.DecimalField(label="Servings produced", decimal_places=2, min_value=0, max_value=99, initial=1, required=True)
 	allergies = forms.ModelMultipleChoiceField(label="Allergy information", queryset=Allergy.objects.all(), required=False)
 	diets = forms.ModelMultipleChoiceField(label="Diet type", queryset=DietPreference.objects.all(), required=False)

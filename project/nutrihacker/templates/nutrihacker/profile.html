@@ -49,18 +49,24 @@
 		font-family: sans-serif;
 		text-transform: uppercase; 
 	}
-	.profile .LeftProfile a{
-		text-decoration: none;
+	.profile .LeftProfile button {
+				padding: 10px 20px;
+				display: flex;
+				font-weight: bold;
+				display: inline-block;
+				margin: 4px 2px;
+				background-color: #4CAF50;
+				font-size: 18px;
+				border-radius: 15px;
+				text-align: center;
+				text-decoration: none;
+				width: 200px;
+			}
+	.profile .LeftProfile button{
 		color:white;
-		font-weight: bold;
-		background-color: #4CAF50;
-		text-align: center;
-		padding: 10px 20px;
-		display: flex;
-		border-radius: 5px;
 	}
-	.profile .LeftProfile a:hover{
-		background-color: #4CAF50;
+	.profile .LeftProfile button:hover{
+		background-color: green;
 	}
 	.profile .profileDetailInfo{
 		margin-top: 5%;
@@ -102,9 +108,9 @@
 		<img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200"/>
 		{% endif %}
 		<h2>{{ user.username }}</h2>
-		<a href="{% url 'nutrihacker:update_profile' %}" style="text-align: center;"> Update Profile</a><br>
-		<a href="{% url 'nutrihacker:diet_and_allergies' %}" target="_blank">Add Diet and Allergy Preferences</a><br>
-		<a href="{% url 'nutrihacker:change_password' %}" target="_blank"> Change Password</a><br>
+		<a href="{% url 'nutrihacker:update_profile' %}" style="text-align: center;"><button> Update Profile</button></a><br>
+		<a href="{% url 'nutrihacker:diet_and_allergies' %}"><button>Add Diet and Allergy Preferences</button></a><br>
+		<a href="{% url 'nutrihacker:change_password' %}"> <button>Change Password</button></a><br>
 		
 	</div>
 	<div class="profileDetailInfo">

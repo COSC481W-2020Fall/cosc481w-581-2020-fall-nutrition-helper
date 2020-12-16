@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django import forms 
-#from users import views as user_views
+from django.contrib.auth import views as auth_views 
+
 
 from . import views
 
@@ -14,14 +15,8 @@ from . import views
 app_name = 'nutrihacker'
 urlpatterns = [
 	# /nutrihacker/
-    path('', views.IndexView.as_view(), name='index'),
-    #/nutrihacker/aboutus
-    path('about_us/', views.AboutUsView.as_view(), name='aboutus'),
-    #/nutrihacker/help
-    path('help/', views.HelpView.as_view(), name='help'),
-	# /nutrihacker/nutrifacts/
+    path('', views.IndexView.as_view(), name='index'),  
     path('nutrifacts/<int:pk>/', views.FactsView.as_view(), name='nutrifacts'),
-
     # /nutrihacker/food_autocomplete/
     path('food_autocomplete/', views.FoodAutocomplete.as_view(), name='food_autocomplete'),
     # /nutrihacker/recipe_autocomplete/
@@ -80,7 +75,7 @@ urlpatterns = [
     path('change_password/', views.PasswordChangeView.as_view(), name='change_password'),
     # /nutrihacker/register_account/
     path('register_account/', views.RegisterAccountView.as_view(), name='register_account'),
-    
+
     #----------------------   RECIPE STUFF   -----------------------------------------------
     
     path('recipe/', views.ListRecipe.as_view(), name='list_recipe'),

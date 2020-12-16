@@ -10,8 +10,7 @@
         <style>
 			* {
 				box-sizing: border-box;
-				margin:0;
-                padding: 0;
+				
 			}
             h1, h2 {
                 color: white;
@@ -29,10 +28,12 @@
                 margin: revert;
             }
             table, td, th{
-            	border: 1px solid black;
+            	border: 1px solid #BFC9CA ;
+            	padding: 10px;
             }
             table{
             	border-collapse: collapse;
+            	width: 60%;
             }
             th {
                 text-align: right;
@@ -40,6 +41,11 @@
             td {
                 color: black;
                 text-align: left;
+                height:20px;
+            }
+            .top_menu{
+            	width:70%;
+            	margin:auto;
             }
             .addbtn{
                 border-radius:90%;
@@ -66,7 +72,6 @@
             .sbmtbtn:hover{
                 background-color: green;
             }
-
 			table.facts-1 {
   			margin-left: auto;
   			margin-right: auto;
@@ -166,6 +171,30 @@
 			body{
 				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
 			}
+			.image{
+				width: 70%;
+				text-align: center;
+				margin-left: 16%;
+			}
+			.image image{
+				width:100%;
+				height:auto;
+			}
+			.title{
+				text-align: center;
+				font-size: 25px;
+				background-color: #009879;
+				color:white;
+			}
+			.right{
+				width:80px;
+			}
+			.recipe_name{
+				text-align: center;
+				letter-spacing: 2px;
+				background-color: #009879;
+				color: white;
+			}
         </style>
         <script type="text/javascript">
 
@@ -176,7 +205,7 @@
         <h1>Recipe Details</h1>
 		
 		<!-- Buttons to update or delete recipe -->
-		<div style="text-align:center">
+		<div class="top_menu"style="text-align:center">
 		<br>
 			{% if user == recipe.user %}
 			<a href="{% url 'nutrihacker:update_recipe' recipe.id %}" style="text-align:center" ><button class="B" style="text-align:center">Update Recipe</button></a>
@@ -196,27 +225,27 @@
 		</div>
 		<br>
 	<div class="boxcolumn-1">
-		<table class="facts-1" style="background-color: white;">
-			<!-- Recipe picture is here -->
-			<tr>
-				<td colspan="2">
+		<!-- Recipe picture is here -->
+			<div class="image">
 					{% if recipe.recipe_image %} <!-- if there is a recipe pic -->
-				<img class="recipe_image"src="{{ recipe.recipe_image.url }}" width="200px" />	
+				<img class="recipe_image"src="{{ recipe.recipe_image.url }}" width="450px"/>
 				{% endif %} <!-- move on if there is no recipe picture -->
-				</td><td></td>
-				
-			</tr><
+			</div>
+			
+		<table class="facts-1" style="background-color: white;">
 			<tr>
-				<th style="text-align: center; background-color:black;" colspan="99">{{ recipe.name }}</th>
-			</tr>
+				<th class="recipe_name" colspan="99">
+					<h1 >{{ recipe.name }}</h1>
+				</th>
+			</tr><hr>
 			<tr>
 				<td>PRODUCES:</td>
 				<td colspan="99" style="text-align:center;">{{ recipe.servingsProduced }} servings</td>
-			</tr>
+			</tr><hr>
 			<tr>
 				<td>INSTRUCTIONS:</td>
 				<td colspan="99"style="text-align:left;">{{ recipe.instruction|linebreaksbr }}</td>
-			</tr>
+			</tr><hr>
 			<tr>
 				<td>INGREDIENTS</td>
 
@@ -230,71 +259,64 @@
 				</td><br>
 				{% endfor %}
 			</tr>
-		</table>
-	</div><br><br>
-	<div class="boxcolumn-2">
-		<h1 style="color: green; margin-top: 100px;"><center>Nutrition Facts:</center></h1>
 		<form action="{% url 'nutrihacker:detail_recipe' recipe.id %}" method="GET">
-			<center>
-				<label style="color: white">Number of portions: </label>
-				<input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}">
-				<button type="submit" value="Submit">Calculate</button>
-			</center>
-			<br>
+			<tr>
+				<th class="title"colspan="99">Nutrition Facts</th>
+			</tr>
+			<tr>
+				<td>Number of portions:</td>
+				<td colspan="99"><input type="number" name="portions" step="any" min="0" max="99" value="{{ portions }}"><button type="submit" value="Submit">Calculate</button>
+				</td>
+
+			</tr>	
 		</form>
-		<table class="facts-2">
 			<tr>
 				<td>Calories</td>
-				<td class="right">{{ nutrition.calories|floatformat }}</td>
-				<td  rowspan="99" style = "width : 20% ; background-color:black">{% include "nutrihacker/recipe/recipe_pi_chart.html" %}</td>
+				<td colspan="2" class="right">{{ nutrition.calories|floatformat }}</td>
+				<td rowspan="6" colspan="99">{% include "nutrihacker/recipe/recipe_pi_chart.html" %}</td>
 			</tr>
 			<tr>
 				<td>Total Fat</td>
-				<td class="right">{{ nutrition.totalFat|floatformat }}g</td>
+				<td colspan="2"class="right">{{ nutrition.totalFat|floatformat }}g</td>
 			</tr>
 			<tr>
 				<td>Cholesterol</td>
-				<td class="right">{{ nutrition.cholesterol|floatformat }}mg</td>
+				<td colspan="2" class="right">{{ nutrition.cholesterol|floatformat }}mg</td>
 			</tr>
 			<tr>
 				<td>Sodium</td>
-				<td class="right">{{ nutrition.sodium|floatformat }}mg</td>
+				<td colspan="2" class="right">{{ nutrition.sodium|floatformat }}mg</td>
 			</tr>
 			<tr>
 				<td>Total Carbohydrates</td>
-				<td class="right">{{ nutrition.totalCarb|floatformat }}g</td>
+				<td colspan="2" class="right">{{ nutrition.totalCarb|floatformat }}g</td>
 			</tr>
 			<tr>
 				<td>Protein</td>
-				<td class="right">{{ nutrition.protein|floatformat }}g</td>
+				<td colspan="2"class="right">{{ nutrition.protein|floatformat }}g</td>
 			</tr>
-
-		</table>
-				
-		<table style="background-color: white; margin-left: auto; margin-right: auto;">
-				<hr>
+			
 			<tr>
-				<td colspan="3" style="color: green; text-align:center; font-weight: bold; background-color:black">Additional Diet Information</td>
+				<td colspan="99" class="title" >Additional Diet Information</td>
 			</tr>
 			<tr>
-				<td>Allergy Information </td>
+				<td >Allergy Information </td>
 				{% if recipe.allergies_string %}
-					<td>{{ recipe.allergies_string }}</td>
+					<td colspan="99">{{ recipe.allergies_string }}</td>
 				{% else %}
-					<td> None </td>
+					<td colspan="99"> None </td>
 				{% endif %}
 			</tr>
 			<tr>
 				<td>Diet Information  </td>
 				{% if recipe.diets_string %}
-					<td>{{ recipe.diets_string }}</td>
+					<td colspan="99">{{ recipe.diets_string }}</td>
 				{% else %}
-					<td> None </td>
+					<td colspan="99"> None </td>
 				{% endif %}
 			</tr>
 		</table>
-		<br>
-		<br>
+		<br><br>
 	</div>
 	</table>
     </body>

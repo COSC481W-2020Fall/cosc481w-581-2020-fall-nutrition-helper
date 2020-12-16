@@ -159,7 +159,7 @@ class DietPreference(models.Model):
 class Recipe(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=50, default="Custom Recipe")
-	recipe_image = models.ImageField(upload_to='Recipe_pic/', blank="True", null="True")
+	recipe_image = models.ImageField(upload_to='Recipe_pic/',blank=True, null="True")
 	is_public = models.BooleanField(default=False)
 	created_at = models.DateTimeField(default=datetime.now)
 	instruction = models.TextField(default="")

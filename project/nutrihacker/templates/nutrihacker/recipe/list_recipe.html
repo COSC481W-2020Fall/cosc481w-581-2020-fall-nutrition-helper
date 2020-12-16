@@ -19,6 +19,13 @@
 				padding: 100px;
 				width: 55%;
 			}
+			.center .title{
+				font-weight: bold;
+				color:#009879;
+				background-color: white ;
+				padding: 10px;
+
+			}
 
 			table.center {
   			margin-left: auto;
@@ -60,18 +67,13 @@
 				font-size: 18px;
 				font-family:"Times New Roman", Times, serif;
 				border-radius:12px;
-				background-color: black;
+				background-color: #4CAF50;
+				color: white;
 
 			}
 			.btn:hover{
 				background-color: green;
 				cursor:pointer;
-			}
-			a {
-				color: white;
-			}
-			a:hover{
-				color: white;
 			}
 			input {
 				width: 48px;
@@ -160,19 +162,22 @@
 
 		<br>
 		<div class="center-div">
-			<button class="btn"><a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe">Create A Personal Recipe</a></button>
+			<a href="{% url 'nutrihacker:create_recipe' %}" alt="Create Recipe"><button class="btn">Create A Personal Recipe</button></a>
 		</div>
 		<br>
 		<br>
 		{% if object_list %}
 			<table class="center">
 					<tr>
-					<th>Name</th>
-					<th>Calories</th>
-					<th>Allergy</th>
-					<th>Diet</th>
-					<th>Servings</th>
-					<th>Date created</th>
+					<th class="title">Name</th>
+					<th class="title">Calories</th>
+					<th class="title">Allergy</th>
+					<th class="title">Diet</th>
+					<th class="title">Servings</th>
+					<th class="title">Date created</th>
+					<th class="title">Update Recipe</th>
+					<th class="title">Clone Recipe</th>
+					<th class="title">Delete Recipe</th>
 					</tr>
 				{% for recipe in object_list %}
 					<tr>
