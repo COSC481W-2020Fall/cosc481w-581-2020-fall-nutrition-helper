@@ -159,7 +159,7 @@
 				var p_clone = p_row.cloneNode(true);
 
 				// remove the cloned span (dal will add a new one automatically)
-			f_clone.getElementsByTagName("span")[0].remove();
+				f_clone.getElementsByTagName("span")[0].remove();
 
 				// get the label, select, and button elements from the food row
 				var f_label = f_clone.getElementsByTagName("label")[0];
@@ -171,16 +171,16 @@
 				var p_input = p_clone.getElementsByTagName("input")[0];
 
 				// set attributes of elements within the food row, initialize value to blank
-				var row_number = 2 * food_number + 1;
+				var row_number = 2 * food_number + 6;
 				f_clone.style.display = "";
 				f_clone.id = "row" + row_number;
 				f_label.setAttribute("for", "id_food" + food_number);
-			f_select.setAttribute("name", "food" + food_number);
-			f_select.setAttribute("data-select2-id", "id_food" + food_number);
-			f_select.id = "id_food" + food_number;
-			f_select.value = "";
-			f_select.disabled = false;
-			f_button.id = row_number;
+				f_select.setAttribute("name", "food" + food_number);
+				f_select.setAttribute("data-select2-id", "id_food" + food_number);
+				f_select.id = "id_food" + food_number;
+				f_select.value = "";
+				f_select.disabled = false;
+				f_button.id = row_number;
 
 				// repeat for portions, initialize value to 1
 				p_clone.style.display = "";
@@ -209,7 +209,7 @@
 			// removes indicated food and portions field from form
 			function remove(clicked_id) {
 				// get rows
-				var f_row = document.getElementById("row" + clicked_id);
+				var f_row = document.getElementById("row" + (Number(clicked_id) + 0));
 				var p_row = document.getElementById("row" + (Number(clicked_id) + 1));
 
 				// get select and input elements
