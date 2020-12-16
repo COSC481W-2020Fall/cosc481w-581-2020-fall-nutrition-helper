@@ -114,30 +114,30 @@ class UpdateRecipe(UserPassesTestMixin, FormView):
 	def get_context_data(self, **kwargs):
 		context = super(UpdateRecipe, self).get_context_data(**kwargs)
 		
-		ml = Recipe.objects.get(id=self.kwargs['pk'])
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
 		
-		context['recipe_id'] = ml.id
+		context['recipe_id'] = recipe.id
 		
 		return context
 
 	# override get_initial to provide initial form values
 	def get_initial(self):
 		initial = super(UpdateRecipe, self).get_initial()
-		ml = Recipe.objects.get(id=self.kwargs['pk'])
+		recipe = Recipe.objects.get(id=self.kwargs['pk'])
 
-		self.recipe_id = ml.id
+		self.recipe_id = recipe.id
 
-		initial['name'] = ml.name
-		initial['servingsProduced'] = ml.servingsProduced
-		initial['allergies'] = ml.allergies.all()
-		initial['diets'] = ml.diets.all()
-		initial['instruction'] = ml.instruction
-		initial['is_public'] = ml.is_public
+		initial['name'] = recipe.name
+		initial['servingsProduced'] = recipe.servingsProduced
+		initial['allergies'] = recipe.allergies.all()
+		initial['diets'] = recipe.diets.all()
+		initial['instruction'] = recipe.instruction
+		initial['is_public'] = recipe.is_public
 
-		mf_list = RecipeFood.objects.filter(recipe=ml)
-		for i in range(mf_list.count()):
-			initial['food'+str(i+1)] = mf_list[i].food
-			initial['portions'+str(i+1)] = chop_zeros(mf_list[i].portions)
+		food_list = RecipeFood.objects.filter(recipe=recipe)
+		for i in range(food_list.count()):
+			initial['food'+str(i+1)] = food_list[i].food
+			initial['portions'+str(i+1)] = chop_zeros(food_list[i].portions)
 		
 		return initial
 

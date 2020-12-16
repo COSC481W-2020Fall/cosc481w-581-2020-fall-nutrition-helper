@@ -49,6 +49,14 @@
             .addbtn:hover{
                  background-color: green;
             }
+			.rmvbtn{
+				border-radius:90%;
+				cursor: pointer;
+				font-weight: 800;
+			}
+			.rmvbtn:hover{
+				 background-color: red;
+			}
             .row1{
                 font-size: 40px;
             }
@@ -75,7 +83,7 @@
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Cloning</h1>
-        <h2>Record what ingredients are in your recipe!</h2>
+        <h2>Record a recipe based on another recipe!</h2>
         <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
@@ -88,7 +96,7 @@
 								<li class="error">&bull; {{ field.errors.0 }}</li>
 							{% endif %}
 						</td>
-						{% if forloop.counter > 5 and not forloop.counter|divisibleby:2 %}
+						{% if forloop.counter > 6 and forloop.counter|divisibleby:2 %}
 							<td>
 								<button id={{ forloop.counter }} class="rmvbtn" type="button">&#8722;</button>
 							</td>
@@ -102,8 +110,7 @@
             <br>
             <table align="center">
                 <tr>
-                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
-                                                        onclick="addAnotherFood()"></td>
+                    <td style="text-align: left"><input id="add" class="addbtn" type="button" value="&#10010"></td>
                     <td style="text-align: right; color: white">Add another food</td>
                 </tr>
             </table>
@@ -113,9 +120,11 @@
         </form>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
         {{ recipe_form.media }}
+        <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+		{{ form.media }}
         <script type="text/javascript">
             var extra_count = Number(document.getElementById("id_extra_field_count").value);
-            var food_number = 2;
+			var food_number = extra_count + 2;
             
 			
 			// add event listeners to all initial remove buttons
@@ -125,16 +134,15 @@
 			}
 			
             // adds another food and portions field to the form
-            function addAnotherFood() {
+			document.getElementById("add").onclick = function() {
                 // get the table
                 var table = document.getElementById("formtable");
                 // get all table rows
                 var rows = table.getElementsByTagName("tr");
                 
-				
                 // select rows 7 and 8 (original food and portions field)
-				var f_row = table.getElementById("id_food1").parentElement.parentElement;
-				var p_row = table.getElementById("id_portions1").parentElement.parentElement;
+				var f_row = rows[7];
+				var p_row = rows[8];
                 
                 // clone the rows
                 var f_clone = f_row.cloneNode(true);
@@ -143,32 +151,42 @@
                 // remove the cloned span (dal will add a new one automatically)
                 f_clone.getElementsByTagName("span")[0].remove();
 
-                // remove the hidden element
-                p_clone.getElementsByTagName("input")[1].remove();
 
-                // get the label and select elements from the food row
+				// get the label, select, and button elements from the food row
                 var f_label = f_clone.getElementsByTagName("label")[0];
                 var f_select = f_clone.getElementsByTagName("select")[0];
+				var f_button = f_clone.getElementsByTagName("button")[0];
                 
                 // get the label and input elements from the portions row
                 var p_label = p_clone.getElementsByTagName("label")[0];
                 var p_input = p_clone.getElementsByTagName("input")[0];
 
-                // set the for, name, and id
+				// set attributes of elements within the food row, initialize value to blank
+				var row_number = 2 * food_number + 1;
+				f_clone.style.display = "";
+				f_clone.id = "row" + row_number;
                 f_label.setAttribute("for", "id_food" + food_number);
                 f_select.setAttribute("name", "food" + food_number);
                 f_select.setAttribute("data-select2-id", "id_food" + food_number);
                 f_select.id = "id_food" + food_number;
+				f_select.value = "";
+				f_select.disabled = false;
+				f_button.id = row_number;
 
-                // repeat for portions, initialize value to 1
+				// repeat for portions, initialize value to 1
+				p_clone.style.display = "";
+				p_clone.id = "row" + (row_number + 1);
                 p_label.setAttribute("for", "id_portions" + food_number);
                 p_input.setAttribute("name", "portions" + food_number);
                 p_input.id = "id_portions" + food_number;
-                p_input.value = 1;
+				p_input.value = 1;
+				p_input.disabled = false;
 
-                // append rows to the table
-                table.appendChild(f_clone);
-                table.appendChild(p_clone);
+				// add event listener to remove button
+				f_button.addEventListener("click", function(){ remove(this.id); });
+				// append rows to the table
+				table.append(f_clone);
+				table.append(p_clone);
 
                 // increment counters
                 food_number++;
