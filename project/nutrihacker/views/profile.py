@@ -12,7 +12,7 @@ from nutrihacker.models import Profile, Allergy, DietPreference
 from nutrihacker.forms import AllergyChoiceForm, DietChoiceForm, AllergyDeleteForm, DietDeleteForm
 from nutrihacker.forms import UserForm, ProfileForm
 
-class ProfileView(ListView):
+class ProfileView(LoginRequiredMixin, ListView):
 	model = Profile
 	template_name = 'nutrihacker/profile.html'
 
