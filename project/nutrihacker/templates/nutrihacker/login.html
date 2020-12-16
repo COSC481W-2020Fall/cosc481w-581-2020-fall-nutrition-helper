@@ -8,6 +8,9 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
         <style>
+            *{
+                box-sizing: border-box;
+            }
             .usrnameLabel{
                 text-align:right;
                  color:white;
@@ -15,6 +18,7 @@
             }
             .usrnamebox{
                 text-align:left;
+                border-radius: 5px;
             }
             .pwdlabel{
                 text-align:right;
@@ -23,7 +27,34 @@
             }
             .pwdbox{
                 text-align:left;
+                border-radius: 5px;
             }
+            body{
+                background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+            }
+            table {
+            border-spacing: 15px;
+        }
+        .login{
+            background-color: blue;
+            color:white;
+            font-size:20px;
+            border-radius: 10px;
+        }
+        .login:hover{
+            background-color: #033C94;
+            cursor:pointer;
+        }
+        .Create{
+            background-color: #42b72a;
+            color:white;
+            font-size:20px;
+            border-radius: 10px;
+        }
+        .Create:hover{
+            background-color: #039C28;
+            cursor:pointer;
+        }
         </style>
         <script>
             function registerRedirect()
@@ -31,31 +62,12 @@
                 window.location.href="{% url 'nutrihacker:register_account' %}"
             }
         </script>
-        <style>
-        table {
-            border-spacing: 15px;
-        }
-        </style>
+       
 	</head>
     <body>
         {% include "nutrihacker/navigation_bar.html" %}
         
-        {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-        {% endif %}
-
-        {% if next %}
-            {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed,
-            please login with an account that has access.</p>
-            {% else %}
-            <p>Please login to see this page.</p>
-            {% endif %}
-        {% endif %}
-        
-        {% if user.is_authenticated %}
-        <p>You are already logged in.</p>
-        {% else %}
+    
         <form method="post" action="{% url 'nutrihacker:login' %}">
         {% csrf_token %}
         <table align="center" width="90%">
@@ -69,13 +81,28 @@
             </tr>
             <tr>
                 <td></td>
-            <td style="text-align:left;"><input type="submit" value="Login"></td>
+            <td style="text-align:left;"><input class="login"type="submit" value="Login"></td>
         </tr>
+        {% if user.is_authenticated %}
+        <p>You are already logged in.</p>
+        {% else %}
+        {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
         <tr>
             <td></td>
             <td style="text-align:left;" >
                 </br> 
-                <input type="button" value="Create Account" onclick="registerRedirect();">
+                <input class="Create"type="button" value="Create Account" onclick="registerRedirect();">
             </td>
         </tr>
         </table>

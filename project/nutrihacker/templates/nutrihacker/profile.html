@@ -2,141 +2,157 @@
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Nutrition Facts</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-		<style>
-			.facts th, td {
-				padding: 12px 15px;
-			}
-			.facts {
-				border-collapse: collapse;
-				width: 35%;
-				margin: 25px 0;
-				font-size: 24px;
-				font-family:"Times New Roman", Times, serif;
-				min-width: 400px;
-				box-shadow: 0 0 20px rgba(0,0, 0, 0.15);
-				margin-left: auto;
-				margin-right: auto;
-			}
-			.facts thead tr{
-				background-color: #009879;
-				color: #ffffff;
-    			text-align: left;
-			}
-			.facts tbody tr{
-				background-color: #f3f3f3;
-				text-align: left;
-			}
-			body {
-				background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
-			}
-			a {
-				text-decoration: none;
-				align: center;
-			}
-			a:hover {
-				color: blue;
-			}
-			.buttonn {
-				padding: 15px 30px;
-				border: none;
+<head>
+<meta charset="UTF-8">
+<title>Profile Page</title>
+<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}"> 
+<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		box-sizing: border-box;
+	}
+	body{
+    background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+	}
+	.profile{
+		top:20%;
+		left:30%;
+		margin: auto;
+		bottom: 50%;
+		width: 50%;
+		display: flex;
+		position: absolute;
+		box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+
+	}
+	.profile .LeftProfile {
+		margin-top: 5%;
+		width:40%;
+		padding:20px 25px;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		text-align: center;
+		color: white;
+	} 
+	.profile .LeftProfile img{
+		border-radius:5px;
+		margin-bottom: 10px;
+	}
+	.profile .LeftProfile h2{
+		margin-bottom: 40px;
+		font-family: sans-serif;
+		text-transform: uppercase; 
+	}
+	.profile .LeftProfile button {
+				padding: 10px 20px;
+				display: flex;
+				font-weight: bold;
 				display: inline-block;
 				margin: 4px 2px;
-				color: white;
+				background-color: #4CAF50;
 				font-size: 18px;
-				border-radius:12px;
-				font-family:"Times New Roman", Times, serif;
+				border-radius: 15px;
+				text-align: center;
+				text-decoration: none;
+				width: 200px;
 			}
-			.buttonn:hover {
-				background-color: blue;
-				cursor: pointer;
-			}
-			input {
-				width: 48px;
-			}
-			label {
-				color: white;
-			}
-		</style>
-	</head>
-	<body style="background-size: cover">
-		{% include "nutrihacker/navigation_bar.html" %}
-        
-		<br>
-		<br>
-		<table class="facts" style="background-color: white; text-align:center;">
-			<thead>
-			<tr>
-				<td>Username</td>
-				<td class="right">{{ user.username }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Email Address</td>
-				<td class="right">{{ user.email }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>First Name</td>
-				<td class="right">{{ user.first_name }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Last Name</td>
-				<td class="right">{{ user.last_name }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Gender</td>
-				<td class="right">{{ user.profile.gender }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Birthdate</td>
-				<td class="right">{{ user.profile.birthdate }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Height</td>
-				<td class="right">{{ user.profile.get_height_str }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Weight</td>
-				<td class="right">{{ user.profile.get_weight_str }}</td>
-			</tr>
-			</tbody>
-			<thead>
-			<tr>
-				<td>Daily Calorie Goal</td>
-				<td class="right">{{ user.profile.caloriegoal }}</td>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>Are metric units preferred?</td>
-				<td class="right">{{ user.profile.showmetric }}</td>
-			</tr>
-			</tbody>
-		</table>
-		<br><br>
-		<div style="text-align: center">
-			<button class="buttonn"><a href="{% url 'nutrihacker:diet_and_allergies' %}" alt="Diet Preferences and Allergies">Diet Preferences and Allergies</a></button>
-			<br><br>
-			<button class="buttonn"><a href="{% url 'nutrihacker:update_profile' %}" alt="Update Profile">Update Profile</a></button>
-			<button class="buttonn"><a href="{% url 'nutrihacker:change_password' %}" alt="Change Password">Change Password</a></button>
-            <br><br>
-		</div>
+	.profile .LeftProfile button{
+		color:white;
+	}
+	.profile .LeftProfile button:hover{
+		background-color: green;
+	}
+	.profile .profileDetailInfo{
+		margin-top: 5%;
+		width: 60%;
+		font-size: 19px;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		padding:20px 35px;
+	}
+	.profile .profileDetailInfo .detailInfo h2{
+		font-style: serif;
+		color: white;
+		padding-bottom: 5px;
+		border-bottom: 1px solid #e0e0e0;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+	.profile .profileDetailInfo .detailInfo h3{
+		font-style: serif;
+		color: green;
+		padding-top: 10px;
 
+	}
+	.profile .profileDetailInfo .detailInfo h4{
+		color: white;
+		font-style: serif;
+	}
+</style>
+</head>
+<body>
+
+{% include "nutrihacker/navigation_bar.html" %}
+
+<div class="profile">
+	<div class="LeftProfile">
+		{% if user.profile.profilePic %}
+		<img src="{{ user.profile.profilePic.url }}" width="260px" />		
+		{% else %}
+		<img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200"/>
+		{% endif %}
+		<h2>{{ user.username }}</h2>
+		<a href="{% url 'nutrihacker:update_profile' %}" style="text-align: center;"><button> Update Profile</button></a><br>
+		<a href="{% url 'nutrihacker:diet_and_allergies' %}"><button>Add Diet and Allergy Preferences</button></a><br>
+		<a href="{% url 'nutrihacker:change_password' %}"> <button>Change Password</button></a><br>
+		
+	</div>
+	<div class="profileDetailInfo">
+		<div class="detailInfo">
+			<h2>PROFILE INFORMATION</h2>
+			<h3>First Name</h3>
+			<h4>{{ user.first_name }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Last Name</h3>
+			<h4>{{ user.last_name }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Email Address</h3>
+			<h4>{{ user.email }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Gender</h3>
+			<h4>{{ user.profile.gender }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Birthdate</h3>
+			<h4>{{ user.profile.birthdate }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Height</h3>
+			<h4>{{ user.profile.get_height_str }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Weight</h3>
+			<h4>{{ user.profile.get_weight_str }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Daily Calorie Goal</h3>
+			<h4>{{ user.profile.caloriegoal }}</h4>
+		</div>
+		<div class="detailInfo">
+			<h3>Are metric units preferred?</h3>
+			<h4>{{ user.profile.showmetric }}</h4>
+		</div>
+	</div>
+</div>
+
+</body>
 </html>

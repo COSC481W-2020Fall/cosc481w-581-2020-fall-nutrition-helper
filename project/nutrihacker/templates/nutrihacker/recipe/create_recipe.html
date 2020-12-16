@@ -8,9 +8,22 @@
         <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
         <style>
+            *{
+                box-sizing: border-box;
+            }
             h1, h2 {
                 color: white;
                 text-align: center;
+            }
+            form{
+                
+            }
+            .recipeCreate{
+                width:60%;
+                height: 100%;
+                margin-right: 30%;
+                margin-left:25%;
+                background-color: #009879;
             }
             label {
                 color: white;
@@ -58,11 +71,28 @@
                 padding: 0px 5px;
             }
             .sbmtbtn{
-                font-size: 22px;
+                font-size: 20px;
                 cursor: pointer;
             }
             .sbmtbtn:hover{
                 background-color: #008CBA;
+            }
+            .save{
+                font-size: 19px;
+                cursor: pointer;
+                border-radius: 5px;
+                background-color:#4CAF50;
+                color:black;
+            }
+            .cancel{
+                color:white;
+                font-size:18px;
+            }
+            .cancel:hover{
+                color:blue;
+            }
+            body{
+                background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
             }
         </style>
     </head>
@@ -70,6 +100,7 @@
         {% include "nutrihacker/navigation_bar.html" %}
         <h1>Recipe Creator</h1>
         <h2>Record what ingredients are in your recipe!</h2>
+        <div class="recipeCreate">
         <form method="POST" action="{% url 'nutrihacker:create_recipe' %}">
             {% csrf_token %}
             <table id="formtable" align="center">
@@ -96,15 +127,17 @@
             <br>
             <table align="center">
                 <tr>
-                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010"
-                                                        onclick="addAnotherFood()"></td>
+                    <td style="text-align: left"><input class="addbtn" type="button" value="&#10010" onclick="addAnotherFood()"></td>
                     <td style="text-align: right; color: white">Add another food</td>
                 </tr>
             </table>
             <br>
-            <input type="submit" value="Submit" />
-			<a class="cancel" href="{% url 'nutrihacker:list_recipe' %}">Cancel</a>
+            <input class="save"type="submit" value="Submit" />
+			<a class="cancel" href="{% url 'nutrihacker:list_recipe' %}"> Cancel</a>
+
+            <br>
         </form>
+    </div>
 		<br>
 		<br>
         <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>

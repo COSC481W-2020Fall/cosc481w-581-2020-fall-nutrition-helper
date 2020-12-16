@@ -1,152 +1,147 @@
+{% extends 'nutrihacker/log/layout.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>{% block title %}{% endblock %}</title>
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-		<style>
-			h1, h2 {
-				color: white;
-				text-align: center;
-			}
-			.logform table {
-				margin-bottom: 0;
-			}
-			.formlabel label {
-				color: white;
-				text-align: right;
-				margin-right: 10px;
-			}
-			input, select {
-				width: revert;
-				padding: revert;
-				margin: revert;
-			}
-			th {
-				text-align: right;
-			}
-			td {
-				color: black;
-				text-align: left;
-			}
-			.select2-results__option li {
-				color: black;
-				text-align: left;
-				font-size: 13px;
-				font-family: sans-serif;
-			}
-			.select2-container {
-				max-width: 20em;
-			}
-			span {
-				font-size: 13px;
-				font-family: sans-serif;
-			}
-			.select2-container--default .select2-selection--single .select2-selection__rendered {
-				color: black !important;
-			}
-			.addbtn{
-				border-radius:90%;
-				cursor: pointer;
-				font-weight: 800;
-			}
-			.addbtn:hover{
-				 background-color: green;
-			}
-			.rmvbtn{
-				border-radius:90%;
-				cursor: pointer;
-				font-weight: 800;
-			}
-			.rmvbtn:hover{
-				 background-color: red;
-			}
-			.row1{
-				font-size: 40px;
-			}
-			.row2{
-				text-decoration-line: underline;
-				text-decoration-style: double;
-			}
-			.cancel {
-				margin-left: 2%;
-				color: white;
-			}
-			.error {
-				display: inline;
-				color: #ff3e30;
-				font-family: sans-serif;
-				margin-left: 5px;
-				font-size: 14px;
-			}
-			.footer {
-				margin-bottom: 25px;
-			}
-		</style>
-	</head>
-	<body>
-		{% include "nutrihacker/navigation_bar.html" %}
-		{% block header %}{% endblock %}
-		<form class="logform" method="POST" action="{% block actionurl %}{% endblock %}">
-			{% csrf_token %}
-			<table id="formtable" align="center">
-				{% for field in form.visible_fields %}
-				<tr id="row{{ forloop.counter }}">
-					<th class="formlabel">{{ field.label_tag }}</th>
-					<td>
-						{{ field }}
-						{% if field.errors %}
-						<li class="error">&bull; {{ field.errors.0 }}</li>
-						{% endif %}
-					</td>
-					{% if forloop.counter > 2 and not forloop.counter|divisibleby:2 %}
-					<td>
-						<button id={{ forloop.counter }} class="rmvbtn" type="button">&#8722;</button>
-					</td>
-					{% endif %}
-				</tr>
-				{% endfor %}
-				{% for field in form.hidden_fields %}
-				<tr hidden><td>{{ field }}</td></tr>
-				{% endfor %}
-				{% if form.non_field_errors %}
-				<tr id="error">
-					<td colspan="2"><br><li class="error">&bull; {{ form.non_field_errors.0 }}</li></td>
-				</tr>
-				{% endif %}
-			</table>
-			<br>
-			<table align="center">
-				<tr>
-					<td style="text-align: left"><input id="add_food" class="addbtn" type="button" value="&#43"></td>
-					<td style="text-align: left; color: white">&nbsp;&nbsp;&nbsp;Add food</td>
-				</tr>
-				<tr>
-					<td style="text-align: left"><input id="add_recipe" class="addbtn" type="button" value="&#43"></td>
-					<td style="text-align: left; color: white">&nbsp;&nbsp;&nbsp;Add recipe</td>
-				</tr>
-			</table>
-			<br>
-			<div>
-				<input type="submit" value="{% block btntxt %}{% endblock %}"/>
-				<a class="cancel" href="{% block cancelurl %}{% endblock %}">Cancel</a>
-			</div>
-		</form>
-		<div class="footer"></div>
-		<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-		{% comment %}{{ form.media }}{% endcomment %}
+{% block style %}
+	<style>
+		h1, h2 {
+			color: white;
+			text-align: center;
+		}
+		.logform table {
+			margin-bottom: 0;
+		}
+		.formlabel label {
+			color: white;
+			text-align: right;
+			margin-right: 10px;
+		}
+		input, select {
+			width: revert;
+			padding: revert;
+			margin: revert;
+		}
+		th {
+			text-align: right;
+		}
+		td {
+			color: black;
+			text-align: left;
+		}
+		.select2-results__option li {
+			color: black;
+			text-align: left;
+			font-size: 13px;
+			font-family: sans-serif;
+		}
+		.select2-container {
+			max-width: 20em;
+		}
+		span {
+			font-size: 13px;
+			font-family: sans-serif;
+		}
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+			color: black !important;
+		}
+		.addbtn{
+			border-radius:90%;
+			cursor: pointer;
+			font-weight: 800;
+		}
+		.addbtn:hover{
+			 background-color: green;
+		}
+		.rmvbtn{
+			border-radius:90%;
+			cursor: pointer;
+			font-weight: 800;
+		}
+		.rmvbtn:hover{
+			 background-color: red;
+		}
+		.row1{
+			font-size: 40px;
+		}
+		.row2{
+			text-decoration-line: underline;
+			text-decoration-style: double;
+		}
+		.cancel {
+			margin-left: 2%;
+			color: white;
+		}
+		.error {
+			display: inline;
+			color: #ff3e30;
+			font-family: sans-serif;
+			margin-left: 5px;
+			font-size: 14px;
+		}
+		.footer {
+			margin-bottom: 25px;
+		}
+	</style>
+{% endblock %}
 
-			<link href="{% static 'admin/css/vendor/select2/select2.css' %}" type="text/css" media="screen" rel="stylesheet">
-			<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
-			<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
-			<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
-			<script src="/static/autocomplete_light/autocomplete_light.js"></script>
-			<script src="/static/autocomplete_light/select2.js"></script>
-			<script src="/static/autocomplete_light/i18n/en.js"></script>
-			
-		<script type="text/javascript" src="{% static 'nutrihacker/log_build.js' %}"></script>
-	</body>
-</html>
+{% block body %}
+	{% block header %}{% endblock %}
+	<form class="logform" method="POST" action="{% block actionurl %}{% endblock %}">
+		{% csrf_token %}
+		<table id="formtable" align="center">
+			{% for field in form.visible_fields %}
+			<tr id="row{{ forloop.counter }}">
+				<th class="formlabel">{{ field.label_tag }}</th>
+				<td>
+					{{ field }}
+					{% if field.errors %}
+					<li class="error">&bull; {{ field.errors.0 }}</li>
+					{% endif %}
+				</td>
+				{% if forloop.counter > 2 and not forloop.counter|divisibleby:2 %}
+				<td>
+					<button id={{ forloop.counter }} class="rmvbtn" type="button">&#8722;</button>
+				</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+			{% for field in form.hidden_fields %}
+			<tr hidden><td>{{ field }}</td></tr>
+			{% endfor %}
+			{% if form.non_field_errors %}
+			<tr id="error">
+				<td colspan="2"><br><li class="error">&bull; {{ form.non_field_errors.0 }}</li></td>
+			</tr>
+			{% endif %}
+		</table>
+		<br>
+		<table align="center">
+			<tr>
+				<td style="text-align: left"><input id="add_food" class="addbtn" type="button" value="&#43"></td>
+				<td style="text-align: left; color: white">&nbsp;&nbsp;&nbsp;Add food</td>
+			</tr>
+			<tr>
+				<td style="text-align: left"><input id="add_recipe" class="addbtn" type="button" value="&#43"></td>
+				<td style="text-align: left; color: white">&nbsp;&nbsp;&nbsp;Add recipe</td>
+			</tr>
+		</table>
+		<br>
+		<div>
+			<input type="submit" value="{% block btntxt %}{% endblock %}"/>
+			<a class="cancel" href="{% block cancelurl %}{% endblock %}">Cancel</a>
+		</div>
+	</form>
+	<div class="footer"></div>
+	<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+	{% comment %}{{ form.media }}{% endcomment %}
+
+		<link href="{% static 'admin/css/vendor/select2/select2.css' %}" type="text/css" media="screen" rel="stylesheet">
+		<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+		<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+		<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+		<script src="/static/autocomplete_light/autocomplete_light.js"></script>
+		<script src="/static/autocomplete_light/select2.js"></script>
+		<script src="/static/autocomplete_light/i18n/en.js"></script>
+		
+	<script type="text/javascript" src="{% static 'nutrihacker/log_build.js' %}"></script>
+{% endblock %}

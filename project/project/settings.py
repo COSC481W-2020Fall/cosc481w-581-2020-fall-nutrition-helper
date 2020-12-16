@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+THIRD_PARTY_APPS = [
+    'django_cleanup',
 
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,8 +125,30 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+#path directory where uploaded pics will be saved
+#It'll store the uploaded pic in file system not in the database
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
+
+
 LOGIN_URL = '/nutrihacker/login/'
 
 LOGIN_REDIRECT_URL = '/nutrihacker/'
 
 LOGOUT_REDIRECT_URL = '/nutrihacker/'
+
+# Reset password SMTP configration(simple mail transfer protocol)
+# the gmail Email host port and TLS searched form the internet ( as GMAIL smtp configuration)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 #gmail port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nutrihackerfall2020@gmail.com' #djano uses this email account to login in our behalf and send the reset form
+EMAIL_HOST_PASSWORD = 'Nutrihacker'

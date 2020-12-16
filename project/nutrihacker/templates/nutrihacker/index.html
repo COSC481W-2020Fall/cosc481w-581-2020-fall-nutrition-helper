@@ -1,64 +1,364 @@
-{% load static %}
+    {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Nutrition Helper</title>
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-	</head>
-	<style>
-		.foodBtn{
-			width: 30%;
-			border-radius: 90px;
-  			color: white;
-  			padding: 55px 88px;
-  			font-size: 16px;
-  			cursor: pointer;
-  			text-align: center;
-			float: left;
-		}
-		.recipeBtn{
-			width: 30%;
-			border-radius: 90px;
-  			color: white;
-  			padding: 55px 88px;
-  			font-size: 16px;
-  			cursor: pointer;
-  			text-align: center;
-			float: right;
-		}
-	</style>
-	<body style="background-size:cover">
-		{% include "nutrihacker/navigation_bar.html" %}
-        
-		<p class="p1">This website helps with meal planning and provides nutrition information.</p>
-		<br>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>HomePage</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
+    </head>
+    <style>
+            *{
+        list-style: none;
+        box-sizing: border-box;
+    }        
+            .homepage h1{
+                font-family: arial;
+                font-size: 40px;
+                padding: 15px;
+                text-align: center;
+                color: yellow;
+                font-style: italic;
+                margin-right: 16%;
+                margin-left: 16%;
+             }
+             .homepage .homepageMsg #Description{
+                color: white;
+                text-align: center;
+                margin-right: 15%;
+                margin-left: 15%;
+             } 
+            .homepage .login .btnsLIN{
+                margin-top: 5px;
+                margin-right: 15%;
+                margin-bottom: 10px;
+                margin-left:22%;
 
-		<!--  Form that submits food value as GET request (shouldn't change the database)  
-			  Field = "food" Value="Broccoli" or "Egg"  -->
-<!-- for the button that was suggested by other groups
-		<div class="foodBtn">
-			<button>Left button</button>
-		</div>
-		<div class="recipeBtn">
-			<button>Right button</button>
-		</div>
--->
-		{% comment %}
-		<table class="t02" width="70%" align="right">
-			<form action="{% url 'nutrihacker:nutrifacts' %}" method="GET">
-			<tr>
-					<th><button id= "demo" class="B" type="submit" name="food" value="broccoli"/> <img src="{% static 'nutrihacker/images/broccoli.jpg' %}" alt="Vegan option" width="120px" height="120px"> <br> Broccoli</th>
-					<th><button class="B" type="submit" name="food" value="egg"/> <img src="{% static 'nutrihacker/images/eggs.png' %}" alt="Vegan option" width="120px" height="120px"> <br> Eggs</th>
-			</tr>
-				</form>
-		</table>
-		{% endcomment %}
+            }
+            .homepage .login .login_out_box{
+                width: 100px;
+                text-align: center;
+                margin: 30px;
+            } 
+            body{
+                background-image: url("{% static 'nutrihacker/images/background.jpg' %}");
+            }
+            p{padding: 10px;}
+            button{
+                padding: 50px;
+                border-radius: 50px;
+                margin: 30px;
+                font-size: 30px;
+            }
+            .homepage .login .btnsLIN button{
+                text-decoration: none;
+                color:white;
+                font-weight: bold;
+                background-color: #4CAF50;
+                text-align: center;
+                padding: 50px;
+                margin: 100px;
+                float: left;
+                display: flex;
+                font-size: 30px;
+                border-radius: 15px;
+            }
+            .homepage .login .btnsLIN button:hover{
+                background-color: green;
+                cursor: pointer;
+            }
+            .loginbtn{
+                width:160px;
+                border-radius: 20px;
+                font-size:18px;
+            }
+            .loginbtn:hover{
+                color:white;
+                background-color: green;
+            }
+            .homepage .login #signup{
+                font-size: 25px;
+            }
+            .homepage .login #signup a{
+                color:green;
+            }
+            .homepage .login #signup a:hover{
+               color:blue;
+            }
+            .team{
+                position: relative;
+            }
+             .team .list{
+                display: inline-flex;
+                font-size:20px;
+            }
+            .homepage .login .login_out_box{
+                font-size: 20px;
+                text-align:center;
+                color: black;
+            }
+             .team .title{
+                text-decoration-line: underline;
+                text-decoration-style: double;
+                color:white;
+                margin-left: 0;
+                text-align: left;
+                padding-bottom: 0;
+            }
+           .team .team_members .list{
+                color:white;
+                font-size: 20px;
+                display: inline;
+                padding-top: 0;
+                margin: 10px;
+            }
+            .featuresDesc{
+                margin:auto;
+                width:100%;
+                padding:5px;
+            }
+            .featuresDesc .food {
+                float: left;
+                margin-right: auto;
+                margin-left: auto;
+                text-align: center;
+                margin:8px;
+                background-color:#E4ECEC;
+                padding: 5px;
+                width:23.5%;
+                height: 400px;
+            }
+            .featuresDesc .recipe_search{
+                float: left;
+                text-align: center;
+                background-color:#E4ECEC; 
+                padding: 5px;
+                margin:8px;
+                width:23.5%; 
+                height: 400px;
+            }
+            .featuresDesc .log{
+                text-align: center;
+                float: left;
+                background-color:#E4ECEC;
+                padding: 5px;
+                margin:8px;
+                width:23.5%;
+                height: 400px;
+            }
+            .featuresDesc .profile{
+                text-align: center;
+                float: left;
+                padding: 5px;
+                margin:8px;
+                background-color:#E4ECEC;
+                width:23.9%;
+                height: 400px;
+            }
+            .featuresDesc  a{
+                color:green;
+                font-size: 30px;
+                letter-spacing: 3px;
+                font-weight: bold;
+            }
+            .featuresDesc a:hover{
+                color: blue;
+            }
+            .featuresDesc .links{
+                color:blue;
+                font-size:20px;
+                letter-spacing: 0;
+                font-weight: normal;
+            }
+             .featuresDesc #detail{
+                font-size:20px;
+                color:black;
 
+             }
+             .memberslist {
+                float:left;
+                display: inline-block;
+                margin:80px 5px;
+                text-align:left;
+                padding: px;
+                width: 25%;
+                background-color: #E4ECEC;
+             }
 
-			</table>
+             
+             .memberslist #title{
+                font-weight: bold;
+                text-decoration: underline;
+                color:green;
+                text-align:center;
+                font-size: 30px;
+                padding-bottom: 5px;
+                margin-top: 15px;
+                margin-bottom: 15px;
+                margin-left: 0;
+                letter-spacing: 5px;
+             }
+             .memberslist .team {
+                font-size: 25px;
+                list-style-type: inherit; 
+                padding: 5px;
+                color:black;
 
-	</body>
+             }
+             .memberslist #t{
+                text-indent: 55px;
+                font-style: italic;
+                font-weight: bold;
+                font-size:20px;
+                color:black;
+             }
+             .inform{
+                width:75%;
+                margin:auto;
+             }
+             .inform input{
+                border-radius: 40px;
+                font-size: 18px;
+             }
+            .LGIN{
+                background-color: #009879;
+                width:45%;margin:auto;padding: 0;
+            }
+            .LGIN input:hover{
+                background-color: #039C28;
+                color:white;
+                cursor: pointer;
+            }
+    	</style> 
+    
+<body style="background-size:cover; font-size:20px;">
+    {% include "nutrihacker/navigation_bar.html" %}
+    
+        <div class="homepage">
+            <div class="homepageMsg">
+                <h1>Good Nutrition is Our Mission!</h1>
+                <p style="color:green; font-weight: bold;">Find your Diet, Log your Meal, Set your Goal & Achive it with NutriHacker!</p>
+                <p id="Description"> Our website is aim to help you improve your nutrition habit by providing
+                nutrition information and meal recording system. The nutrition information that is used in this website are from
+                USDA nutrition facts database.</p>
+
+            </div>
+            <div class="login">
+                
+                {% if user.is_authenticated %}
+                <div class="btnsLIN">
+                    <a href="{% url 'nutrihacker:search-recipe' %}" ><button>Recipe</button></a>
+                    <a href="{% url 'nutrihacker:log_list' %}" ><button>Log</button></a>
+                </div>
+                         <!-- appears only if they're not already logged in -->
+                 {% else %}
+                 <div class=LGIN>
+                 <!-- still redirects to log page -->
+                  <form class="inform"method="post" action="{% url 'nutrihacker:login' %}">
+                     {% csrf_token %}
+                     <h2 style="color:white; font-weight: bold;letter-spacing: 2px; text-decoration: underline;"> Log in </h2>
+                     <table style="width:100%">
+                        <tr>
+                         <td style="color:white; font-size: 25px;">User Name</td>
+                         <td style="text-align: left;"> <input type="text" name="Username" placeholder="User name"></td>
+                        </tr>
+                        <tr>
+                            <td style="color:white; font-size: 25px;">Password</td>
+                            <td style="text-align: left;"><input type="password" name="Password" placeholder="Password"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="margin:0;"><input  type="submit" value="Login"></td>
+                            <tr>
+                     </table>
+               </form>
+               <p id="signup">Don't have an account? <a href="{% url 'nutrihacker:register_account' %}" >Sign up</a></p> 
+           </div>
+                   {%comment%}
+                    <a href="{% url 'nutrihacker:password_reset' %}"><br>Forgot password?</a> 
+                    {%endcomment%}
+
+                        
+
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <div class="featuresDesc">
+                        <div class="food">
+                            <a href="{% url 'nutrihacker:search' %}">Food Search</a>
+                            <p id="detail">Food Searching feature allows users to search food and view nutrition fact of the searched food in a table. It allows users to filter the search results by selecting a nutrition fact and entering the desired ranges.The user can sort the results by the value in ascending order. Clicking on the same header again will sort the results in descending order. </p>
+                                Click <a class="links" href="{% url 'nutrihacker:search' %}"> HERE </a> to search for food.
+                        </div>
+                        <div class="recipe_search">
+                            <a href="{% url 'nutrihacker:search-recipe' %}">Recipe</a>
+                            <p id="detail">Users can search and view public recipe and their private recipe. Recipe search will display recipe name, the total calorie of the recipe, allergy information, diet information, recipe creator’s name, and the date when the recipe was created.</p>
+                                Click<a class="links" href="{% url 'nutrihacker:search-recipe' %}"> HERE </a> to visit our Recipe Search page. 
+                            
+                        </div>
+                        <div class="log">
+                            <a href="{% url 'nutrihacker:log_list' %}">Log</a>
+                            <p id="detail">The Log page allows users to log meals, view log, update log and display the log in a table and graph. It allows users to track the nutrition intake logged over five different time ranges. In addition, it calculate and display the total number of nutritions that the users log per day. </p>User needs to <a class="links" href="{% url 'nutrihacker:login' %}">login</a> to their user account inorder to access the log page.
+                               Click <a class="links" href="{% url 'nutrihacker:log_list' %}"> HERE </a> to visit the log page.
+                            
+                        </div>
+                        <div class="profile">
+                            <a href="{% url 'nutrihacker:profile' %}">Profile</a>
+                            <p id="detail">Profile page displays the personal information of the logged-in user. Also, Users can update their profile, change their password, and indicate their diet preferences and allergy information</p>
+                            User needs to <a class="links" href="{% url 'nutrihacker:login' %}">login</a> account inorder to access the log page.
+                               Click <a class="links" href="{% url 'nutrihacker:profile' %}"> HERE </a> to visit the profile page.
+                        </div>
+                    </div><br><br><br><br>
+                    <div class="memberslist">
+                        <h1 id="title">Our Team</h1>
+                        <ul>
+                            <li class="team">Bryce VanAsselt 
+                                <li id="t">Team Leader</li></li>
+                            <li class="team">Michael Neet</li>
+                            <li class="team">John Owens</li>
+                            <li class="team">Athena Xia</li>
+                            <li class="team">Jalen Hudson</li>
+                            <li class="team">Tsion Tadesse</li>
+                        </ul>
+                    </div>
+                   
+                    {% endif %}
+                  
+            </div>   
+        </div>
+</body>
 </html>
+ <!--
+                    <div class="memberslist">
+                        <h1 id="title">Our Team</h1>
+                        <div class="tm1">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200" alt="Bryce's image" /><br>
+                            <h2 class="name">Bryce VanAsselt</h2>
+                            <p id="#Gleader">Group Leader</p>
+                        </div>
+                        <div class="tm2">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200" alt="Michael's image" /><br>
+                            <h2 class="name" >Michael Neet</h2>
+                        </div>
+                        <div class="tm3">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200"alt="John's image" /><br>
+                            <h2 class="name">John Owens</h2>
+                        </div>
+                        <div class="tm4">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200" alt="Athena's image" /><br>
+                            <h2 class="name">Athena Xia</h2>
+                        </div>
+                        <div class="tm5">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200" alt="Jalen's image" /><br>
+                            <h2 class="name">Jalen Hudson</h2>
+                        </div>
+                        <div class="tm6">
+                            <img src="{% static 'nutrihacker/media/profile_picture/default.jpg' %}" width="200" alt="Tsion's image" /><br>
+                            <h2 class="name">Tsion Tadesse</h2>
+                        </div>
+                    </div>
+
+                    .tm1 {float: left; width: 16%; background-color: #E4ECEC; height: 200px; margin:5px;}
+             .tm2 {float: left; width: 16%; background-color: #E4ECEC; height: 200px; margin:5px;}
+             .tm3 {float: left; width: 16%; background-color: #E4ECEC; height: 200px;margin:5px;}
+             .tm4 {float: left; width: 16%; background-color: #E4ECEC;height: 200px;margin:5px;}
+             .tm5 {float: left; width: 16%; background-color: #E4ECEC;height: 200px;margin:5px;}
+             .tm6 {float: left; width: 15.5%;background-color: #E4ECEC;height: 200px;margin:5px;}
+                    -->

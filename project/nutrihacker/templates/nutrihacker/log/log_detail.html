@@ -1,247 +1,251 @@
+{% extends 'nutrihacker/log/layout.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-	    <meta charset="UTF-8">
-	    <title>Log Details</title>
-		<link rel="shortcut icon" type="image/png" href="{% static 'nutrihacker/images/favicon.png' %}">
-	    <link rel="stylesheet" type="text/css" href="{% static 'nutrihacker/style.css' %}">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<style>
-			.detailtable {
-				border-collapse: collapse;
-				border: 1px solid black;
-				border-right: 0px;
-				width: 90%;
-				background-color: white;
-				border-spacing: 0;
-			}
-			.detailtable th {
-				border-collapse: collapse;
-				padding: 2px;
-				border: 1px solid black;
-			}
-			.detailtable td {
-				border-collapse: collapse;
-				border: 1px solid black;
-				border-right: 0px;
-			}
-			tr.teal {
-				background-color: #009879;
-				color: #ffffff;
-			}
-			.facts {
-				width: 35%;
-				margin: auto;
-				font-size: 24px;
-			}
-			.right {
-				text-align: right;
-				width: 9%;
-			}
-			.btntable {
-				width: 90%;
-				margin-bottom: 0;
-			}
-			.topbtn {
-				padding: 5px;
-				font-size: 15px;
-				border-radius:12px;
-			}
-			a {
-				text-decoration: none;
-				align: center;
-			}
-			a:hover {
-				color: blue;
-			}
-			input {
-				width: 48px;
-			}
-			label {
-				color: white;
-			}
-			form {
-				display: inline;
-			}
-			span {
-				font-size: 18px;
-			}
-			.btn {
-				font-size: 20px;
-				text-align: right;
-			}
-			.footer {
-				margin-bottom: 25px;
-			}
-			
-			/* Popup container */
-			.popup {
-				position: relative;
-				display: inline-block;
-				cursor: pointer;
-			}
+{% block title %}Log Details{% endblock %}
 
-			/* The actual popup (appears on top) */
-			.popup .popuptext {
-				visibility: hidden;
-				width: 160px;
-				background-color: #555;
-				color: #fff;
-				text-align: center;
-				border-radius: 6px;
-				padding: 8px 0;
-				position: absolute;
-				z-index: 1;
-				bottom: 125%;
-				left: 50%;
-				margin-left: -80px;
-			}
+{% block links %}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
 
-			/* Popup arrow *
-			.popup .popuptext::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -5px;
-				border-width: 5px;
-				border-style: solid;
-				border-color: #555 transparent transparent transparent;
-			}*/
+{% block style %}
+	<style>
+		.detailtable {
+			border-collapse: collapse;
+			border: 0;
+			width: 90%;
+			background-color: none;
+			border-spacing: 0;
+		}
+		.detailtable th {
+			border-collapse: collapse;
+			padding: 2px 5px;
+			border: 1px solid black;
+		}
+		.detailtable td {
+			border-collapse: collapse;
+			border: 1px solid black;
+			border-right: 0px;
+		}
+		tr.clear {
+			background-color: transparent;
+			border: 0;
+		}
+		th.coltop {
+			background-color: #242424;
+			color: white;
+			border: none;
+		}
+		th.teal, tr.teal {
+			background-color: #009879;
+			color: white;
+		}
+		th.white {
+			background-color: white;
+		}
+		.facts {
+			width: 35%;
+			margin: auto;
+			font-size: 24px;
+		}
+		.right {
+			text-align: right;
+			width: 9%;
+		}
+		.btntable {
+			width: 90%;
+			margin-bottom: 0;
+		}
+		.topbtn {
+			padding: 5px;
+			font-size: 15px;
+			border-radius:12px;
+		}
+		a {
+			text-decoration: none;
+			align: center;
+		}
+		a:hover {
+			color: blue;
+		}
+		input {
+			width: 48px;
+		}
+		label {
+			color: white;
+		}
+		form {
+			display: inline;
+		}
+		span {
+			font-size: 18px;
+		}
+		.btn {
+			font-size: 20px;
+			text-align: center;
+			height: 33px;
+			width: 36px;
+		}
+		.footer {
+			margin-bottom: 25px;
+		}
+		
+		/* Popup container */
+		.popup {
+			position: relative;
+			display: inline-block;
+			cursor: pointer;
+		}
 
-			/* Toggle this class when clicking on the popup container (hide and show the popup) */
-			.popup .show {
-				visibility: visible;
-				-webkit-animation: fadeIn 0.5s;
-				animation: fadeIn 0.5s
-			}
+		/* The actual popup (appears on top) */
+		.popup .popuptext {
+			visibility: hidden;
+			width: 160px;
+			background-color: #555;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 8px 0;
+			position: absolute;
+			z-index: 1;
+			bottom: 125%;
+			left: 50%;
+			margin-left: -80px;
+		}
 
-			/* Add animation (fade in the popup) */
-			@-webkit-keyframes fadeIn {
-				from {opacity: 0;}
-				to {opacity: 1;}
-			}
+		/* Popup arrow *
+		.popup .popuptext::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: #555 transparent transparent transparent;
+		}*/
 
-			@keyframes fadeIn {
-				from {opacity: 0;}
-				to {opacity:1 ;}
-			}
-		</style>
-	</head>
-	<body>
-		{% include "nutrihacker/navigation_bar.html" %}
+		/* Toggle this class when clicking on the popup container (hide and show the popup) */
+		.popup .show {
+			visibility: visible;
+			-webkit-animation: fadeIn 0.5s;
+			animation: fadeIn 0.5s
+		}
 
-		<p>Overview for {{ dailylog.date }}</p>
-		<table class="btntable" align="center">
-			<tr>
-				<td style="text-align: left">
-					<a href="{% url 'nutrihacker:log_list' %}"><button class="topbtn">&#9204; Back to My Logs&nbsp;</button></a>
-				</td>
-				<td style="text-align: right">
-					<form action="{% url 'nutrihacker:log_create' %}" method="GET">
-						<button type="submit" class="topbtn" name="date" value="{{ dailylog.date|date:'Y-m-d' }}">
-							<b>+</b>&nbsp;&nbsp;Add a Meal&nbsp;
-						</button>
-					</form>
-				</td>
+		/* Add animation (fade in the popup) */
+		@-webkit-keyframes fadeIn {
+			from {opacity: 0;}
+			to {opacity: 1;}
+		}
+
+		@keyframes fadeIn {
+			from {opacity: 0;}
+			to {opacity:1 ;}
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<p>Overview for {{ dailylog.date }}</p>
+	<table class="btntable" align="center">
+		<tr>
+			<td style="text-align: left">
+				<a href="{% url 'nutrihacker:log_list' %}"><button class="topbtn">&#9204; Back to My Logs&nbsp;</button></a>
+			</td>
+			<td style="text-align: right">
+				<form action="{% url 'nutrihacker:log_create' %}" method="GET">
+					<button type="submit" class="topbtn" name="date" value="{{ dailylog.date|date:'Y-m-d' }}">
+						<b>+</b>&nbsp;&nbsp;Add a Meal&nbsp;
+					</button>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<br><br>
+	<table class="detailtable" align="center">
+		{% if info_list %}
+		<tr style="border: 1px solid black">
+			<th colspan="3" class="coltop" style="border: none"></th>
+			<th class="coltop">Weight<br>(g)</th>
+			<th class="coltop">Calories<br>(kcal)</th>
+			<th class="coltop">Total Fat<br>(g)</th>
+			<th class="coltop">Cholesterol<br>(mg)</th>
+			<th class="coltop">Sodium<br>(mg)</th>
+			<th class="coltop">Total Carbs<br>(g)</th>
+			<th class="coltop" style="border-right: 1px solid black">Protein<br>(g)</th>
+		</tr>
+		<tr class="teal">
+			<th colspan="3" style="text-align: center; width: 25%">Day Total </th>
+			<th class="right">{{ daytotal.servingSize|floatformat }}</th>
+			<th class="right">{{ daytotal.calories|floatformat }}</th>
+			<th class="right">{{ daytotal.totalFat|floatformat }}</th>
+			<th class="right">{{ daytotal.cholesterol|floatformat }}</th>
+			<th class="right">{{ daytotal.sodium|floatformat }}</th>
+			<th class="right">{{ daytotal.totalCarb|floatformat }}</th>
+			<th class="right">{{ daytotal.protein|floatformat }}</th>
+		</tr>
+		<tr class="clear"><th style="border: 0"><br><br></th></tr>
+		<tr class="clear">
+			<th colspan="12" style="color: white; border: 0; font-size: 22px">Breakdown by meal:<br><br></th>
+		</tr>
+			{% for meallog in info_list %}
+			<tr style="background-color: #242424; border: 0">
+				<th colspan="10" style="font-size: 21px; color: white; text-align: left">{{ meallog.time }}</th>
+				<th style="border: 0; width: 2%; padding: 0">
+					<a href="{% url 'nutrihacker:log_update' meallog.id %}" title="Edit"><button class="btn">&#9998;</button></a>
+				</th>
+				<th style="border: 0; width: 2%; padding: 0">
+					<div class="popup" id={{ meallog.id }} onclick="confirm(this.id)"  title="Delete">
+						<span class="popuptext" id="popup{{ meallog.id }}">Are you sure you want to delete?<br>
+							<form action="{% url 'nutrihacker:meallog_delete' %}" method="POST">
+								{% csrf_token %}
+								<input type="hidden" name="id" value={{ meallog.id }}>
+								<button type="submit">Yes</button>
+							</form><button>No</button>
+						</span>
+						<button class="btn"><i class="fa fa-trash"></i></button>
+					</div>
+				</th>
 			</tr>
-		</table>
-		<br><br>
-		<table class="detailtable" align="center">
-			{% if info_list %}
-			<tr class="teal">
-				<th colspan="2"></th>
-				<th>Amount (g)<br>(Servings)</th>
-				<th>Calories<br>(kcal)</th>
-				<th>Total Fat<br>(g)</th>
-				<th>Cholesterol<br>(mg)</th>
-				<th>Sodium<br>(mg)</th>
-				<th>Total Carbs<br>(g)</th>
-				<th>Protein<br>(g)</th>
-				<th colspan="2"></th>
-			</tr>
-			<tr class="teal">
-				<th colspan="2" style="text-align: center">Day Total </th>
-				<th class="right">{{ daytotal.servingSize|floatformat }}</th>
-				<th class="right">{{ daytotal.calories|floatformat }}</th>
-				<th class="right">{{ daytotal.totalFat|floatformat }}</th>
-				<th class="right">{{ daytotal.cholesterol|floatformat }}</th>
-				<th class="right">{{ daytotal.sodium|floatformat }}</th>
-				<th class="right">{{ daytotal.totalCarb|floatformat }}</th>
-				<th class="right">{{ daytotal.protein|floatformat }}</th>
-				<th colspan="2"></th>
-			</tr>
-			<tr class="teal">
-				<th colspan="11" style="padding-top: 20px; padding-bottom: 10px">Breakdown by meal:</th>
-			</tr>
-				{% for meallog in info_list %}
-				<tr style="background-color: #242424">
-					<th style="width: 8%">{{ meallog.time }}</th>
-					<th colspan="8"></th>
-					<th>
-						<a href="{% url 'nutrihacker:log_update' meallog.id %}"><button class="btn">&#9998;</button></a>
-					</th>
-					<th>
-						<div class="popup" id={{ meallog.id }} onclick="confirm(this.id)">
-							<span class="popuptext" id="popup{{ meallog.id }}">Are you sure you want to delete?<br>
-								<form action="{% url 'nutrihacker:meallog_delete' %}" method="POST">
-									{% csrf_token %}
-									<input type="hidden" name="id" value={{ meallog.id }}>
-									<button type="submit">Yes</button>
-								</form><button>No</button>
-							</span>
-							<button class="btn"><i class="fa fa-trash"></i></button>
-						</div>
-					</th>
+				{% if meallog.item_list %}
+					{% for item in meallog.item_list %}
+					<tr style="background-color: white">
+						<th colspan="2" style="text-align: left; border-right: none; padding-left: 20px"><a href="
+							{% if item.type == 'food' %}
+								{% url 'nutrihacker:nutrifacts' item.id %}
+							{% else %}
+								{% url 'nutrihacker:detail_recipe' item.id %}
+							{% endif %}
+						">{{ item.name }}</a></th>
+						<th style="border-left: none">&times;{{ item.portions }}</th>
+						<th class="right">{{ item.servingSize|floatformat }}</th>
+						<th class="right">{{ item.calories|floatformat }}</th>
+						<th class="right">{{ item.totalFat|floatformat }}</th>
+						<th class="right">{{ item.cholesterol|floatformat }}</th>
+						<th class="right">{{ item.sodium|floatformat }}</th>
+						<th class="right">{{ item.totalCarb|floatformat }}</th>
+						<th class="right">{{ item.protein|floatformat }}</th>
+					</tr>
+					{% endfor %}
+				<tr class="teal">
+					<th colspan="3" class="teal" style="text-align: center">Meal Total</th>
+					<th class="right">{{ meallog.total.servingSize|floatformat }}</th>
+					<th class="right">{{ meallog.total.calories|floatformat }}</th>
+					<th class="right">{{ meallog.total.totalFat|floatformat }}</th>
+					<th class="right">{{ meallog.total.cholesterol|floatformat }}</th>
+					<th class="right">{{ meallog.total.sodium|floatformat }}</th>
+					<th class="right">{{ meallog.total.totalCarb|floatformat }}</th>
+					<th class="right">{{ meallog.total.protein|floatformat }}</th>
 				</tr>
-					{% if meallog.item_list %}
-						{% for item in meallog.item_list %}
-						<tr>
-							<th></th>
-							<th style="text-align: left"><a href="
-								{% if item.type == 'food' %}
-									{% url 'nutrihacker:nutrifacts' item.id %}
-								{% else %}
-									{% url 'nutrihacker:detail_recipe' item.id %}
-								{% endif %}
-							">{{ item.name }}</a></th>
-							<th class="right">{{ item.servingSize|floatformat }} ({{ item.portions }})</th>
-							<th class="right">{{ item.calories|floatformat }}</th>
-							<th class="right">{{ item.totalFat|floatformat }}</th>
-							<th class="right">{{ item.cholesterol|floatformat }}</th>
-							<th class="right">{{ item.sodium|floatformat }}</th>
-							<th class="right">{{ item.totalCarb|floatformat }}</th>
-							<th class="right">{{ item.protein|floatformat }}</th>
-						</tr>
-						{% endfor %}
-					<tr class="teal">
-						<th style="background-color: white"></th>
-						<th style="text-align: left">Meal Total</th>
-						<th class="right">{{ meallog.total.servingSize|floatformat }}</th>
-						<th class="right">{{ meallog.total.calories|floatformat }}</th>
-						<th class="right">{{ meallog.total.totalFat|floatformat }}</th>
-						<th class="right">{{ meallog.total.cholesterol|floatformat }}</th>
-						<th class="right">{{ meallog.total.sodium|floatformat }}</th>
-						<th class="right">{{ meallog.total.totalCarb|floatformat }}</th>
-						<th class="right">{{ meallog.total.protein|floatformat }}</th>
-					</tr>
-					{% else %}
-					<tr>
-						<th></th>
-						<th colspan="8">There is no information logged for this time</th>
-					</tr>
-					{% endif %}
-				{% endfor %}
-			{% else %}
+				{% endif %}
+			{% endfor %}
+		{% else %}
 			<tr>
 				<th>You have no meals logged for this day</th>
 			</tr>
-			{% endif %}
-		</table>
-		<div class="footer"></div>
-	</body>
+		{% endif %}
+	</table>
+	<div class="footer"></div>
 	<script>
 		// When the user clicks on <div>, open the popup
 		function confirm(clicked_id) {
@@ -249,4 +253,4 @@
 		  	popup.classList.toggle("show");
 		}
 	</script>
-</html>
+{% endblock %}

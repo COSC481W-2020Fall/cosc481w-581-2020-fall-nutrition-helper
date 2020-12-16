@@ -27,9 +27,14 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 		return context
 		
 	def post(self, request):
+
+#since our profile picture is in the file data not in database
+
+		file_data = request.FILES
+
 		profile = get_object_or_404(Profile, user=self.request.user)
 		user_form = UserForm(request.POST, instance=self.request.user)
-		profile_form = ProfileForm(request.POST, instance=profile)
+		profile_form = ProfileForm(request.POST, file_data, instance=profile) #the image field is in profile form so file_data will be in profileForm
 				
 		if user_form.is_valid() and profile_form.is_valid():
 			user = user_form.save()
@@ -39,7 +44,7 @@ class UpdateProfile(LoginRequiredMixin, TemplateView):
 			profile.set_caloriegoal(profile_form.cleaned_data.get('caloriegoal'))
 			profile.save()
 			return HttpResponseRedirect(reverse('nutrihacker:profile'))
-		
+
 		context = {'user_form':user_form, 'profile_form':profile_form}
 		return self.render_to_response(context)
 
@@ -109,13 +114,30 @@ def delete_diet_preference(request):
 				diet.profiles.remove(profile)
 	
 	return HttpResponseRedirect(reverse('nutrihacker:diet_and_allergies'))
-	
 
 class LoginView(auth_views.LoginView):
 	template_name = "nutrihacker/login.html"
 
+	def login(request):
+		if request.method == 'POST':
+			username = request.POST['username']
+			password = request.POST['password']
+
+			user = auth.authenticate(username=username, password=password)
+
+			if user is not None:
+				auth.login(request, user)
+				return redirect("index.html")
+			else:
+				messages.info(request, 'invalid username or password')
+				return redirects("index.html")
+		else:
+			return render(request, 'index.html')
+
+
 class LogoutView(auth_views.LogoutView):
 	template_name = "nutrihacker/logout.html"
+	
 
 class PasswordChangeView(auth_views.PasswordChangeView):
 	template_name = "nutrihacker/change_password.html"
@@ -135,3 +157,15 @@ class RegisterAccountView(FormView):
 		user = authenticate(username=username, password=raw_password)
 		login(self.request, user)
 		return super().form_valid(form)
+# class PasswordResetView(auth_views.PasswordResetView):
+# 	template_name="nutrihacker/reset_password.html"
+
+# class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+# 	template_name="nutrihacker/password_email_sent.html"
+
+# class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+# 	template_name="nutrihacker/reset_pwd_form.html"
+
+# class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+# 	template_name="nutrihacker/reset_pwd_done.html"
+		

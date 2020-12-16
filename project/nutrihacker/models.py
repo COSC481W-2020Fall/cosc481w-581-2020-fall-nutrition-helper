@@ -52,6 +52,7 @@ class Food(models.Model):
 class Profile(models.Model):
 	#userdata id auto generated, but then is 1:1 with users ()
 	user = models.OneToOneField(User, on_delete = models.CASCADE)
+	profilePic = models.ImageField(default='default.jpg', upload_to='profile_picture/') #profile_picture is under profile_pics
 	gender = models.CharField(max_length=1, null=True)
 	birthdate = models.DateField(null=True)
 	height = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -158,6 +159,7 @@ class DietPreference(models.Model):
 class Recipe(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=50, default="Custom Recipe")
+	recipe_image = models.ImageField(upload_to='Recipe_pic/',blank=True, null="True")
 	is_public = models.BooleanField(default=False)
 	created_at = models.DateTimeField(default=datetime.now)
 	instruction = models.TextField(default="")
